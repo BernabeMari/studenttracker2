@@ -403,6 +403,11 @@
         </div>
     </div>
 
+    <!-- Toast notifications container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- Toasts will be appended here dynamically -->
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
@@ -458,12 +463,46 @@
             .withAutomaticReconnect()
             .build();
 
-        // Handle receiving location updates
+        connection.on('StudentStoppedTracking', (studentId) => {
+            console.log(`Student ${studentId} stopped tracking`);
+            
+            // Get the student name before updating status
+            const studentName = studentMarkers[studentId]?.fullname || 
+                                studentMarkers[studentId]?.username || 
+                                'Student';
+            
+            // Update student status to inactive
+            if (studentMarkers[studentId]) {
+                studentMarkers[studentId].isActive = false;
+            }
+            
+            // Show notification for stopped tracking
+            showNotification(
+                'warning',
+                `${studentName} Stopped Tracking`,
+                `${studentName} is no longer sharing their location.`,
+                studentMarkers[studentId]?.profilePic
+            );
+            
+            // Update student status in the list
+            updateStudentStatus(studentId, false);
+            
+            // If this is the active student, update the UI
+            if (activeStudentId === studentId) {
+                document.getElementById('currently-monitoring').innerHTML = 
+                    `<span class="text-warning">Student ${studentMarkers[studentId]?.fullname || studentMarkers[studentId]?.username || activeStudentName} stopped sharing location</span>`;
+            }
+        });
+        
+        // Enhanced handler for receiving location updates with route change detection
         connection.on('ReceiveLocation', (studentId, username, latitude, longitude, fullname, profilePic) => {
             console.log(`Receiving location for student ${studentId} (${fullname || username}): ${latitude}, ${longitude}`);
             
             // Use fullname if available, otherwise fall back to username
             const displayName = fullname || username;
+            
+            // Check if this is the first update (student started tracking)
+            const isFirstUpdate = !studentMarkers[studentId] || !studentMarkers[studentId].isActive;
             
             // Create studentMarkers entry if it doesn't exist
             if (!studentMarkers[studentId]) {
@@ -473,13 +512,36 @@
                     lastUpdate: null,
                     username: username,
                     fullname: fullname,
-                    profilePic: profilePic
+                    profilePic: profilePic,
+                    previousRoute: null
                 };
             } else {
                 // Update student info
                 studentMarkers[studentId].username = username;
                 studentMarkers[studentId].fullname = fullname;
                 studentMarkers[studentId].profilePic = profilePic;
+            }
+            
+            // If this is a new tracking session (student started tracking), show notification
+            if (isFirstUpdate) {
+                showNotification(
+                    'success',
+                    `${displayName} Started Tracking`,
+                    `${displayName} is now sharing their location.`,
+                    studentMarkers[studentId].profilePic
+                );
+            } else {
+                // Check if route has significantly changed
+                const routeChanged = checkForRouteChanges(studentId, latitude, longitude);
+                
+                if (routeChanged && studentId === activeStudentId) {
+                    showNotification(
+                        'info',
+                        `${displayName} Changed Route`,
+                        `${displayName} has changed their route to school.`,
+                        studentMarkers[studentId].profilePic
+                    );
+                }
             }
             
             // Remove existing marker if exists
@@ -534,24 +596,6 @@
             
             // Update student status in the list
             updateStudentStatus(studentId, true);
-        });
-
-        connection.on('StudentStoppedTracking', (studentId) => {
-            console.log(`Student ${studentId} stopped tracking`);
-            
-            // Update student status to inactive
-            if (studentMarkers[studentId]) {
-                studentMarkers[studentId].isActive = false;
-            }
-            
-            // Update student status in the list
-            updateStudentStatus(studentId, false);
-            
-            // If this is the active student, update the UI
-            if (activeStudentId === studentId) {
-                document.getElementById('currently-monitoring').innerHTML = 
-                    `<span class="text-warning">Student ${studentMarkers[studentId]?.fullname || studentMarkers[studentId]?.username || activeStudentName} stopped sharing location</span>`;
-            }
         });
 
         function setActiveStudent(studentId, studentName) {
@@ -1023,6 +1067,97 @@
                 initializeMapElements();
             })
             .catch(err => console.error('Error connecting to SignalR Hub:', err));
+
+        // Function to show toast notifications
+        function showNotification(type, title, message, profilePic = null) {
+            // Create unique ID for this toast
+            const toastId = 'toast-' + Date.now();
+            
+            // Create the toast element
+            const toastHtml = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header ${type === 'success' ? 'bg-success text-white' : type === 'warning' ? 'bg-warning' : ''}">
+                        ${profilePic ? 
+                            `<img src="${profilePic}" class="rounded me-2" alt="Profile" style="width: 20px; height: 20px; object-fit: cover;">` : 
+                            `<i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>`
+                        }
+                        <strong class="me-auto">${title}</strong>
+                        <small>just now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            // Add the toast to the container
+            document.querySelector('.toast-container').insertAdjacentHTML('beforeend', toastHtml);
+            
+            // Initialize and show the toast
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 5000
+            });
+            
+            toast.show();
+            
+            // Remove toast from DOM after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+
+        // Function to detect route changes when location updates
+        function checkForRouteChanges(studentId, newLat, newLng) {
+            // Get the previous route points if they exist
+            const student = studentMarkers[studentId];
+            
+            // If this is the first location update, there's no previous route
+            if (!student.previousRoute) {
+                student.previousRoute = {
+                    latitude: newLat,
+                    longitude: newLng
+                };
+                return false;
+            }
+            
+            // Calculate distance between previous point and new point (in meters)
+            const distance = calculateDistance(
+                student.previousRoute.latitude, 
+                student.previousRoute.longitude,
+                newLat, 
+                newLng
+            );
+            
+            // If distance is significant (more than 100 meters), consider it a route change
+            const isRouteChange = distance > 100;
+            
+            // Update the previous route
+            student.previousRoute = {
+                latitude: newLat,
+                longitude: newLng
+            };
+            
+            return isRouteChange;
+        }
+        
+        // Calculate distance between two points using Haversine formula
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Earth radius in meters
+            const φ1 = lat1 * Math.PI/180;
+            const φ2 = lat2 * Math.PI/180;
+            const Δφ = (lat2-lat1) * Math.PI/180;
+            const Δλ = (lon2-lon1) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            return R * c; // Distance in meters
+        }
     </script>
 </body>
 </html> 

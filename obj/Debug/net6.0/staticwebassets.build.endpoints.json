@@ -249,7 +249,7 @@
       ]
     },
     {
-      "Route": "parent-dashboard.e4ztyu44mr.html",
+      "Route": "parent-dashboard.frj3n73rnf.html",
       "AssetFile": "parent-dashboard.html",
       "Selectors": [],
       "ResponseHeaders": [
@@ -263,7 +263,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "41374"
+          "Value": "47291"
         },
         {
           "Name": "Content-Type",
@@ -271,21 +271,21 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"8s5cTc39Hh6gqR/6YT2KjM2x/oMluDwThk3Gp0n5HT8=\""
+          "Value": "\"y2kL9DaRiHIswPsQPsC/9DOFqef8owqx64lrXPcBAPE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 14 Mar 2025 14:44:34 GMT"
+          "Value": "Fri, 14 Mar 2025 14:51:04 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "e4ztyu44mr"
+          "Value": "frj3n73rnf"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-8s5cTc39Hh6gqR/6YT2KjM2x/oMluDwThk3Gp0n5HT8="
+          "Value": "sha256-y2kL9DaRiHIswPsQPsC/9DOFqef8owqx64lrXPcBAPE="
         },
         {
           "Name": "label",
@@ -308,7 +308,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "41374"
+          "Value": "47291"
         },
         {
           "Name": "Content-Type",
@@ -316,17 +316,17 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"8s5cTc39Hh6gqR/6YT2KjM2x/oMluDwThk3Gp0n5HT8=\""
+          "Value": "\"y2kL9DaRiHIswPsQPsC/9DOFqef8owqx64lrXPcBAPE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 14 Mar 2025 14:44:34 GMT"
+          "Value": "Fri, 14 Mar 2025 14:51:04 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-8s5cTc39Hh6gqR/6YT2KjM2x/oMluDwThk3Gp0n5HT8="
+          "Value": "sha256-y2kL9DaRiHIswPsQPsC/9DOFqef8owqx64lrXPcBAPE="
         }
       ]
     },
@@ -427,7 +427,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "97216"
+          "Value": "106397"
         },
         {
           "Name": "Content-Type",
@@ -435,22 +435,22 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"hnnsT2H0LS63whqW+hrskC12dbhQf+6J/VFA4BJdNnc=\""
+          "Value": "\"ER3FNj4LC5U3j7yyjZPJbZ/wt4W1LJOozJlAYWDfJ58=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 14 Mar 2025 14:39:53 GMT"
+          "Value": "Fri, 14 Mar 2025 14:54:44 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-hnnsT2H0LS63whqW+hrskC12dbhQf+6J/VFA4BJdNnc="
+          "Value": "sha256-ER3FNj4LC5U3j7yyjZPJbZ/wt4W1LJOozJlAYWDfJ58="
         }
       ]
     },
     {
-      "Route": "student-dashboard.m9qyhbdxcb.html",
+      "Route": "student-dashboard.lzlfwcz0vu.html",
       "AssetFile": "student-dashboard.html",
       "Selectors": [],
       "ResponseHeaders": [
@@ -464,7 +464,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "97216"
+          "Value": "106397"
         },
         {
           "Name": "Content-Type",
@@ -472,21 +472,21 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"hnnsT2H0LS63whqW+hrskC12dbhQf+6J/VFA4BJdNnc=\""
+          "Value": "\"ER3FNj4LC5U3j7yyjZPJbZ/wt4W1LJOozJlAYWDfJ58=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 14 Mar 2025 14:39:53 GMT"
+          "Value": "Fri, 14 Mar 2025 14:54:44 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "m9qyhbdxcb"
+          "Value": "lzlfwcz0vu"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-hnnsT2H0LS63whqW+hrskC12dbhQf+6J/VFA4BJdNnc="
+          "Value": "sha256-ER3FNj4LC5U3j7yyjZPJbZ/wt4W1LJOozJlAYWDfJ58="
         },
         {
           "Name": "label",

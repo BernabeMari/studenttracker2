@@ -66,8 +66,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>e4ztyu44mr</Fingerprint>
-      <Integrity>8s5cTc39Hh6gqR/6YT2KjM2x/oMluDwThk3Gp0n5HT8=</Integrity>
+      <Fingerprint>frj3n73rnf</Fingerprint>
+      <Integrity>y2kL9DaRiHIswPsQPsC/9DOFqef8owqx64lrXPcBAPE=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\parent-dashboard.html'))</OriginalItemSpec>
@@ -102,8 +102,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>m9qyhbdxcb</Fingerprint>
-      <Integrity>hnnsT2H0LS63whqW+hrskC12dbhQf+6J/VFA4BJdNnc=</Integrity>
+      <Fingerprint>lzlfwcz0vu</Fingerprint>
+      <Integrity>ER3FNj4LC5U3j7yyjZPJbZ/wt4W1LJOozJlAYWDfJ58=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\student-dashboard.html'))</OriginalItemSpec>
