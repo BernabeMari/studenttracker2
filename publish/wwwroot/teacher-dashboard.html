@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Student Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #5469d4;
+            --secondary-color: #4655a8;
+            --accent-color: #f7fafc;
+            --text-color: #2d3748;
+            --light-text: #718096;
+            --success-color: #38a169;
+            --danger-color: #e53e3e;
+            --warning-color: #f6ad55;
+            --info-color: #63b3ed;
+            --border-radius: 10px;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --border-color: #e2e8f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-color);
+            background-color: #f7fafc;
+            line-height: 1.6;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-dark.bg-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Card styling */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+        
+        /* Button styling */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .status-pending {
+            background-color: var(--warning-color);
+        }
+        
+        .status-approved {
+            background-color: var(--success-color);
+        }
+        
+        .status-rejected {
+            background-color: var(--danger-color);
+        }
+        
+        /* Student list styling */
+        .student-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .student-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        
+        .student-item:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .student-item:last-child {
+            border-bottom: none;
+        }
+        
+        .subject-card {
+            transition: all 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+        }
+        
+        .border-dashed {
+            border-style: dashed !important;
+            border-width: 2px !important;
+            border-color: #ccc !important;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-book-fill me-2"></i>
+                Student Tracker
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span id="username-display">Teacher</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="logout-btn">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast container for notifications -->
+    <div class="toast-container"></div>
+
+    <!-- Main content -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Teacher Dashboard</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Welcome to the Teacher Dashboard! Here you can create subjects and manage students.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Create Subject</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="create-subject-form">
+                            <div class="mb-3">
+                                <label for="subject-name" class="form-label">Subject Name</label>
+                                <input type="text" class="form-control" id="subject-name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject-description" class="form-label">Description</label>
+                                <textarea class="form-control" id="subject-description" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Create Subject</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Add Student to Subject</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="add-student-form">
+                            <div class="mb-3">
+                                <label for="subject-select" class="form-label">Select Subject</label>
+                                <select class="form-select" id="subject-select" required>
+                                    <option value="">Select a subject</option>
+                                    <!-- Subjects will be loaded here -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="student-id" class="form-label">Student ID</label>
+                                <input type="number" class="form-control" id="student-id" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Send Request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">My Subjects</h5>
+                        <button class="btn btn-sm btn-primary" id="refresh-subjects-btn">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="subjects-container" class="row row-cols-1 row-cols-md-2 g-4">
+                            <!-- Subject cards will be loaded here -->
+                            <div class="col">
+                                <div class="card h-100 subject-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">No Subjects</h5>
+                                        <p class="card-text text-muted">Create your first subject using the form on the left.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Student Connection Requests</h5>
+                        <button class="btn btn-sm btn-primary" id="refresh-requests-btn">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Subject</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="connection-requests">
+                                    <tr>
+                                        <td colspan="4" class="text-center">No pending connection requests</td>
+                                    </tr>
+                                    <!-- Connection requests will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Details Modal -->
+    <div class="modal fade" id="subjectDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subject-modal-title">Subject Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Description</h6>
+                        <p id="subject-modal-description">No description available</p>
+                    </div>
+                    
+                    <!-- QR Code Section for Attendance -->
+                    <div class="mb-4 p-3 border rounded bg-light">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="fw-bold">Attendance QR Code</h6>
+                            <div>
+                                <button class="btn btn-sm btn-primary" id="generate-qr-btn">
+                                    <i class="bi bi-qr-code me-1"></i> Generate QR Code
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">Students can scan this QR code to quickly log their attendance for this subject. Each subject has one persistent session.</p>
+                        <div class="d-flex justify-content-center">
+                            <div id="qr-code-container" class="text-center d-none">
+                                <div id="qrcode" class="mb-2 bg-white p-2 d-inline-block"></div>
+                                <div class="mt-2">
+                                    <span id="attendance-session-id" class="badge bg-secondary mb-2 d-block">Session: </span>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" id="download-qr-btn">
+                                            <i class="bi bi-download me-1"></i> Download
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" id="new-session-btn">
+                                            <i class="bi bi-arrow-repeat me-1"></i> Refresh QR
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" id="view-attendance-btn">
+                                            <i class="bi bi-list-check me-1"></i> View Attendance
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" id="view-statistics-btn">
+                                            <i class="bi bi-bar-chart me-1"></i> Statistics
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="qr-placeholder" class="text-center text-muted">
+                                <div class="border border-dashed p-4 mb-2">
+                                    <i class="bi bi-qr-code" style="font-size: 3rem;"></i>
+                                    <p class="mb-0 mt-2">Click "Generate QR Code" to create an attendance QR code</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h6 class="fw-bold">Students</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student ID</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subject-students">
+                                    <tr>
+                                        <td colspan="4" class="text-center">No students in this subject</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add a new section for attendance records after the Students table -->
+    <div class="mt-4 attendance-records-section d-none">
+        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+            <span>Attendance Records</span>
+            <button class="btn btn-sm btn-outline-secondary" id="close-attendance-btn">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </h6>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Record ID</th>
+                    </tr>
+                </thead>
+                <tbody id="attendance-records">
+                    <tr>
+                        <td colspan="4" class="text-center">Loading attendance records...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add a new section for attendance statistics -->
+    <div class="mt-4 attendance-stats-section d-none">
+        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+            <span>Attendance Statistics</span>
+            <button class="btn btn-sm btn-outline-secondary" id="close-stats-btn">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </h6>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">Students Present</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush" id="present-students">
+                            <li class="list-group-item text-center">Loading...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-danger text-white">
+                        <h6 class="mb-0">Students Absent</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush" id="absent-students">
+                            <li class="list-group-item text-center">Loading...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const userString = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            if (!userString || !token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            const user = JSON.parse(userString);
+            if (user.userType !== 'Teacher') {
+                alert('Access denied. This page is for teachers only.');
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Set username in navbar
+            document.getElementById('username-display').textContent = user.username;
+            
+            // Setup logout
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = '/login.html';
+            });
+
+            // Initialize event listeners
+            initializeFormHandlers();
+            loadSubjects();
+            loadConnectionRequests();
+        });
+
+        function initializeFormHandlers() {
+            // Create Subject Form Handler
+            document.getElementById('create-subject-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const subjectName = document.getElementById('subject-name').value;
+                const description = document.getElementById('subject-description').value;
+
+                try {
+                    const response = await fetch('/api/subject/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({
+                            name: subjectName,
+                            description: description
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        document.getElementById('create-subject-form').reset();
+                        showNotification('success', 'Subject Created', data.message);
+                        loadSubjects();
+                    } else {
+                        const errorData = await response.json();
+                        showNotification('error', 'Error', errorData.message || 'Failed to create subject');
+                    }
+                } catch (error) {
+                    console.error('Error creating subject:', error);
+                    showNotification('error', 'Error', 'Failed to create subject. Please try again.');
+                }
+            });
+
+            // Add Student to Subject Form Handler
+            document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const subjectId = document.getElementById('subject-select').value;
+                const studentId = document.getElementById('student-id').value;
+
+                if (!subjectId) {
+                    showNotification('error', 'Error', 'Please select a subject');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/teacherconnection/request', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({
+                            studentId: parseInt(studentId),
+                            subjectId: parseInt(subjectId)
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        document.getElementById('add-student-form').reset();
+                        showNotification('success', 'Request Sent', data.message);
+                        loadConnectionRequests();
+                    } else {
+                        const errorData = await response.json();
+                        showNotification('error', 'Error', errorData.message || 'Failed to send connection request');
+                    }
+                } catch (error) {
+                    console.error('Error sending connection request:', error);
+                    showNotification('error', 'Error', 'Failed to send connection request. Please try again.');
+                }
+            });
+
+            // Refresh buttons
+            document.getElementById('refresh-subjects-btn').addEventListener('click', loadSubjects);
+            document.getElementById('refresh-requests-btn').addEventListener('click', loadConnectionRequests);
+        }
+
+        async function loadSubjects() {
+            try {
+                const response = await fetch('/api/subject/list', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const subjects = await response.json();
+                    const subjectsContainer = document.getElementById('subjects-container');
+                    
+                    if (subjects.length === 0) {
+                        subjectsContainer.innerHTML = `
+                            <div class="col">
+                                <div class="card h-100 subject-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">No Subjects</h5>
+                                        <p class="card-text text-muted">Create your first subject using the form on the left.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    subjectsContainer.innerHTML = subjects.map(subject => `
+                        <div class="col">
+                            <div class="card h-100 subject-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${subject.name}</h5>
+                                    <p class="card-text">${subject.description || 'No description'}</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="bi bi-people-fill me-1"></i>
+                                            ${subject.studentCount} students
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="showSubjectDetails(${subject.subjectId})">
+                                        View Details
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${subject.subjectId}, '${subject.name}')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    updateSubjectSelect(subjects);
+                } else {
+                    console.error('Failed to load subjects:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load subjects');
+                }
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+                showNotification('error', 'Error', 'Failed to load subjects');
+            }
+        }
+
+        function updateSubjectSelect(subjects) {
+            const subjectSelect = document.getElementById('subject-select');
+            
+            // Keep the first "Select a subject" option
+            subjectSelect.innerHTML = '<option value="">Select a subject</option>';
+            
+            // Add options for each subject
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.subjectId;
+                option.textContent = subject.name;
+                subjectSelect.appendChild(option);
+            });
+        }
+
+        async function loadConnectionRequests() {
+            try {
+                const response = await fetch('/api/teacherconnection/pending', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const connections = await response.json();
+                    const connectionRequestsTable = document.getElementById('connection-requests');
+                    
+                    if (connections.length === 0) {
+                        connectionRequestsTable.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="text-center">No pending connection requests</td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    connectionRequestsTable.innerHTML = connections.map(request => `
+                        <tr>
+                            <td>${request.student.fullname} (ID: ${request.student.studentId})</td>
+                            <td>${request.subject.name}</td>
+                            <td>
+                                <span class="status-indicator status-${request.status.toLowerCase()}"></span>
+                                ${request.status}
+                            </td>
+                            <td>${new Date(request.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    console.error('Failed to load connection requests:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load connection requests');
+                }
+            } catch (error) {
+                console.error('Error loading connection requests:', error);
+                showNotification('error', 'Error', 'Failed to load connection requests');
+            }
+        }
+
+        async function showSubjectDetails(subjectId) {
+            try {
+                const response = await fetch(`/api/subject/${subjectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const subject = await response.json();
+                    
+                    document.getElementById('subject-modal-title').textContent = subject.name;
+                    document.getElementById('subject-modal-description').textContent = subject.description || 'No description available';
+                    
+                    // Store subject ID in modal dataset for reference
+                    const modalElement = document.getElementById('subjectDetailsModal');
+                    modalElement.dataset.subjectId = subject.subjectId;
+                    
+                    // Check for existing session data in localStorage
+                    const sessionKey = `attendance_session_${subject.subjectId}`;
+                    const existingSession = localStorage.getItem(sessionKey);
+                    
+                    if (existingSession) {
+                        // If we have an existing session, restore it
+                        const sessionData = JSON.parse(existingSession);
+                        
+                        // Show the QR code container and hide the placeholder
+                        document.getElementById('qr-code-container').classList.remove('d-none');
+                        document.getElementById('qr-placeholder').classList.add('d-none');
+                        
+                        // Update the session ID display
+                        const sessionSpan = document.getElementById('attendance-session-id');
+                        sessionSpan.textContent = `Session: ${sessionData.sessionId}`;
+                        sessionSpan.dataset.sessionId = sessionData.sessionId;
+                        
+                        // Generate QR code with the session data
+                        const qrContainer = document.getElementById('qrcode');
+                        qrContainer.innerHTML = '';
+                        
+                        // Create QR data with the saved information
+                        const qrData = JSON.stringify({
+                            type: 'attendance',
+                            sessionId: sessionData.sessionId,
+                            subjectId: subject.subjectId,
+                            subjectName: subject.name,
+                            timestamp: sessionData.timestamp
+                        });
+                        
+                        // Generate QR code using the qrcodejs library
+                        try {
+                            new QRCode(qrContainer, {
+                                text: qrData,
+                                width: 200,
+                                height: 200,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        } catch (qrError) {
+                            console.error('Error regenerating QR code:', qrError);
+                        }
+                    } else {
+                        // No existing session, show the placeholder
+                        document.getElementById('qr-code-container').classList.add('d-none');
+                        document.getElementById('qr-placeholder').classList.remove('d-none');
+                    }
+                    
+                    // Set up QR code generation button
+                    const generateQrBtn = document.getElementById('generate-qr-btn');
+                    generateQrBtn.onclick = () => generateAttendanceQR(subject.subjectId, subject.name);
+                    
+                    // Set up download button handler
+                    document.getElementById('download-qr-btn').onclick = downloadQRCode;
+                    
+                    // Set up new session button handler
+                    document.getElementById('new-session-btn').onclick = () => clearQRCodeSession(subject.subjectId, subject.name);
+                    
+                    // Set up attendance records viewing button
+                    document.getElementById('view-attendance-btn').onclick = () => viewAttendanceRecords(subject.subjectId);
+                    
+                    // Set up attendance statistics viewing button
+                    document.getElementById('view-statistics-btn').onclick = () => viewAttendanceStatistics(subject.subjectId);
+                    
+                    // Set up close attendance button
+                    document.getElementById('close-attendance-btn').onclick = () => {
+                        document.querySelector('.attendance-records-section').classList.add('d-none');
+                    };
+                    
+                    // Set up close statistics button
+                    document.getElementById('close-stats-btn').onclick = () => {
+                        document.querySelector('.attendance-stats-section').classList.add('d-none');
+                    };
+                    
+                    const studentsTable = document.getElementById('subject-students');
+                    if (!subject.students || subject.students.length === 0) {
+                        studentsTable.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="text-center">No students in this subject</td>
+                            </tr>
+                        `;
+                    } else {
+                        studentsTable.innerHTML = subject.students.map(student => `
+                            <tr>
+                                <td>${student.studentId}</td>
+                                <td>${student.fullname}</td>
+                                <td>
+                                    <span class="status-indicator status-${student.status.toLowerCase()}"></span>
+                                    ${student.status}
+                                </td>
+                                <td>
+                                    ${student.status === 'Approved' ? 
+                                        `<button class="btn btn-sm btn-outline-danger" onclick="removeStudent(${student.connectionId})">Remove</button>` : 
+                                        ''}
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                    
+                    // Show the modal
+                    const modal = new bootstrap.Modal(document.getElementById('subjectDetailsModal'));
+                    modal.show();
+                } else {
+                    console.error('Failed to load subject details:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load subject details');
+                }
+            } catch (error) {
+                console.error('Error loading subject details:', error);
+                showNotification('error', 'Error', 'Failed to load subject details');
+            }
+        }
+
+        // Function to remove a student from a subject
+        async function removeStudent(connectionId) {
+            if (!confirm('Are you sure you want to remove this student from the subject?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/teacherconnection/${connectionId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    showNotification('success', 'Student Removed', data.message);
+                    
+                    // Refresh the modal data
+                    const subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
+                    showSubjectDetails(subjectId);
+                } else {
+                    const errorData = await response.json();
+                    showNotification('error', 'Error', errorData.message || 'Failed to remove student');
+                }
+            } catch (error) {
+                console.error('Error removing student:', error);
+                showNotification('error', 'Error', 'Failed to remove student');
+            }
+        }
+
+        // Function to show toast notifications
+        function showNotification(type, title, message) {
+            // Create unique ID for this toast
+            const toastId = 'toast-' + Date.now();
+            
+            // Create the toast element
+            const toastHtml = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header ${type === 'success' ? 'bg-success text-white' : type === 'error' ? 'bg-danger text-white' : ''}">
+                        <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+                        <strong class="me-auto">${title}</strong>
+                        <small>just now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            // Add the toast to the container
+            document.querySelector('.toast-container').insertAdjacentHTML('beforeend', toastHtml);
+            
+            // Initialize and show the toast
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 5000
+            });
+            
+            toast.show();
+            
+            // Remove toast from DOM after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+        
+        // Generate attendance QR code
+        async function generateAttendanceQR(subjectId, subjectName) {
+            try {
+                // Get or create a session for this subject
+                const sessionData = await createAttendanceSession(subjectId);
+                
+                if (!sessionData) {
+                    showNotification('error', 'Error', 'Failed to get attendance session');
+                    return;
+                }
+                
+                // Show the QR code container and hide the placeholder
+                document.getElementById('qr-code-container').classList.remove('d-none');
+                document.getElementById('qr-placeholder').classList.add('d-none');
+                
+                // Update the session ID display
+                const sessionSpan = document.getElementById('attendance-session-id');
+                sessionSpan.textContent = `Session: ${sessionData.sessionId}`;
+                sessionSpan.dataset.sessionId = sessionData.sessionId;
+                
+                // Generate QR code with the session data
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+                
+                // Create QR data with all necessary information
+                const timestamp = new Date().toISOString();
+                const qrData = JSON.stringify({
+                    type: 'attendance',
+                    sessionId: sessionData.sessionId,
+                    subjectId: subjectId,
+                    subjectName: subjectName,
+                    timestamp: timestamp
+                });
+                
+                // Save session data to localStorage for persistence
+                const sessionKey = `attendance_session_${subjectId}`;
+                const sessionToSave = {
+                    sessionId: sessionData.sessionId,
+                    timestamp: timestamp
+                };
+                localStorage.setItem(sessionKey, JSON.stringify(sessionToSave));
+                
+                // Generate QR code using the qrcodejs library
+                try {
+                    new QRCode(qrContainer, {
+                        text: qrData,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    
+                    showNotification('success', 'QR Code Generated', 'Using persistent session for this subject. Students can now scan this code to record their attendance.');
+                } catch (qrError) {
+                    console.error('Error generating QR code:', qrError);
+                    showNotification('error', 'Error', 'Could not generate QR code');
+                }
+            } catch (error) {
+                console.error('Error creating attendance QR code:', error);
+                showNotification('error', 'Error', 'Failed to generate QR code');
+            }
+        }
+        
+        // Download QR code as image
+        function downloadQRCode() {
+            try {
+                const canvas = document.querySelector('#qrcode img');
+                if (!canvas) {
+                    showNotification('error', 'Error', 'No QR code to download');
+                    return;
+                }
+                
+                // Create a temporary canvas to draw the QR code
+                const tempCanvas = document.createElement('canvas');
+                const context = tempCanvas.getContext('2d');
+                // Set canvas dimensions to match the QR code
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                // Draw the QR code image to the canvas
+                context.drawImage(canvas, 0, 0);
+                
+                // Create a download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = tempCanvas.toDataURL('image/png');
+                
+                // Get subject name and session ID for filename
+                const subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
+                const sessionId = document.getElementById('attendance-session-id').dataset.sessionId;
+                
+                // Create filename with subject ID and session ID
+                downloadLink.download = `attendance-qr-subject-${subjectId}-session-${sessionId}.png`;
+                
+                // Trigger the download
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                showNotification('success', 'Download Started', 'QR code image is being downloaded');
+            } catch (error) {
+                console.error('Error downloading QR code:', error);
+                showNotification('error', 'Error', 'Could not download QR code');
+            }
+        }
+        
+        // Clear existing QR code session and create a new one
+        function clearQRCodeSession(subjectId, subjectName) {
+            try {
+                // Clear the previous session from localStorage
+                const sessionKey = `attendance_session_${subjectId}`;
+                localStorage.removeItem(sessionKey);
+                
+                // Reset UI to show placeholder
+                document.getElementById('qr-code-container').classList.add('d-none');
+                document.getElementById('qr-placeholder').classList.remove('d-none');
+                document.getElementById('qrcode').innerHTML = '';
+                
+                // Generate a new QR code (which will trigger a new session or get existing one)
+                generateAttendanceQR(subjectId, subjectName);
+                
+                showNotification('success', 'QR Code Refreshed', 'The QR code has been refreshed with the current session data.');
+            } catch (error) {
+                console.error('Error clearing QR session:', error);
+                showNotification('error', 'Error', 'Failed to refresh QR code');
+            }
+        }
+        
+        // Create a new attendance session on the server
+        async function createAttendanceSession(subjectId) {
+            try {
+                const response = await fetch('/api/attendance/create-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        subjectId: subjectId,
+                        date: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to create attendance session:', errorText);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error creating attendance session:', error);
+                return null;
+            }
+        }
+
+        // Add function to delete a subject
+        async function deleteSubject(subjectId, subjectName) {
+            if (!confirm(`Are you sure you want to delete subject "${subjectName}"?\nThis will also delete all related attendance data.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/subject/${subjectId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    showNotification('success', 'Subject Deleted', `"${subjectName}" has been deleted successfully.`);
+                    
+                    // Clear any stored session data for this subject
+                    const sessionKey = `attendance_session_${subjectId}`;
+                    localStorage.removeItem(sessionKey);
+                    
+                    // Refresh the subjects list
+                    loadSubjects();
+                } else {
+                    const errorData = await response.json();
+                    showNotification('error', 'Error', errorData.message || 'Failed to delete subject');
+                }
+            } catch (error) {
+                console.error('Error deleting subject:', error);
+                showNotification('error', 'Error', 'Failed to delete subject. Please try again.');
+            }
+        }
+
+        // Add function to view attendance records
+        async function viewAttendanceRecords(subjectId) {
+            try {
+                const response = await fetch(`/api/attendance/subject/${subjectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const attendanceRecordsTable = document.getElementById('attendance-records');
+                    
+                    // Show the attendance records section
+                    document.querySelector('.attendance-records-section').classList.remove('d-none');
+                    
+                    if (!data.records || data.records.length === 0) {
+                        attendanceRecordsTable.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="text-center">No attendance records found for this subject</td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    attendanceRecordsTable.innerHTML = data.records.map(record => `
+                        <tr>
+                            <td>${record.studentName}</td>
+                            <td>${record.date}</td>
+                            <td>${record.time}</td>
+                            <td>${record.attendanceId}</td>
+                        </tr>
+                    `).join('');
+                    
+                    // Show summary information
+                    attendanceRecordsTable.innerHTML += `
+                        <tr class="table-secondary">
+                            <td colspan="4" class="text-end">
+                                <strong>Total Attendance: ${data.attendanceCount} student(s)</strong>
+                            </td>
+                        </tr>
+                    `;
+                    
+                } else {
+                    console.error('Failed to load attendance records:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load attendance records');
+                }
+            } catch (error) {
+                console.error('Error loading attendance records:', error);
+                showNotification('error', 'Error', 'Failed to load attendance records');
+            }
+        }
+    </script>
+</body>
+</html> 

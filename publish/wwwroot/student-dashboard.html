@@ -1,0 +1,2701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Student Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Add html5-qrcode library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <!-- Remove MapBox CSS -->
+    <style>
+        :root {
+            --primary-color: #5469d4;
+            --secondary-color: #4655a8;
+            --accent-color: #f7fafc;
+            --text-color: #2d3748;
+            --light-text: #718096;
+            --success-color: #38a169;
+            --danger-color: #e53e3e;
+            --warning-color: #f6ad55;
+            --info-color: #63b3ed;
+            --border-radius: 10px;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --border-color: #e2e8f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-color);
+            background-color: #f7fafc;
+            line-height: 1.6;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-dark.bg-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Card styling */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Map styling */
+        #map { 
+            height: 420px; 
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            position: relative !important; /* Ensure proper positioning */
+            z-index: 10; /* Good z-index value */
+            display: block !important; /* Force display */
+            width: 100% !important; /* Force full width */
+            min-height: 300px !important; /* Minimum height */
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Add visibility to Leaflet-specific elements */
+        .leaflet-container {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .leaflet-control-container {
+            z-index: 15;
+        }
+        
+        /* Ensure leaflet controls are visible */
+        .leaflet-control-zoom {
+            z-index: 15 !important;
+        }
+        
+        /* Button styling */
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(84, 105, 212, 0.3);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background-color: #2f9159;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            border: none;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c53030;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+        }
+        
+        /* Tracking button styling */
+        #tracking-btn {
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(84, 105, 212, 0.2);
+            border-radius: 50px;
+            min-width: 220px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        #tracking-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+        
+        #tracking-btn:hover:before {
+            opacity: 1;
+        }
+        
+        #tracking-btn.btn-danger {
+            background: linear-gradient(45deg, var(--danger-color), #c53030);
+            box-shadow: 0 4px 10px rgba(229, 62, 62, 0.2);
+        }
+        
+        .tracking-btn-animated.active {
+            animation: pulse-tracking 1.5s infinite;
+        }
+        
+        @keyframes pulse-tracking {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        #tracking-status {
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        
+        /* List group item styling */
+        .list-group-item {
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .list-group-item:hover {
+            background-color: var(--accent-color);
+        }
+        
+        /* Typography enhancements */
+        h3 {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 16px;
+        }
+        
+        .text-muted {
+            color: var(--light-text) !important;
+        }
+        
+        /* Connection request items for better display */
+        .connection-item {
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background-color: white;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .connection-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Badges */
+        .badge {
+            padding: 6px 10px;
+            font-weight: 500;
+            border-radius: 20px;
+        }
+        
+        /* Avatar circle */
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Custom map marker styling */
+        .custom-map-marker {
+            background: transparent;
+        }
+        
+        .marker-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid var(--primary-color);
+            overflow: hidden;
+            transform-origin: bottom center;
+            animation: bounce 1s ease infinite alternate;
+        }
+        
+        .student-marker-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .student-location-icon {
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        .marker-profile-pic {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            object-fit: cover;
+            transform-origin: bottom center;
+            animation: bounce 1s ease infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+        
+        /* Map popup styling */
+        .map-popup {
+            padding: 5px;
+        }
+        
+        .popup-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .popup-content {
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+        }
+        
+        .leaflet-popup-content {
+            margin: 10px 12px;
+        }
+        
+        /* Mobile-friendly styles */
+        @media (max-width: 767px) {
+            #map { height: 300px; }
+            .container { padding-left: 15px; padding-right: 15px; }
+            .card { margin-bottom: 20px; }
+            .navbar-brand { font-size: 1.2rem; }
+            .btn { width: 100%; margin-bottom: 12px; }
+            h3 { font-size: 1.5rem; }
+            
+            .nav-link, .btn {
+                padding: 12px 15px;
+            }
+            
+            .list-group-item {
+                padding: 15px;
+            }
+        }
+        
+        /* Profile Picture Styles */
+        .profile-pic-container {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-pic-lg {
+            position: relative;
+            width: 128px;
+            height: 128px;
+            overflow: hidden;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+        
+        .profile-pic-lg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        #profile-pic-input {
+            display: none;
+        }
+        
+        .profile-pic-preview {
+            display: none;
+            margin: 1rem auto;
+            width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--success-color);
+            z-index: 2000; /* Ensure this is higher than modal backdrop */
+            position: relative; /* Ensure proper positioning */
+        }
+        
+        .profile-pic-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Added style to make drop overlay properly visible */
+        #drop-overlay {
+            display: flex; /* Make sure the flex display is active */
+            opacity: 0; /* Start hidden */
+            transition: opacity 0.3s ease;
+        }
+        
+        .drop-zone:hover #drop-overlay {
+            opacity: 0.8; /* Show on hover */
+        }
+        
+        .img-upload-label {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            background-color: var(--success-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        /* Drag and Drop styles */
+        .drop-zone {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .drop-zone:hover {
+            transform: scale(1.02);
+        }
+        
+        .drop-zone.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(56, 161, 105, 0.7);
+        }
+        
+        .drag-pulse {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        /* New styles for the route */
+        .route-path {
+            stroke: #3388ff;
+            stroke-width: 6;
+            stroke-opacity: 0.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: routePulse 2s infinite;
+        }
+        
+        .school-marker {
+            background-color: #2c3e50;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes routePulse {
+            0%, 100% { stroke-opacity: 0.7; }
+            50% { stroke-opacity: 0.4; }
+        }
+        
+        /* Add style for waypoints on the route */
+        .waypoint-marker {
+            background-color: #3388ff;
+            border-radius: 50%;
+            width: 8px !important;
+            height: 8px !important;
+            margin-left: -4px !important;
+            margin-top: -4px !important;
+            border: 2px solid white;
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
+        }
+        
+        /* QR Scanner styles */
+        #qr-reader {
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        #qr-reader img {
+            display: block;
+            margin: 0 auto;
+        }
+        
+        #qr-reader__dashboard_section_csr button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .scan-result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgba(56, 161, 105, 0.1);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .scan-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .scan-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Student Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Add QR Scanner button -->
+                    <li class="nav-item">
+                        <button class="nav-link scan-btn" id="qr-scan-btn" data-bs-toggle="modal" data-bs-target="#qrScannerModal">
+                            <i class="bi bi-qr-code-scan"></i> Scan QR Code
+                        </button>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear-fill me-2 fs-5"></i>
+                            <span id="nav-username">Student</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/test-profilepic.html"><i class="bi bi-person-circle me-2"></i>Edit Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Map section - will be full width on mobile -->
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Location Tracking</h3>
+                        <div class="mb-4">
+                            <div class="tracking-button-container text-center">
+                                <button id="tracking-btn" class="btn btn-primary btn-lg tracking-btn-animated">
+                                    <i class="bi bi-broadcast me-2"></i> Start Tracking
+                                </button>
+                                <div id="tracking-status" class="mt-2 text-muted small">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Click to start sharing your location with connected parents
+                                </div>
+                            </div>
+                        </div>
+                        <div id="map"></div>
+                        <div class="mt-2 text-center d-md-none">
+                            <small class="text-muted">Scroll down to see your connections</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right sidebar - will stack below on mobile -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>Pending Connections</h3>
+                        <div class="alert alert-info small py-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Kapag ni-reject mo ang request, maaari pa ring mag-send ng bagong request ang magulang sa ibang araw.
+                            <span class="fw-bold d-block mt-1">Patakaran: </span>
+                            <ul class="mb-0 ps-3">
+                                <li>Pagkatapos ng 3 rejections, hindi na maaaring mag-request muli ang magulang.</li>
+                                <li>Sa bawat rejection, makikita mo kung ilang attempts na ang natitira.</li>
+                                <li>Maaaring tanggapin ang request kahit ilang beses nang na-reject dati.</li>
+                            </ul>
+                        </div>
+                        <div id="pending-connections" class="list-group">
+                            <!-- Pending connections will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>Connected Parents</h3>
+                        <div id="connected-parents" class="list-group">
+                            <!-- Connected parents will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Teacher Connection Requests Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>Subject Invitations</h3>
+                        <div class="alert alert-info small py-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Teachers can invite you to join their subjects. You can accept or reject these invitations.
+                        </div>
+                        <div id="teacher-connections" class="list-group">
+                            <!-- Teacher connection requests will be loaded here -->
+                            <div class="text-center py-3 text-muted">
+                                <i class="bi bi-hourglass me-2"></i>Loading...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enrolled Subjects Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>My Subjects</h3>
+                        <div id="enrolled-subjects" class="list-group">
+                            <!-- Enrolled subjects will be loaded here -->
+                            <div class="text-center py-3 text-muted">
+                                <i class="bi bi-hourglass me-2"></i>Loading...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0 fs-5">Rejected Requests</h3>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#rejectedConnectionsList" aria-expanded="false">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse" id="rejectedConnectionsList">
+                        <div class="card-body">
+                            <div class="text-muted small mb-3">
+                                Ang mga magulang na ito ay nag-send ng connection request na ni-reject mo. Maaari silang mag-send muli ng bagong request sa ibang pagkakataon.
+                            </div>
+                            <div id="rejected-connections" class="list-group">
+                                <div class="text-center py-3 text-muted">
+                                    <i class="bi bi-hourglass me-2"></i>Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for action confirmation -->
+    <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="actionModalLabel">Kumpirmahin ang Aksyon</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="actionModalBody">
+                    <!-- Content will be filled dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kanselahin</button>
+                    <button type="button" class="btn btn-primary" id="actionConfirmBtn">Kumpirmahin</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-labelledby="qrScannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrScannerModalLabel">Scan QR Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="qr-reader"></div>
+                    <div id="scan-result" class="scan-result d-none">
+                        <h6 class="mb-2">Scan Result:</h6>
+                        <div id="result-text"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="reset-scanner">Reset Scanner</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <!-- Remove MapBox scripts -->
+    <script>
+        // Global variables and error handling
+        let map;
+        let currentMarker = null;
+        let isTracking = false;
+        let watchId = null;
+        let connection;
+        let token; // Global token variable
+        let user; // Global user variable
+        let routeLayer = null; // Layer for the route to school
+        let schoolMarker = null; // Marker for the school
+        let waypoints = []; // Store waypoints
+        
+        // School coordinates (Taguig City University)
+        const SCHOOL_COORDINATES = {
+            latitude: 14.4909,
+            longitude: 121.0551,
+            name: "Taguig City University"
+        };
+        
+        // Remove Mapbox token
+        // ... existing code ...
+
+        // Global error handling
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('Global error:', message, 'at', source, ':', lineno, ':', colno);
+            console.error('Error object:', error);
+            return false;
+        };
+
+        // Document ready function
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM ready, initializing dashboard...');
+            
+            // Check authentication
+            token = localStorage.getItem('token');
+            user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!token || !user || user.userType !== 'Student') {
+                console.log('Authentication failed, redirecting to login');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                // Initialize UI elements
+                initializeUI(user);
+                
+                // Initialize map
+                initializeMap();
+                
+                // Initialize SignalR connection
+                initializeSignalR(token);
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+                // Initialize QR Scanner
+                initializeQRScanner();
+                
+                console.log('Dashboard initialization complete');
+            } catch (error) {
+                console.error('Error during initialization:', error);
+            }
+        });
+
+        // Initialize UI elements
+        function initializeUI(user) {
+            // Set username in navbar
+            const navUsername = document.getElementById('nav-username');
+            if (navUsername) {
+                navUsername.textContent = user.fullname || user.username || 'Student';
+            }
+            
+            // No need to set profile picture in navbar anymore as we're using a settings icon
+        }
+
+        // Initialize map
+        function initializeMap() {
+            try {
+                const mapContainer = document.getElementById('map');
+                if (!mapContainer) {
+                    throw new Error('Map container not found');
+                }
+                
+                // Log map container dimensions for debugging
+                console.log('Map container dimensions before init:', 
+                    'Width:', mapContainer.clientWidth, 
+                    'Height:', mapContainer.clientHeight,
+                    'Offset Width:', mapContainer.offsetWidth,
+                    'Offset Height:', mapContainer.offsetHeight);
+                
+                // Force map container visibility
+                mapContainer.style.display = 'block';
+                mapContainer.style.height = '420px';
+                mapContainer.style.width = '100%';
+                
+                // Initialize Leaflet map
+                map = L.map('map').setView([0, 0], 2);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                // Add school marker
+                addSchoolToMap();
+                
+                // Log map dimensions after initialization
+                console.log('Map container dimensions after init:', 
+                    'Width:', mapContainer.clientWidth, 
+                    'Height:', mapContainer.clientHeight,
+                    'Offset Width:', mapContainer.offsetWidth,
+                    'Offset Height:', mapContainer.offsetHeight);
+                
+                // Trigger a resize event to ensure proper rendering
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                    map.invalidateSize();
+                    console.log('Map resized and invalidated');
+                    
+                    // Final check of map container dimensions
+                    console.log('Map container dimensions after resize:', 
+                        'Width:', mapContainer.clientWidth, 
+                        'Height:', mapContainer.clientHeight,
+                        'Offset Width:', mapContainer.offsetWidth,
+                        'Offset Height:', mapContainer.offsetHeight);
+                }, 500);
+            } catch (error) {
+                console.error('Error initializing map:', error);
+            }
+        }
+
+        // Add school marker to the map
+        function addSchoolToMap() {
+            // Remove existing school marker if present
+            if (schoolMarker) {
+                map.removeLayer(schoolMarker);
+            }
+            
+            // Create custom icon for school
+            const schoolIcon = L.divIcon({
+                className: 'school-marker',
+                html: '<i class="bi bi-buildings-fill"></i>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
+                popupAnchor: [0, -16]
+            });
+            
+            // Add marker for school
+            schoolMarker = L.marker(
+                [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude], 
+                { icon: schoolIcon }
+            )
+            .bindPopup(`
+                <div class="map-popup">
+                    <div class="popup-header">
+                        <i class="bi bi-buildings-fill me-2"></i>
+                        <strong>${SCHOOL_COORDINATES.name}</strong>
+                    </div>
+                    <div class="popup-content">
+                        <div>Latitude: ${SCHOOL_COORDINATES.latitude.toFixed(6)}</div>
+                        <div>Longitude: ${SCHOOL_COORDINATES.longitude.toFixed(6)}</div>
+                    </div>
+                </div>
+            `)
+            .addTo(map);
+        }
+
+        // Initialize SignalR connection
+        function initializeSignalR(token) {
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl('/trackingHub', { accessTokenFactory: () => token })
+                .withAutomaticReconnect()
+                .build();
+                
+            connection.start()
+                .then(() => {
+                    console.log('Connected to SignalR Hub');
+                    loadConnections();
+                    loadTeacherConnections();
+                    checkActiveSession();
+                    
+                    // If was tracking before page refresh, resume tracking
+                    if (localStorage.getItem('isTracking') === 'true') {
+                        console.log('Resuming tracking after page refresh');
+                        startTracking();
+                    }
+                    
+                    // Force map resize after connection established
+                    if (map) {
+                        setTimeout(() => {
+                            map.invalidateSize();
+                        }, 1000);
+                    }
+                })
+                .catch(error => console.error('SignalR Connection Error:', error));
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login.html';
+                });
+            }
+            
+            // Tracking button
+            const trackingBtn = document.getElementById('tracking-btn');
+            if (trackingBtn) {
+                trackingBtn.addEventListener('click', () => {
+                    if (!isTracking) {
+                        startTracking(true);
+                    } else {
+                        stopTracking(true);
+                    }
+                });
+            }
+        }
+
+        // Check for active tracking session on page load
+        async function checkActiveSession() {
+            try {
+                const response = await fetch('/api/tracking/status', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.isActive) {
+                        console.log('Active tracking session found, resuming tracking');
+                        isTracking = true;
+                        const trackingBtn = document.getElementById('tracking-btn');
+                        const trackingStatus = document.getElementById('tracking-status');
+                        
+                        trackingBtn.innerHTML = '<i class="bi bi-broadcast-pin me-2"></i> Stop Tracking';
+                        trackingBtn.classList.replace('btn-primary', 'btn-danger');
+                        trackingBtn.classList.add('active');
+                        
+                        trackingStatus.innerHTML = '<i class="bi bi-check-circle-fill me-1 text-success"></i> Location tracking is active and sharing with connected parents';
+                        
+                        startTracking();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking tracking status:', error);
+            }
+        }
+
+        function startTracking(userInitiated = false) {
+            if ('geolocation' in navigator) {
+                if (userInitiated) {
+                    // Show tracking in progress
+                    const trackingBtn = document.getElementById('tracking-btn');
+                    if (trackingBtn) {
+                        trackingBtn.disabled = true;
+                        trackingBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Starting...';
+                    }
+
+                    // Create tracking session on server
+                    fetch('/api/tracking/start', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to start tracking session');
+                        }
+                        console.log('Tracking session started on server');
+                        // Enable button again
+                        if (trackingBtn) {
+                            trackingBtn.disabled = false;
+                        }
+                        // Continue with tracking
+                        enableTracking();
+                    })
+                    .catch(error => {
+                        console.error('Error starting tracking session:', error);
+                        alert('Error starting tracking session. Please try again.');
+                        // Reset button
+                        if (trackingBtn) {
+                            trackingBtn.disabled = false;
+                            trackingBtn.innerHTML = '<i class="bi bi-broadcast me-2"></i> Start Tracking';
+                        }
+                        return;
+                    });
+                } else {
+                    // Just enable tracking without creating a new session
+                    enableTracking();
+                }
+            } else {
+                alert('Geolocation is not available in your browser.');
+            }
+
+            // Common function to enable actual tracking
+            function enableTracking() {
+                watchId = navigator.geolocation.watchPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+                        
+                        // Update map with custom icon
+                        if (currentMarker) {
+                            map.removeLayer(currentMarker);
+                        }
+                        
+                        // Create custom icon for marker
+                        const customIcon = L.divIcon({
+                            className: 'custom-map-marker',
+                            html: `<div class="marker-icon">
+                                    <img src="${user.profilePic || '/images/default-profile.png'}" class="student-marker-img" alt="Student" 
+                                        onerror="this.src='/images/default-profile.png'; this.onerror=null;">
+                                  </div>`,
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 32],
+                            popupAnchor: [0, -32]
+                        });
+                        
+                        // Create marker with custom icon and popup
+                        currentMarker = L.marker([latitude, longitude], { icon: customIcon })
+                            .bindPopup(`
+                                <div class="map-popup">
+                                    <div class="popup-header">
+                                        <i class="bi bi-broadcast-pin me-2"></i>
+                                        <strong>Your Location</strong>
+                                    </div>
+                                    <div class="popup-content">
+                                        <div>Latitude: ${latitude.toFixed(6)}</div>
+                                        <div>Longitude: ${longitude.toFixed(6)}</div>
+                                        <div class="mt-2 small">Updated: ${new Date().toLocaleTimeString()}</div>
+                                    </div>
+                                </div>
+                            `)
+                            .addTo(map);
+                            
+                        map.setView([latitude, longitude], 15);
+                        
+                        // Draw route to school
+                        drawRouteToSchool(latitude, longitude);
+
+                        // Send location to server using SignalR
+                        if (connection && connection.state === signalR.HubConnectionState.Connected) {
+                            try {
+                                console.log(`Sending location: ${latitude}, ${longitude}`);
+                                await connection.invoke('UpdateLocation', latitude, longitude);
+                                console.log('Location sent successfully');
+                            } catch (error) {
+                                console.error('Error sending location:', error);
+                            }
+                        } else {
+                            console.warn('SignalR connection not established. Current state:', connection ? connection.state : 'undefined');
+                        }
+                    },
+                    (error) => {
+                        console.error('Geolocation error:', error);
+                        if (error.code === 1) { // Permission denied
+                            alert('Location permission denied. Please enable location services to use tracking features.');
+                            stopTracking(true);
+                        }
+                    },
+                    { enableHighAccuracy: true, maximumAge: 10000 }
+                );
+
+                isTracking = true;
+                const trackingBtn = document.getElementById('tracking-btn');
+                const trackingStatus = document.getElementById('tracking-status');
+                
+                if (trackingBtn) {
+                    trackingBtn.innerHTML = '<i class="bi bi-broadcast-pin me-2"></i> Stop Tracking';
+                    trackingBtn.classList.replace('btn-primary', 'btn-danger');
+                    trackingBtn.classList.add('active');
+                }
+                
+                if (trackingStatus) {
+                    trackingStatus.innerHTML = '<i class="bi bi-check-circle-fill me-1 text-success"></i> Location tracking is active and sharing with connected parents';
+                }
+                
+                // Save tracking state to localStorage
+                localStorage.setItem('isTracking', 'true');
+            }
+        }
+
+        function stopTracking(userInitiated = false) {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+            if (currentMarker && map) {
+                map.removeLayer(currentMarker);
+                currentMarker = null;
+            }
+            
+            if (userInitiated && connection && connection.state === signalR.HubConnectionState.Connected) {
+                try {
+                    // Show stopping in progress
+                    const trackingBtn = document.getElementById('tracking-btn');
+                    if (trackingBtn) {
+                        trackingBtn.disabled = true;
+                        trackingBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Stopping...';
+                    }
+
+                    // Only stop tracking on server if user explicitly clicked the button
+                    connection.invoke('StopTracking');
+                    console.log('Stopped tracking successfully');
+                    
+                    // Also call API endpoint to update session
+                    fetch('/api/tracking/stop', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to stop tracking session');
+                        }
+                        console.log('Tracking session stopped on server');
+                        
+                        // Enable button again
+                        if (trackingBtn) {
+                            trackingBtn.disabled = false;
+                        }
+                        
+                        // Update UI
+                        completeStopTracking();
+                    })
+                    .catch(error => {
+                        console.error('Error stopping tracking:', error);
+                        
+                        // Enable button again anyway
+                        if (trackingBtn) {
+                            trackingBtn.disabled = false;
+                        }
+                        
+                        // Update UI even if there was an error
+                        completeStopTracking();
+                    });
+                } catch (error) {
+                    console.error('Error stopping tracking:', error);
+                    
+                    // Update UI even if there was an error
+                    completeStopTracking();
+                }
+            } else {
+                // Just update UI
+                completeStopTracking();
+            }
+            
+            function completeStopTracking() {
+                isTracking = false;
+                const trackingBtn = document.getElementById('tracking-btn');
+                const trackingStatus = document.getElementById('tracking-status');
+                
+                if (trackingBtn) {
+                    trackingBtn.innerHTML = '<i class="bi bi-broadcast me-2"></i> Start Tracking';
+                    trackingBtn.classList.replace('btn-danger', 'btn-primary');
+                    trackingBtn.classList.remove('active');
+                }
+                
+                if (trackingStatus) {
+                    trackingStatus.innerHTML = '<i class="bi bi-info-circle me-1"></i> Click to start sharing your location with connected parents';
+                }
+                
+                // Remove tracking state from localStorage
+                localStorage.removeItem('isTracking');
+            }
+        }
+
+        // Add window unload event to save state but NOT stop tracking
+        window.addEventListener('beforeunload', function() {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+            // Note: we don't call StopTracking() here to keep the tracking active
+        });
+
+        // Load connections
+        async function loadConnections() {
+            try {
+                if (!token) {
+                    console.error('No authentication token available');
+                    document.getElementById('pending-connections').innerHTML = 
+                        '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
+                    document.getElementById('connected-parents').innerHTML = 
+                        '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
+                    document.getElementById('rejected-connections').innerHTML = 
+                        '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
+                    return;
+                }
+
+                // Display loading indicators
+                document.getElementById('pending-connections').innerHTML = '<div class="list-group-item">Loading...</div>';
+                document.getElementById('connected-parents').innerHTML = '<div class="list-group-item">Loading...</div>';
+                document.getElementById('rejected-connections').innerHTML = 
+                    '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
+                
+                // Get rejected connections first to count rejections per parent
+                const parentRejectionCounts = {};
+                try {
+                    const rejectedResponse = await fetch('/api/connection/rejected', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (rejectedResponse.ok) {
+                        const rejectedData = await rejectedResponse.json();
+                        
+                        // Count rejections by parent
+                        rejectedData.forEach(conn => {
+                            if (conn.parent && conn.parent.parentId) {
+                                const parentId = conn.parent.parentId;
+                                if (!parentRejectionCounts[parentId]) {
+                                    parentRejectionCounts[parentId] = {
+                                        count: 0,
+                                        parent: conn.parent
+                                    };
+                                }
+                                parentRejectionCounts[parentId].count++;
+                            }
+                        });
+                        
+                        console.log('Parent rejection counts:', parentRejectionCounts);
+                    }
+                } catch (err) {
+                    console.error('Error getting rejection counts:', err);
+                }
+                
+                // Load pending connections
+                try {
+                    const pendingResponse = await fetch('/api/connection/pending', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (!pendingResponse.ok) {
+                        const errorText = await pendingResponse.text();
+                        console.error('Error fetching pending connections:', errorText);
+                        document.getElementById('pending-connections').innerHTML = 
+                            `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
+                    } else {
+                        const pendingData = await pendingResponse.json();
+                        console.log('Pending connections raw data:', JSON.stringify(pendingData, null, 2));
+                        
+                        if (pendingData.length === 0) {
+                            document.getElementById('pending-connections').innerHTML = 
+                                '<div class="list-group-item">No pending connections</div>';
+                        } else {
+                            const pendingHtml = pendingData.map((conn, index) => {
+                                console.log(`Connection ${index}:`, conn);
+                                const parentName = conn.parent && (conn.parent.fullname || conn.parent.username) ? 
+                                    (conn.parent.fullname || conn.parent.username) : 'Unknown Parent';
+                                const parentEmail = conn.parent && conn.parent.email ? conn.parent.email : 'No email provided';
+                                const requestDate = new Date(conn.createdAt).toLocaleString();
+                                
+                                // Check rejection count
+                                let rejectionInfo = '';
+                                if (conn.parent && conn.parent.parentId && parentRejectionCounts[conn.parent.parentId]) {
+                                    const rejections = parentRejectionCounts[conn.parent.parentId].count;
+                                    if (rejections > 0) {
+                                        rejectionInfo = `
+                                        <div class="small text-warning mb-2">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                            Nare-reject na ${rejections} beses (max: 3)
+                                        </div>`;
+                                    }
+                                }
+                                
+                                return `
+                                <div class="connection-item">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h5 class="mb-1">${parentName}</h5>
+                                            <p class="mb-1 small text-muted">${parentEmail}</p>
+                                        </div>
+                                        <span class="badge bg-warning">Pending</span>
+                                    </div>
+                                    <p class="small mb-2 text-muted">Request received: ${requestDate}</p>
+                                    ${rejectionInfo}
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button class="btn btn-danger btn-sm me-2" 
+                                            onclick="handleConnection(${conn.connectionId}, false)">
+                                            <i class="bi bi-x-circle"></i> Reject
+                                        </button>
+                                        <button class="btn btn-success btn-sm" 
+                                            onclick="handleConnection(${conn.connectionId}, true)">
+                                            <i class="bi bi-check-circle"></i> Accept
+                                        </button>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('');
+                            document.getElementById('pending-connections').innerHTML = pendingHtml;
+                        }
+                    }
+                } catch (pendingError) {
+                    console.error('Error loading pending connections:', pendingError);
+                    document.getElementById('pending-connections').innerHTML = 
+                        `<div class="list-group-item text-danger">Error loading pending connections: ${pendingError.message}</div>`;
+                }
+
+                // Load connected parents
+                try {
+                    const connectedResponse = await fetch('/api/connection/connected', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (!connectedResponse.ok) {
+                        const errorText = await connectedResponse.text();
+                        console.error('Error fetching connected parents:', errorText);
+                        document.getElementById('connected-parents').innerHTML = 
+                            `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
+                    } else {
+                        const connectedData = await connectedResponse.json();
+                        console.log('Connected parents raw data:', JSON.stringify(connectedData, null, 2));
+                        
+                        if (connectedData.length === 0) {
+                            document.getElementById('connected-parents').innerHTML = 
+                                '<div class="list-group-item">No connected parents</div>';
+                        } else {
+                            const connectedHtml = connectedData.map((parent, index) => {
+                                console.log(`Parent ${index}:`, parent);
+                                return `
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3">
+                                                <div class="avatar-circle bg-primary text-white">
+                                                    ${(parent.fullname || parent.username || '?').charAt(0).toUpperCase()}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <strong>${parent.fullname || parent.username || 'Unknown'}</strong>
+                                                <div class="small text-muted">${parent.email || 'No email'}</div>
+                                            </div>
+                                        </div>
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i>Connected
+                                        </span>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('');
+                            document.getElementById('connected-parents').innerHTML = connectedHtml;
+                        }
+                    }
+                } catch (connectedError) {
+                    console.error('Error loading connected parents:', connectedError);
+                    document.getElementById('connected-parents').innerHTML = 
+                        `<div class="list-group-item text-danger">Error loading connected parents: ${connectedError.message}</div>`;
+                }
+                
+                // Load rejected connections - attempt to fetch from API if endpoint exists
+                try {
+                    const rejectedResponse = await fetch('/api/connection/rejected', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    // If the endpoint doesn't exist or returns an error, handle gracefully
+                    if (!rejectedResponse.ok) {
+                        if (rejectedResponse.status === 404) {
+                            // Endpoint doesn't exist, show a message about this being a new feature
+                            document.getElementById('rejected-connections').innerHTML = 
+                                `<div class="list-group-item text-muted">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Ang history ng mga ni-reject na requests ay hindi pa available sa current version.
+                                </div>`;
+                        } else {
+                            const errorText = await rejectedResponse.text();
+                            console.error('Error fetching rejected connections:', errorText);
+                            document.getElementById('rejected-connections').innerHTML = 
+                                `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
+                        }
+                    } else {
+                        const rejectedData = await rejectedResponse.json();
+                        console.log('Rejected connections raw data:', JSON.stringify(rejectedData, null, 2));
+                        
+                        if (rejectedData.length === 0) {
+                            document.getElementById('rejected-connections').innerHTML = 
+                                '<div class="list-group-item text-muted">Wala kang ni-reject na connection requests.</div>';
+                        } else {
+                            // Group by parent and count rejections
+                            const parentRejections = {};
+                            rejectedData.forEach(conn => {
+                                const parentId = conn.parent?.parentId;
+                                if (parentId) {
+                                    if (!parentRejections[parentId]) {
+                                        parentRejections[parentId] = {
+                                            parent: conn.parent,
+                                            count: 0,
+                                            lastRejected: conn.updatedAt || conn.createdAt
+                                        };
+                                    }
+                                    parentRejections[parentId].count++;
+                                    
+                                    // Update last rejected date if this is more recent
+                                    const currentDate = new Date(conn.updatedAt || conn.createdAt);
+                                    const existingDate = new Date(parentRejections[parentId].lastRejected);
+                                    if (currentDate > existingDate) {
+                                        parentRejections[parentId].lastRejected = conn.updatedAt || conn.createdAt;
+                                    }
+                                }
+                            });
+                            
+                            const rejectedHtml = Object.values(parentRejections).map(entry => {
+                                const parent = entry.parent;
+                                const parentName = parent && (parent.fullname || parent.username) ? 
+                                    (parent.fullname || parent.username) : 'Unknown Parent';
+                                const parentEmail = parent && parent.email ? parent.email : 'No email provided';
+                                const rejectedDate = new Date(entry.lastRejected).toLocaleString();
+                                const maxReached = entry.count >= 3;
+                                
+                                return `
+                                <div class="list-group-item ${maxReached ? 'border-danger' : ''}">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2">
+                                                    <div class="avatar-circle ${maxReached ? 'bg-danger' : 'bg-secondary'} text-white">
+                                                        ${parentName.charAt(0).toUpperCase()}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div>${parentName}</div>
+                                                    <div class="small text-muted">${parentEmail}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end small">
+                                            <div class="text-muted">Last Rejected: ${rejectedDate}</div>
+                                            <div class="badge ${maxReached ? 'bg-danger' : 'bg-secondary'}">
+                                                <i class="bi ${maxReached ? 'bi-x-circle' : 'bi-info-circle'} me-1"></i>
+                                                ${entry.count} / 3 rejections
+                                            </div>
+                                            <div class="small mt-1 ${maxReached ? 'text-danger' : 'text-muted'}">
+                                                ${maxReached ? 
+                                                    '<i class="bi bi-lock-fill me-1"></i>Hindi na maaaring mag-request muli' : 
+                                                    '<i class="bi bi-arrow-repeat me-1"></i>Maaaring mag-request ulit'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('');
+                            document.getElementById('rejected-connections').innerHTML = rejectedHtml;
+                        }
+                    }
+                } catch (rejectedError) {
+                    console.error('Error loading rejected connections:', rejectedError);
+                    document.getElementById('rejected-connections').innerHTML = 
+                        `<div class="list-group-item text-muted">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Hindi ma-access ang rejected connections history sa ngayon.
+                        </div>`;
+                }
+            } catch (error) {
+                console.error('General error loading connections:', error);
+                document.getElementById('pending-connections').innerHTML = 
+                    `<div class="list-group-item text-danger">Error loading connections: ${error.message}</div>`;
+                document.getElementById('connected-parents').innerHTML = 
+                    `<div class="list-group-item text-danger">Error loading connections: ${error.message}</div>`;
+                document.getElementById('rejected-connections').innerHTML = 
+                    `<div class="list-group-item text-danger">Error loading connections: ${error.message}</div>`;
+            }
+        }
+
+        // Define handleConnection as a global function
+        window.handleConnection = async function(connectionId, accept) {
+            try {
+                if (!token) {
+                    console.error('No authentication token available');
+                    alert('Authentication error. Please refresh the page and try again.');
+                    return;
+                }
+                
+                // Get the parent name if available from the button's parent element
+                const connectionItem = event.target.closest('.connection-item');
+                let parentName = 'ang magulang';
+                if (connectionItem) {
+                    const nameElement = connectionItem.querySelector('h5');
+                    if (nameElement && nameElement.textContent) {
+                        parentName = nameElement.textContent.trim();
+                    }
+                }
+
+                // For reject action, show confirmation modal
+                if (!accept) {
+                    const actionModal = new bootstrap.Modal(document.getElementById('actionModal'));
+                    const actionModalBody = document.getElementById('actionModalBody');
+                    const actionConfirmBtn = document.getElementById('actionConfirmBtn');
+                    
+                    actionModalBody.innerHTML = `
+                        <div class="text-center mb-3">
+                            <i class="bi bi-exclamation-triangle text-warning fs-1"></i>
+                        </div>
+                        <p>Sigurado ka bang gusto mong i-reject ang connection request ni <strong>${parentName}</strong>?</p>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Note:</strong> Kapag ni-reject mo ang request, maaaring mag-send muli ang magulang ng 
+                            bagong request sa ibang araw. Maaari ka ring mag-accept ng ibang magulang nang walang limitasyon.
+                        </div>
+                    `;
+                    
+                    // Update confirm button
+                    actionConfirmBtn.textContent = 'I-reject';
+                    actionConfirmBtn.className = 'btn btn-danger';
+                    
+                    // Set up the confirm action
+                    const handleConfirm = async function() {
+                        actionConfirmBtn.disabled = true;
+                        actionConfirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...';
+                        
+                        // Remove the event listener to prevent multiple calls
+                        actionConfirmBtn.removeEventListener('click', handleConfirm);
+                        
+                        // Close the modal
+                        actionModal.hide();
+                        
+                        // Process the rejection
+                        await processConnection(connectionId, false);
+                    };
+                    
+                    // Add event listener for confirmation
+                    actionConfirmBtn.addEventListener('click', handleConfirm);
+                    
+                    // Show the modal
+                    actionModal.show();
+                    
+                    // Clean up when modal is hidden
+                    document.getElementById('actionModal').addEventListener('hidden.bs.modal', function () {
+                        actionConfirmBtn.removeEventListener('click', handleConfirm);
+                    }, { once: true });
+                    
+                    return;
+                } else {
+                    // For accept action, process directly
+                    await processConnection(connectionId, true);
+                }
+                
+                // Function to process the connection request
+                async function processConnection(connectionId, accept) {
+                    console.log(`Processing connection: ID=${connectionId}, Accept=${accept}`);
+                    const endpoint = accept ? 'accept' : 'reject';
+                    
+                    // Show loading in original button if it exists
+                    const btn = event.target.closest('button');
+                    let originalHTML = '';
+                    if (btn) {
+                        originalHTML = btn.innerHTML; // Save original HTML
+                        btn.disabled = true;
+                        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                    }
+                    
+                    // Process the request
+                    try {
+                        const response = await fetch(`/api/connection/${connectionId}/${endpoint}`, {
+                            method: 'POST',
+                            headers: { 
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        console.log('Response status:', response.status);
+                        
+                        if (response.ok) {
+                            console.log('Connection updated successfully');
+                            
+                            // Parse the response
+                            let responseData;
+                            try {
+                                responseData = await response.json();
+                            } catch (e) {
+                                console.error('Error parsing JSON response:', e);
+                                responseData = { message: 'Connection ' + (accept ? 'accepted' : 'rejected') };
+                            }
+                            
+                            // Show different messages depending on accept/reject
+                            if (accept) {
+                                alert(`Connection request kay ${parentName} ay tinanggap. Maaari na nilang makita ang iyong lokasyon kapag naka-active ang tracking.`);
+                            } else {
+                                // Show rejection message with rejection count if available
+                                let rejectMsg = `Connection request kay ${parentName} ay tinanggihan.`;
+                                
+                                if (responseData.rejectionCount) {
+                                    rejectMsg += ` Ito ay ang ika-${responseData.rejectionCount} rejection para sa magulang na ito.`;
+                                    
+                                    if (responseData.maxRejectionsReached) {
+                                        rejectMsg += ` Hindi na sila maaaring mag-send ng bagong request.`;
+                                    } else {
+                                        const remainingAttempts = 3 - responseData.rejectionCount;
+                                        rejectMsg += ` Maaari pa silang mag-send ng ${remainingAttempts} pang ${remainingAttempts > 1 ? 'requests' : 'request'}.`;
+                                    }
+                                } else {
+                                    rejectMsg += ` Maaari silang mag-send muli ng request sa ibang pagkakataon.`;
+                                }
+                                
+                                alert(rejectMsg);
+                            }
+                            
+                            // Reload connections to update the UI
+                            loadConnections();
+                            loadTeacherConnections();
+                        } else {
+                            let errorText;
+                            try {
+                                const errorData = await response.json();
+                                errorText = errorData.message || 'Unknown error';
+                            } catch (e) {
+                                errorText = await response.text();
+                            }
+                            
+                            console.error('Error handling connection:', errorText);
+                            alert('Failed to update connection status: ' + errorText);
+                            
+                            // Reset button if it exists
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.innerHTML = originalHTML;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error processing connection:', error);
+                        alert('An error occurred while updating the connection: ' + error.message);
+                        
+                        // Reset button if it exists
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = originalHTML;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error in handleConnection:', error);
+                alert('An error occurred while processing your request: ' + error.message);
+            }
+        };
+
+        // Profile Picture Handling
+        console.log('DEBUG: Starting profile pic setup script');
+
+        // Get the DOM elements we need - removing references to nav profile pic
+        const profilePicModal = document.getElementById('profilePicModal');
+        const profilePicInput = document.getElementById('profile-pic-input');
+        const currentProfilePic = document.getElementById('current-profile-pic');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        const uploadBtn = document.getElementById('upload-profile-pic');
+        const uploadMessage = document.getElementById('upload-message');
+        const dropZone = document.getElementById('current-profile-container');
+        const dropOverlay = document.getElementById('drop-overlay');
+
+        // Debug check - removing references to nav profile pic
+        console.log('DEBUG: Modal:', profilePicModal ? 'Found' : 'Not found');
+        console.log('DEBUG: Profile Pic Input:', profilePicInput ? 'Found' : 'Not found');
+        console.log('DEBUG: Current Profile Pic:', currentProfilePic ? 'Found' : 'Not found');
+        console.log('DEBUG: Preview Container:', previewContainer ? 'Found' : 'Not found');
+        console.log('DEBUG: Preview Image:', previewImage ? 'Found' : 'Not found');
+        console.log('DEBUG: Upload Button:', uploadBtn ? 'Found' : 'Not found');
+        console.log('DEBUG: Upload Message:', uploadMessage ? 'Found' : 'Not found');
+        console.log('DEBUG: Drop Zone:', dropZone ? 'Found' : 'Not found');
+        console.log('DEBUG: Drop Overlay:', dropOverlay ? 'Found' : 'Not found');
+
+        // Load profile pic on page load
+        if (user.profilePic) {
+            console.log("DEBUG: User has profile pic");
+            currentProfilePic.src = user.profilePic;
+        } else {
+            console.log("DEBUG: User has no profile pic, using default");
+            currentProfilePic.src = '/images/default-profile.png';
+            
+            // Try to get profile pic from server if none in localStorage
+            getProfilePicFromServer();
+        }
+        
+        // Function to get profile pic from server (using test-profilepic.html approach)
+        function getProfilePicFromServer() {
+            console.log('DEBUG: Calling getProfilePicFromServer()');
+            try {
+                console.log('DEBUG: Attempting to fetch profile pic from server');
+                
+                // Use the API endpoint
+                fetch('/api/student/profilepic', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    console.log(`DEBUG: Profile pic fetch response status: ${response.status}`);
+                    if (response.ok) {
+                        // Check Content-Type
+                        const contentType = response.headers.get('Content-Type');
+                        console.log(`DEBUG: Response content type: ${contentType}`);
+                        
+                        if (contentType && contentType.includes('application/json')) {
+                            return response.json().then(data => {
+                                console.log('DEBUG: Received JSON response for profile pic');
+                                return { type: 'json', data };
+                            });
+                        } else {
+                            return response.blob().then(blob => {
+                                console.log(`DEBUG: Received blob response for profile pic, type: ${blob.type}, size: ${blob.size}`);
+                                return { type: 'blob', data: blob };
+                            });
+                        }
+                    }
+                    throw new Error(`Failed to fetch profile pic: ${response.status}`);
+                })
+                .then(result => {
+                    if (result.type === 'json' && result.data.profilePicUrl) {
+                        console.log('DEBUG: Setting profile pic from JSON response URL');
+                        
+                        // Update all profile picture elements
+                        if (currentProfilePic) currentProfilePic.src = result.data.profilePicUrl;
+                        
+                        // Update local storage
+                        if (user) {
+                            user.profilePic = result.data.profilePicUrl;
+                            localStorage.setItem('user', JSON.stringify(user));
+                        }
+                    } else if (result.type === 'blob') {
+                        console.log('DEBUG: Setting profile pic from blob response');
+                        const url = URL.createObjectURL(result.data);
+                        
+                        // Update all profile picture elements
+                        if (currentProfilePic) currentProfilePic.src = url;
+                    }
+                })
+                .catch(error => {
+                    console.error('DEBUG: Error getting profile pic:', error);
+                });
+            } catch (err) {
+                console.error('DEBUG: Exception in getProfilePicFromServer:', err);
+            }
+        }
+        
+        // Drag and Drop Functionality
+        if (dropZone) {
+            // Fixed overlay styling issue
+            dropOverlay.style.display = 'flex';
+            
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Highlight drop zone when dragging over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                console.log('DEBUG: File being dragged over drop zone');
+                dropOverlay.style.opacity = '1';
+                dropZone.classList.add('active');
+                dropZone.classList.add('drag-pulse');
+            }
+            
+            function unhighlight() {
+                console.log('DEBUG: File drag ended or file dropped');
+                dropOverlay.style.opacity = '0';
+                dropZone.classList.remove('active');
+                dropZone.classList.remove('drag-pulse');
+            }
+            
+            // Handle dropped files
+            dropZone.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                console.log('DEBUG: File dropped');
+                
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length) {
+                    console.log(`DEBUG: Dropped ${files.length} files`);
+                    handleFiles(files);
+                }
+            }
+            
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0]; // Get only the first file
+                    console.log(`DEBUG: Handling dropped file: ${file.name}`);
+                    
+                    // Set the file in the file input
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    profilePicInput.files = dataTransfer.files;
+                    
+                    // Trigger change event to use the same processing logic
+                    const changeEvent = new Event('change', { bubbles: true });
+                    
+                    // Additional logging before dispatching event
+                    console.log("DEBUG: About to dispatch change event to show preview");
+                    
+                    // Set a flag to prevent auto upload in case something's triggering it
+                    window.preventAutoUpload = true;
+                    
+                    // Dispatch the event to show the preview
+                    profilePicInput.dispatchEvent(changeEvent);
+                    
+                    // Clear the flag after a short delay
+                    setTimeout(() => {
+                        window.preventAutoUpload = false;
+                    }, 500);
+                    
+                    // Show message instructing to use the upload button
+                    uploadMessage.textContent = 'File received. Click "Upload Picture" button when ready.';
+                    uploadMessage.classList.remove('d-none', 'alert-danger', 'alert-success');
+                    uploadMessage.classList.add('alert-info');
+                }
+            }
+            
+            // Make the drop zone also clickable as another way to open file dialog
+            dropZone.addEventListener('click', function() {
+                profilePicInput.click();
+            });
+        }
+        
+        // Ultra simple profile picture preview
+        profilePicInput.addEventListener('change', function() {
+            console.log("DEBUG: File input change triggered");
+            
+            // Clear previous preview
+            previewImage.src = '';
+            previewContainer.style.display = 'none';
+            uploadMessage.classList.add('d-none');
+            uploadBtn.disabled = true;
+            
+            const file = this.files[0];
+            if (!file) {
+                console.log("DEBUG: No file selected");
+                return;
+            }
+            
+            console.log(`DEBUG: File selected - Name: ${file.name}, Type: ${file.type}, Size: ${file.size}B`);
+            
+            // Basic validation
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+            if (!validImageTypes.includes(file.type)) {
+                console.error("DEBUG: Invalid file type:", file.type);
+                uploadMessage.textContent = 'Please select a valid image file (JPEG, PNG, GIF)';
+                uploadMessage.classList.remove('d-none', 'alert-info', 'alert-success');
+                uploadMessage.classList.add('alert-danger');
+                return;
+            }
+            
+            if (file.size > 1048576) { // 1MB
+                console.error("DEBUG: File too large:", file.size);
+                uploadMessage.textContent = 'File size must be less than 1MB';
+                uploadMessage.classList.remove('d-none', 'alert-info');
+                uploadMessage.classList.add('alert-danger');
+                return;
+            }
+            
+            // Show message while loading
+            uploadMessage.textContent = 'Reading file...';
+            uploadMessage.classList.remove('d-none', 'alert-danger', 'alert-success');
+            uploadMessage.classList.add('alert-info');
+            
+            console.log("DEBUG: Creating FileReader");
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                console.log("DEBUG: FileReader onload triggered");
+                
+                // Set the image source
+                previewImage.src = e.target.result;
+                
+                // Show the image when it's loaded
+                previewImage.onload = function() {
+                    console.log("DEBUG: Preview image loaded, dimensions:", 
+                        previewImage.naturalWidth, "x", previewImage.naturalHeight);
+                    previewContainer.style.display = 'block';
+                    
+                    // CRITICAL FIX: Z-index issue - make sure the preview is visible
+                    previewContainer.style.zIndex = "1050"; // Higher than the modal backdrop
+                };
+                
+                // Enable upload button
+                uploadBtn.disabled = false;
+                
+                // Update message
+                uploadMessage.textContent = 'Click "Upload Picture" to save your new profile image';
+                uploadMessage.classList.remove('alert-danger');
+                uploadMessage.classList.add('alert-info');
+            };
+            
+            reader.onerror = function(e) {
+                console.error("DEBUG: Error reading file:", e);
+                uploadMessage.textContent = 'Error reading file';
+                uploadMessage.classList.remove('d-none', 'alert-info');
+                uploadMessage.classList.add('alert-danger');
+            };
+            
+            console.log("DEBUG: Reading file as Data URL");
+            reader.readAsDataURL(file);
+        });
+        
+        // Set auth token in hidden field
+        document.getElementById('auth-token').value = token;
+        
+        // Tanggalin ang fetch approach at gumamit ng simplified XMLHttpRequest
+        uploadBtn.addEventListener('click', function() {
+            console.log("DEBUG: Upload button clicked (USING SIMPLEST XMLHttpRequest)");
+            
+            const file = profilePicInput.files[0];
+            if (!file) {
+                console.log("DEBUG: No file selected for upload");
+                if (uploadMessage) {
+                    uploadMessage.textContent = 'Please select an image first';
+                    uploadMessage.classList.remove('d-none');
+                    uploadMessage.classList.remove('alert-info', 'alert-success');
+                    uploadMessage.classList.add('alert-danger');
+                }
+                return;
+            }
+            
+            console.log(`DEBUG: Ready to upload file: ${file.name}, Type: ${file.type}, Size: ${file.size}B`);
+            
+            // Update UI for upload in progress
+            if (uploadMessage) {
+                uploadMessage.textContent = 'Uploading...';
+                uploadMessage.classList.remove('d-none');
+                uploadMessage.classList.remove('alert-danger', 'alert-success');
+                uploadMessage.classList.add('alert-info');
+            }
+            if (uploadBtn) {
+                uploadBtn.disabled = true;
+            }
+            
+            // Create FormData - HINDI nilalagyan ng Content-Type
+            const formData = new FormData();
+            formData.append('profilePic', file);
+            
+            console.log("DEBUG: SUPER SIMPLIFIED UPLOAD ATTEMPT");
+            
+            // Gumamit ng XMLHttpRequest para mas simple
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/student/profilepic', true);
+            
+            // ONLY AUTHORIZATION HEADER
+            xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+            
+            xhr.onload = function() {
+                console.log(`DEBUG: XHR upload complete - Status: ${xhr.status}`);
+                console.log(`DEBUG: Response text: ${xhr.responseText}`);
+                
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log('DEBUG: Upload successful!');
+                    
+                    // Show success message
+                    if (uploadMessage) {
+                        uploadMessage.textContent = 'Profile picture updated successfully!';
+                        uploadMessage.classList.remove('alert-info', 'alert-danger');
+                        uploadMessage.classList.add('alert-success');
+                    }
+                    
+                    // Try to parse response
+                    try {
+                        const result = JSON.parse(xhr.responseText);
+                        console.log('DEBUG: Parsed response:', result);
+                        
+                        // Update profile picture if URL is returned
+                        if (result.profilePicUrl) {
+                            if (user) {
+                                user.profilePic = result.profilePicUrl;
+                                localStorage.setItem('user', JSON.stringify(user));
+                            }
+                            
+                            // Update UI images
+                            if (currentProfilePic) currentProfilePic.src = result.profilePicUrl;
+                        }
+                    } catch (e) {
+                        console.error('DEBUG: Error parsing response:', e);
+                    }
+                    
+                    // Close modal after delay
+                    setTimeout(() => {
+                        try {
+                            const modal = bootstrap.Modal.getInstance(profilePicModal);
+                            if (modal) modal.hide();
+                        } catch (e) {
+                            console.error('DEBUG: Error closing modal:', e);
+                        }
+                    }, 1500);
+                } else {
+                    console.error(`DEBUG: Upload failed with status ${xhr.status}`);
+                    
+                    // Show error message
+                    if (uploadMessage) {
+                        let errorMessage = `Upload failed (Status: ${xhr.status})`;
+                        
+                        try {
+                            const result = JSON.parse(xhr.responseText);
+                            if (result.message) {
+                                errorMessage = result.message;
+                            }
+                        } catch (e) {
+                            // Use raw response if not JSON
+                            if (xhr.responseText) {
+                                errorMessage = xhr.responseText;
+                            }
+                        }
+                        
+                        uploadMessage.textContent = errorMessage;
+                        uploadMessage.classList.remove('d-none', 'alert-info', 'alert-success');
+                        uploadMessage.classList.add('alert-danger');
+                    }
+                }
+                
+                // Re-enable upload button
+                if (uploadBtn) uploadBtn.disabled = false;
+            };
+            
+            xhr.onerror = function(e) {
+                console.error('DEBUG: Network error during upload:', e);
+                
+                if (uploadMessage) {
+                    uploadMessage.textContent = 'Network error occurred during upload';
+                    uploadMessage.classList.remove('d-none', 'alert-info', 'alert-success');
+                    uploadMessage.classList.add('alert-danger');
+                }
+                
+                if (uploadBtn) uploadBtn.disabled = false;
+            };
+            
+            console.log('DEBUG: Sending XMLHttpRequest...');
+            xhr.send(formData);
+        });
+
+        // Replace the function that opens the modal with one that redirects to the profile page
+        function openProfileEditor() {
+            window.location.href = '/test-profilepic.html';
+        }
+
+        // Replace any event listeners that would open the modal
+        document.addEventListener('DOMContentLoaded', function() {
+            // Replace modal opening with redirection
+            const profileElements = document.querySelectorAll('[data-action="open-profile-editor"]');
+            profileElements.forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openProfileEditor();
+                });
+            });
+            
+            // No need to add actions to profile pic in navbar since it's now a settings icon
+        });
+
+        // Monitor any form submission attempts
+        document.addEventListener('submit', function(e) {
+            console.log("DEBUG: Form submission detected for", e.target.id || "unknown form");
+            // Prevent any form submissions in the modal
+            if (e.target.closest('#profilePicModal')) {
+                console.log("DEBUG: Form submission inside profile pic modal caught");
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
+
+        // Function to draw route from current position to school
+        function drawRouteToSchool(startLat, startLng) {
+            // Clear existing route
+            if (routeLayer) {
+                map.removeLayer(routeLayer);
+                routeLayer = null;
+            }
+            
+            // Clear existing waypoints
+            waypoints.forEach(waypoint => {
+                if (map.hasLayer(waypoint)) {
+                    map.removeLayer(waypoint);
+                }
+            });
+            waypoints = [];
+            
+            // OSRM API URL - free and no token needed
+            const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${SCHOOL_COORDINATES.longitude},${SCHOOL_COORDINATES.latitude}?overview=full&geometries=polyline`;
+            
+            // Fetch route from OSRM
+            fetch(osrmUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.routes && data.routes.length > 0) {
+                        // Get the route geometry (encoded polyline)
+                        const geometry = data.routes[0].geometry;
+                        
+                        // Decode the polyline
+                        const coordinates = decodePolyline(geometry);
+                        
+                        // Create a polyline layer
+                        routeLayer = L.polyline(coordinates, {
+                            color: '#3388ff',
+                            weight: 6,
+                            opacity: 0.7,
+                            className: 'route-path'
+                        }).addTo(map);
+                        
+                        // Add waypoint markers at intervals along the route
+                        addWaypoints(coordinates);
+                        
+                        // Fit map to show the entire route
+                        const bounds = routeLayer.getBounds();
+                        map.fitBounds(bounds, { padding: [50, 50] });
+                        
+                        console.log('Route to school drawn successfully');
+                    } else {
+                        console.error('No route found', data);
+                        // Fallback to direct line if routing fails
+                        drawDirectLineToSchool(startLat, startLng);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching route:', error);
+                    // Fallback to direct line if routing fails
+                    drawDirectLineToSchool(startLat, startLng);
+                });
+        }
+        
+        // Function to add waypoint markers along the route for visual effect
+        function addWaypoints(coordinates) {
+            // Add waypoints at intervals (every N points)
+            const interval = Math.max(Math.floor(coordinates.length / 10), 1);
+            
+            for (let i = interval; i < coordinates.length - interval; i += interval) {
+                const waypoint = L.circleMarker(coordinates[i], {
+                    radius: 4,
+                    color: 'white',
+                    fillColor: '#3388ff',
+                    fillOpacity: 1,
+                    weight: 2,
+                    className: 'waypoint-marker'
+                }).addTo(map);
+                
+                waypoints.push(waypoint);
+            }
+        }
+        
+        // Function to decode a polyline string into coordinates
+        function decodePolyline(str) {
+            const coordinates = [];
+            let index = 0, lat = 0, lng = 0;
+            
+            while (index < str.length) {
+                let b, shift = 0, result = 0;
+                
+                do {
+                    b = str.charCodeAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                
+                const dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                lat += dlat;
+                
+                shift = 0;
+                result = 0;
+                
+                do {
+                    b = str.charCodeAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                
+                const dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                lng += dlng;
+                
+                coordinates.push([lat / 1e5, lng / 1e5]);
+            }
+            
+            return coordinates;
+        }
+        
+        // Fallback function to draw a direct line to school
+        function drawDirectLineToSchool(startLat, startLng) {
+            // Clear existing route
+            if (routeLayer) {
+                map.removeLayer(routeLayer);
+            }
+            
+            // Draw a direct line between points
+            routeLayer = L.polyline([
+                [startLat, startLng],
+                [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
+            ], {
+                color: '#3388ff',
+                weight: 5,
+                opacity: 0.7,
+                dashArray: '10, 10',
+                className: 'route-path'
+            }).addTo(map);
+            
+            // Fit bounds to show both points
+            map.fitBounds(routeLayer.getBounds(), { padding: [50, 50] });
+            console.log('Direct line to school drawn as fallback');
+        }
+
+        // Initialize QR Scanner
+        function initializeQRScanner() {
+            // QR Scanner variables
+            let html5QrCode;
+            let scanning = false;
+            
+            // Getting elements
+            const qrScannerModal = document.getElementById('qrScannerModal');
+            const resetScannerBtn = document.getElementById('reset-scanner');
+            const scanResult = document.getElementById('scan-result');
+            const resultText = document.getElementById('result-text');
+            
+            // Initialize scanner when modal is shown
+            qrScannerModal.addEventListener('shown.bs.modal', function() {
+                html5QrCode = new Html5Qrcode("qr-reader");
+                startScanner();
+            });
+            
+            // Reset scanner when the reset button is clicked
+            resetScannerBtn.addEventListener('click', function() {
+                if (scanning) {
+                    html5QrCode.stop().then(() => {
+                        scanning = false;
+                        scanResult.classList.add('d-none');
+                        startScanner();
+                    }).catch(err => console.error('Error stopping scanner:', err));
+                } else {
+                    startScanner();
+                }
+            });
+            
+            // Clean up when modal is hidden
+            qrScannerModal.addEventListener('hidden.bs.modal', function() {
+                if (scanning) {
+                    html5QrCode.stop().then(() => {
+                        scanning = false;
+                    }).catch(err => console.error('Error stopping scanner:', err));
+                }
+                
+                if (html5QrCode) {
+                    html5QrCode.clear();
+                }
+            });
+            
+            // Function to start scanner
+            function startScanner() {
+                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+                
+                html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    config,
+                    onScanSuccess,
+                    onScanFailure
+                ).then(() => {
+                    scanning = true;
+                    console.log('QR scanner started');
+                }).catch(err => {
+                    console.error('Error starting scanner:', err);
+                    alert('Could not start camera. Please ensure camera permissions are granted and try again.');
+                });
+            }
+            
+            // On successful scan
+            function onScanSuccess(decodedText, decodedResult) {
+                // Stop scanning after success
+                if (scanning) {
+                    html5QrCode.stop().then(() => {
+                        scanning = false;
+                        
+                        // Display the result
+                        resultText.textContent = decodedText;
+                        scanResult.classList.remove('d-none');
+                        
+                        console.log('QR code detected:', decodedText);
+                        
+                        // Process the QR code data
+                        processQRCode(decodedText);
+                    }).catch(err => console.error('Error stopping scanner:', err));
+                }
+            }
+            
+            // On scan failure (continue scanning)
+            function onScanFailure(error) {
+                // Just continue scanning - no need to log every failure
+            }
+            
+            // Process QR code data
+            function processQRCode(data) {
+                // Try to parse as JSON
+                try {
+                    let jsonData;
+                    
+                    // Check if the data is a simple number (old format)
+                    if (/^\d+$/.test(data.trim())) {
+                        // Convert numeric ID to a proper attendance request
+                        const studentId = parseInt(data.trim());
+                        console.log('Numeric student ID detected:', studentId);
+                        
+                        // Get current subject from the UI (assuming there is a way to know which subject)
+                        const currentSubject = getCurrentSubject();
+                        
+                        if (!currentSubject) {
+                            resultText.innerHTML = `
+                                <div class="alert alert-warning mb-0">
+                                    <strong>Please Select a Subject</strong><br>
+                                    You need to select a subject before scanning this type of QR code.
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        // Create JSON data with current context
+                        jsonData = {
+                            type: 'attendance',
+                            sessionId: Date.now(), // Generate a temporary session ID
+                            subjectId: currentSubject.id,
+                            subjectName: currentSubject.name,
+                            studentId: studentId,
+                            timestamp: new Date().toISOString()
+                        };
+                    } else {
+                        // Parse as regular JSON
+                        jsonData = JSON.parse(data);
+                    }
+                    
+                    console.log('Parsed QR data:', jsonData);
+                    
+                    // Handle school check-in QR code
+                    if (jsonData.type === 'school-checkin') {
+                        console.log('School check-in QR code detected:', jsonData);
+                        
+                        // You can add API call to record check-in
+                        // For example: recordSchoolCheckin(jsonData.locationId);
+                        
+                        resultText.innerHTML = `
+                            <div class="alert alert-success mb-0">
+                                <strong>Check-in Successful!</strong><br>
+                                Location: ${jsonData.locationName || 'School'}<br>
+                                Time: ${new Date().toLocaleTimeString()}
+                            </div>
+                        `;
+                    }
+                    // Handle attendance QR code
+                    else if (jsonData.type === 'attendance') {
+                        console.log('Attendance QR code detected:', jsonData);
+                        
+                        // Record attendance
+                        recordAttendance(jsonData)
+                            .then(response => {
+                                if (response && response.success) {
+                                    resultText.innerHTML = `
+                                        <div class="alert alert-success mb-0">
+                                            <strong>Attendance Recorded!</strong><br>
+                                            Subject: ${jsonData.subjectName}<br>
+                                            Session: ${jsonData.sessionId}<br>
+                                            Time: ${new Date().toLocaleTimeString()}
+                                        </div>
+                                    `;
+                                } else {
+                                    const errorMessage = response ? response.message : 'Failed to record attendance';
+                                    resultText.innerHTML = `
+                                        <div class="alert alert-danger mb-0">
+                                            <strong>Error Recording Attendance</strong><br>
+                                            ${errorMessage}
+                                        </div>
+                                    `;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error recording attendance:', error);
+                                resultText.innerHTML = `
+                                    <div class="alert alert-danger mb-0">
+                                        <strong>Error Recording Attendance</strong><br>
+                                        ${error.message || 'Unknown error occurred'}
+                                    </div>
+                                `;
+                            });
+                    }
+                    // Handle other QR code types
+                    else {
+                        resultText.innerHTML = `
+                            <div class="alert alert-info mb-0">
+                                <strong>QR Code Scanned:</strong><br>
+                                Type: ${jsonData.type || 'Unknown'}<br>
+                                Data: ${JSON.stringify(jsonData)}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error processing QR code:', error);
+                    
+                    // If not JSON, treat as raw data
+                    resultText.innerHTML = `
+                        <div class="alert alert-info mb-0">
+                            <strong>QR Code Scanned (Plain Text):</strong><br>
+                            Data: ${data}
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Helper function to get current subject
+        function getCurrentSubject() {
+            // This function should return the current subject selected by the user
+            // If there's a subject selection dropdown, you can get its value
+            // Or you can store the current subject in a variable when the user selects it
+            
+            // For example:
+            const subjectSelect = document.getElementById('subject-select');
+            if (subjectSelect && subjectSelect.value) {
+                return {
+                    id: parseInt(subjectSelect.value),
+                    name: subjectSelect.options[subjectSelect.selectedIndex].text
+                };
+            }
+            
+            // If there's no way to determine the subject, return null
+            return null;
+        }
+
+        // Load teacher connections and subjects
+        async function loadTeacherConnections() {
+            try {
+                if (!token) {
+                    console.error('No authentication token available');
+                    document.getElementById('teacher-connections').innerHTML = 
+                        '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
+                    document.getElementById('enrolled-subjects').innerHTML = 
+                        '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
+                    return;
+                }
+
+                // Display loading indicators
+                document.getElementById('teacher-connections').innerHTML = 
+                    '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
+                document.getElementById('enrolled-subjects').innerHTML = 
+                    '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
+                
+                // Load pending teacher connections (subject invitations)
+                try {
+                    const pendingResponse = await fetch('/api/teacherconnection/pending', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (!pendingResponse.ok) {
+                        const errorText = await pendingResponse.text();
+                        console.error('Error fetching teacher connection requests:', errorText);
+                        document.getElementById('teacher-connections').innerHTML = 
+                            `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
+                    } else {
+                        const pendingData = await pendingResponse.json();
+                        
+                        if (pendingData.length === 0) {
+                            document.getElementById('teacher-connections').innerHTML = 
+                                '<div class="list-group-item">No pending subject invitations</div>';
+                        } else {
+                            const pendingHtml = pendingData.map((conn) => {
+                                const teacherName = conn.teacher && (conn.teacher.fullname || conn.teacher.username) ? 
+                                    (conn.teacher.fullname || conn.teacher.username) : 'Unknown Teacher';
+                                const teacherEmail = conn.teacher && conn.teacher.email ? conn.teacher.email : 'No email provided';
+                                const subjectName = conn.subject && conn.subject.name ? conn.subject.name : 'Unknown Subject';
+                                const requestDate = new Date(conn.createdAt).toLocaleString();
+                                
+                                return `
+                                <div class="connection-item mb-3 p-3 border rounded">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h5 class="mb-1">${subjectName}</h5>
+                                            <p class="mb-1 small text-muted">Teacher: ${teacherName} (${teacherEmail})</p>
+                                        </div>
+                                        <span class="badge bg-warning">Pending</span>
+                                    </div>
+                                    <p class="small mb-2 text-muted">Invitation received: ${requestDate}</p>
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button class="btn btn-danger btn-sm me-2" 
+                                            onclick="handleTeacherConnection(${conn.connectionId}, 'Rejected')">
+                                            <i class="bi bi-x-circle"></i> Reject
+                                        </button>
+                                        <button class="btn btn-success btn-sm" 
+                                            onclick="handleTeacherConnection(${conn.connectionId}, 'Approved')">
+                                            <i class="bi bi-check-circle"></i> Accept
+                                        </button>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('');
+                            document.getElementById('teacher-connections').innerHTML = pendingHtml;
+                        }
+                    }
+                } catch (pendingError) {
+                    console.error('Error loading teacher connection requests:', pendingError);
+                    document.getElementById('teacher-connections').innerHTML = 
+                        `<div class="list-group-item text-danger">Error loading subject invitations: ${pendingError.message}</div>`;
+                }
+
+                // Load enrolled subjects
+                try {
+                    const subjectsResponse = await fetch('/api/subject/list', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (!subjectsResponse.ok) {
+                        const errorText = await subjectsResponse.text();
+                        console.error('Error fetching enrolled subjects:', errorText);
+                        document.getElementById('enrolled-subjects').innerHTML = 
+                            `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
+                    } else {
+                        const subjectsData = await subjectsResponse.json();
+                        
+                        if (subjectsData.length === 0) {
+                            document.getElementById('enrolled-subjects').innerHTML = 
+                                '<div class="list-group-item">You are not enrolled in any subjects yet</div>';
+                        } else {
+                            const subjectsHtml = subjectsData.map((subject) => {
+                                const teacherName = subject.teacher ? subject.teacher.fullname : 'Unknown Teacher';
+                                
+                                return `
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">${subject.name}</h5>
+                                            <p class="mb-1 small text-muted">Teacher: ${teacherName}</p>
+                                            <p class="small mb-0">${subject.description || 'No description available'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('');
+                            document.getElementById('enrolled-subjects').innerHTML = subjectsHtml;
+                        }
+                    }
+                } catch (subjectsError) {
+                    console.error('Error loading enrolled subjects:', subjectsError);
+                    document.getElementById('enrolled-subjects').innerHTML = 
+                        `<div class="list-group-item text-danger">Error loading subjects: ${subjectsError.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error loading teacher connections and subjects:', error);
+            }
+        }
+        
+        // Handle teacher connection response (accept/reject)
+        async function handleTeacherConnection(connectionId, status) {
+            try {
+                if (!token) {
+                    alert('Authentication error. Please refresh the page and try again.');
+                    return;
+                }
+                
+                const confirmation = confirm(`Are you sure you want to ${status.toLowerCase()} this subject invitation?`);
+                if (!confirmation) return;
+                
+                const response = await fetch('/api/teacherconnection/respond', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        connectionId: connectionId,
+                        status: status
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(data.message);
+                    
+                    // Reload connections after successful response
+                    loadTeacherConnections();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error updating connection:', errorText);
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        alert(`Error: ${errorData.message || 'Failed to update connection status'}`);
+                    } catch (e) {
+                        alert(`Error: ${errorText || 'Failed to update connection status'}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Error handling teacher connection:', error);
+                alert(`Error: ${error.message || 'An unknown error occurred'}`);
+            }
+        }
+
+        // Record attendance from QR code
+        async function recordAttendance(qrData) {
+            try {
+                if (!token) {
+                    return { success: false, message: 'Not authenticated. Please log in.' };
+                }
+                
+                // Check if we need to handle legacy numeric format
+                const isLegacyFormat = qrData.hasOwnProperty('studentId');
+                
+                // Prepare request data based on format
+                let requestData;
+                
+                if (isLegacyFormat) {
+                    // Legacy format with studentId
+                    requestData = {
+                        sessionId: qrData.sessionId,
+                        subjectId: qrData.subjectId,
+                        timestamp: qrData.timestamp || new Date().toISOString(),
+                        // Include studentId for legacy support if server allows this parameter
+                        studentId: qrData.studentId
+                    };
+                } else {
+                    // Standard format just uses the current user's ID
+                    requestData = {
+                        sessionId: qrData.sessionId,
+                        subjectId: qrData.subjectId,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+                
+                console.log('Sending attendance record:', requestData);
+                
+                const response = await fetch('/api/attendance/record', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return { success: true, ...data };
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to record attendance:', errorText);
+                    
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        return { success: false, message: errorData.message || 'Failed to record attendance' };
+                    } catch (e) {
+                        return { success: false, message: errorText || 'Failed to record attendance' };
+                    }
+                }
+            } catch (error) {
+                console.error('Error in recordAttendance:', error);
+                return { success: false, message: error.message || 'Unknown error occurred' };
+            }
+        }
+
+        // Function to handle connection response
+    </script>
+</body>
+</html> 

@@ -70,3 +70,8 @@ C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\refint\St
 C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.pdb
 C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.genruntimeconfig.cache
 C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\ref\StudentTracker.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\web.config
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\appsettings.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\StudentTracker.deps.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\StudentTracker.runtimeconfig.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\StudentTracker.staticwebassets.endpoints.json

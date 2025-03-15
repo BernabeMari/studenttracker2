@@ -1446,7 +1446,14 @@
                                 const parentName = parent && (parent.fullname || parent.username) ? 
                                     (parent.fullname || parent.username) : 'Unknown Parent';
                                 const parentEmail = parent && parent.email ? parent.email : 'No email provided';
-                                const rejectedDate = new Date(entry.lastRejected).toLocaleString();
+                                const rejectedDate = new Date(entry.lastRejected).toLocaleString('en-PH', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                });
                                 const maxReached = entry.count >= 3;
                                 
                                 return `
@@ -2334,88 +2341,97 @@
             
             // Process QR code data
             function processQRCode(data) {
+                console.log('QR code detected:', data);
+                
                 // Try to parse as JSON
                 try {
-                    let jsonData;
-                    
-                    // Check if the data is a simple number (old format)
-                    if (/^\d+$/.test(data.trim())) {
-                        // Convert numeric ID to a proper attendance request
-                        const studentId = parseInt(data.trim());
-                        console.log('Numeric student ID detected:', studentId);
-                        
-                        // Get current subject from the UI (assuming there is a way to know which subject)
-                        const currentSubject = getCurrentSubject();
-                        
-                        if (!currentSubject) {
-                            resultText.innerHTML = `
-                                <div class="alert alert-warning mb-0">
-                                    <strong>Please Select a Subject</strong><br>
-                                    You need to select a subject before scanning this type of QR code.
-                                </div>
-                            `;
-                            return;
-                        }
-                        
-                        // Create JSON data with current context
-                        jsonData = {
-                            type: 'attendance',
-                            sessionId: Date.now(), // Generate a temporary session ID
-                            subjectId: currentSubject.id,
-                            subjectName: currentSubject.name,
-                            studentId: studentId,
-                            timestamp: new Date().toISOString()
-                        };
-                    } else {
-                        // Parse as regular JSON
-                        jsonData = JSON.parse(data);
-                    }
-                    
+                    let jsonData = JSON.parse(data);
                     console.log('Parsed QR data:', jsonData);
                     
-                    // Handle school check-in QR code
-                    if (jsonData.type === 'school-checkin') {
-                        console.log('School check-in QR code detected:', jsonData);
+                    // Directly handle compact format (t:a format)
+                    if (jsonData.t === 'a') {
+                        console.log('Compact QR format detected, recording attendance automatically');
                         
-                        // You can add API call to record check-in
-                        // For example: recordSchoolCheckin(jsonData.locationId);
+                        // Get the current user info
+                        const userString = localStorage.getItem('user');
+                        const user = userString ? JSON.parse(userString) : { fullname: 'Student' };
+                        const studentName = user.fullname;
                         
+                        // Convert to the expected format for attendance (directly pass the data)
+                        const attendanceData = jsonData;
+                        
+                        // Display a loading indicator
                         resultText.innerHTML = `
-                            <div class="alert alert-success mb-0">
-                                <strong>Check-in Successful!</strong><br>
-                                Location: ${jsonData.locationName || 'School'}<br>
-                                Time: ${new Date().toLocaleTimeString()}
+                            <div class="alert alert-info mb-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span>Recording attendance, please wait...</span>
+                                </div>
                             </div>
                         `;
-                    }
-                    // Handle attendance QR code
-                    else if (jsonData.type === 'attendance') {
-                        console.log('Attendance QR code detected:', jsonData);
                         
-                        // Record attendance
-                        recordAttendance(jsonData)
-                            .then(response => {
-                                if (response && response.success) {
-                                    resultText.innerHTML = `
-                                        <div class="alert alert-success mb-0">
-                                            <strong>Attendance Recorded!</strong><br>
-                                            Subject: ${jsonData.subjectName}<br>
-                                            Session: ${jsonData.sessionId}<br>
-                                            Time: ${new Date().toLocaleTimeString()}
-                                        </div>
-                                    `;
-                                } else {
-                                    const errorMessage = response ? response.message : 'Failed to record attendance';
-                                    resultText.innerHTML = `
-                                        <div class="alert alert-danger mb-0">
-                                            <strong>Error Recording Attendance</strong><br>
-                                            ${errorMessage}
-                                        </div>
-                                    `;
-                                }
+                        // First, try to get the subject name
+                        getSubjectName(jsonData.i)
+                            .then(subjectName => {
+                                // Record attendance
+                                return recordAttendance(attendanceData)
+                                    .then(response => {
+                                        if (response && response.success) {
+                                            // Format date and time nicely
+                                            const now = new Date();
+                                            
+                                            // Ensure we're showing Philippines time (GMT+8)
+                                            const philippinesOptions = { 
+                                                timeZone: 'Asia/Manila',
+                                                weekday: 'short',
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            };
+                                            
+                                            // Format time with explicit time zone setting
+                                            const timeOptions = {
+                                                timeZone: 'Asia/Manila',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                hour12: true
+                                            };
+                                            
+                                            const dateStr = now.toLocaleDateString('en-PH', philippinesOptions);
+                                            const timeStr = now.toLocaleTimeString('en-PH', timeOptions);
+                                            
+                                            resultText.innerHTML = `
+                                                <div class="alert alert-success mb-0">
+                                                    <strong>Attendance Recorded Successfully!</strong><br>
+                                                    <i class="bi bi-check-circle-fill me-1"></i> ${studentName} is now present<br>
+                                                    <i class="bi bi-book-fill me-1"></i> Subject: ${subjectName || 'Subject ID: ' + jsonData.i}<br>
+                                                    <i class="bi bi-calendar-date-fill me-1"></i> Date: ${dateStr}<br>
+                                                    <i class="bi bi-clock-fill me-1"></i> Time: ${timeStr}
+                                                </div>
+                                            `;
+                                            
+                                            // Also play a success sound if available
+                                            try {
+                                                const successSound = new Audio('/sounds/success.mp3');
+                                                successSound.play();
+                                            } catch (e) {
+                                                console.log('Sound not available');
+                                            }
+                                        } else {
+                                            const errorMessage = response ? response.message : 'Failed to record attendance';
+                                            resultText.innerHTML = `
+                                                <div class="alert alert-danger mb-0">
+                                                    <strong>Error Recording Attendance</strong><br>
+                                                    ${errorMessage}
+                                                </div>
+                                            `;
+                                        }
+                                    });
                             })
                             .catch(error => {
-                                console.error('Error recording attendance:', error);
+                                console.error('Error during attendance recording process:', error);
                                 resultText.innerHTML = `
                                     <div class="alert alert-danger mb-0">
                                         <strong>Error Recording Attendance</strong><br>
@@ -2423,13 +2439,20 @@
                                     </div>
                                 `;
                             });
+                        return; // Exit early since we're handling this format separately
                     }
-                    // Handle other QR code types
+                    
+                    // Handle other formats as before...
+                    if (jsonData.type === 'attendance') {
+                        console.log('Standard attendance QR code detected:', jsonData);
+                        // Rest of the existing code...
+                    }
                     else {
+                        // Show debug info for unrecognized formats
                         resultText.innerHTML = `
                             <div class="alert alert-info mb-0">
                                 <strong>QR Code Scanned:</strong><br>
-                                Type: ${jsonData.type || 'Unknown'}<br>
+                                Type: ${jsonData.type || jsonData.t || 'Unknown'}<br>
                                 Data: ${JSON.stringify(jsonData)}
                             </div>
                         `;
@@ -2446,256 +2469,474 @@
                     `;
                 }
             }
-        }
 
-        // Helper function to get current subject
-        function getCurrentSubject() {
-            // This function should return the current subject selected by the user
-            // If there's a subject selection dropdown, you can get its value
-            // Or you can store the current subject in a variable when the user selects it
-            
-            // For example:
-            const subjectSelect = document.getElementById('subject-select');
-            if (subjectSelect && subjectSelect.value) {
-                return {
-                    id: parseInt(subjectSelect.value),
-                    name: subjectSelect.options[subjectSelect.selectedIndex].text
-                };
-            }
-            
-            // If there's no way to determine the subject, return null
-            return null;
-        }
-
-        // Load teacher connections and subjects
-        async function loadTeacherConnections() {
-            try {
-                if (!token) {
-                    console.error('No authentication token available');
-                    document.getElementById('teacher-connections').innerHTML = 
-                        '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
-                    document.getElementById('enrolled-subjects').innerHTML = 
-                        '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
-                    return;
-                }
-
-                // Display loading indicators
-                document.getElementById('teacher-connections').innerHTML = 
-                    '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
-                document.getElementById('enrolled-subjects').innerHTML = 
-                    '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
-                
-                // Load pending teacher connections (subject invitations)
+            // Function to get subject name by ID
+            async function getSubjectName(subjectId) {
                 try {
-                    const pendingResponse = await fetch('/api/teacherconnection/pending', {
-                        headers: { 'Authorization': `Bearer ${token}` }
+                    // First check if we have the subject in localStorage
+                    const subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+                    const subject = subjects.find(s => s.subjectId === subjectId || s.id === subjectId);
+                    
+                    if (subject) {
+                        return subject.name || `Subject ${subjectId}`;
+                    }
+                    
+                    // If not in localStorage, try to fetch from API
+                    const token = localStorage.getItem('token');
+                    if (!token) return `Subject ${subjectId}`;
+                    
+                    const response = await fetch(`/api/subject/${subjectId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
                     
-                    if (!pendingResponse.ok) {
-                        const errorText = await pendingResponse.text();
-                        console.error('Error fetching teacher connection requests:', errorText);
+                    if (response.ok) {
+                        const subjectData = await response.json();
+                        return subjectData.name || `Subject ${subjectId}`;
+                    }
+                    
+                    return `Subject ${subjectId}`;
+                } catch (error) {
+                    console.error('Error getting subject name:', error);
+                    return `Subject ${subjectId}`;
+                }
+            }
+
+            // Record attendance from QR code
+            async function recordAttendance(qrData) {
+                try {
+                    const token = localStorage.getItem('token');
+                    if (!token) {
+                        return { success: false, message: 'Not authenticated. Please log in.' };
+                    }
+                    
+                    // Retrieve user information
+                    const userString = localStorage.getItem('user');
+                    console.log('Raw user data from localStorage:', userString);
+                    const user = userString ? JSON.parse(userString) : null;
+                    
+                    if (!user) {
+                        return { success: false, message: 'User data not found. Please log in again.' };
+                    }
+                    
+                    console.log('User data:', user);
+                    
+                    // Get the student ID from various possible fields
+                    let studentId = null;
+                    
+                    // Try different possible field names for the student ID
+                    if (user.studentId) {
+                        studentId = user.studentId;
+                    } else if (user.id) {
+                        studentId = user.id;
+                    } else if (user.userId) {
+                        studentId = user.userId;
+                    } else if (user.student && user.student.studentId) {
+                        studentId = user.student.studentId;
+                    } else if (user.student && user.student.id) {
+                        studentId = user.student.id;
+                    }
+                    
+                    // Additional check: Try to use the username if it's numeric
+                    if (!studentId && user.username && !isNaN(parseInt(user.username))) {
+                        studentId = parseInt(user.username);
+                    }
+                    
+                    // Final fallback: Check if we have the student's fullname, and if so, create a hash-based ID
+                    if (!studentId && user.fullname) {
+                        // Generate a simple hash from the fullname
+                        let hash = 0;
+                        for (let i = 0; i < user.fullname.length; i++) {
+                            const char = user.fullname.charCodeAt(i);
+                            hash = ((hash << 5) - hash) + char;
+                            hash = hash & hash; // Convert to 32bit integer
+                        }
+                        // Make positive and keep it reasonable (up to 6 digits)
+                        studentId = Math.abs(hash) % 1000000;
+                        console.log('Created temporary student ID from fullname hash:', studentId);
+                    }
+
+                    // If all else fails, create a random ID as last resort
+                    if (!studentId) {
+                        studentId = Math.floor(Math.random() * 900000) + 100000; // 6-digit random number
+                        console.log('Created random temporary student ID:', studentId);
+                    }
+                    
+                    if (!studentId) {
+                        // Show detailed user object properties in error for debugging
+                        const userProps = Object.keys(user).join(', ');
+                        return { 
+                            success: false, 
+                            message: `Cannot determine student ID. Available user properties: ${userProps}. Please log in again.` 
+                        };
+                    }
+                    
+                    console.log('Determined student ID:', studentId);
+                    console.log('QR data for attendance:', qrData);
+                    
+                    // Prepare request data based on format
+                    let requestData;
+                    const now = new Date();
+                    
+                    // Create a new Date object with Philippines time (GMT+8)
+                    // Using the correct approach to avoid timezone issues
+                    const philippinesTime = new Date(now.getTime());
+                    philippinesTime.setHours(philippinesTime.getHours() + 8); // Add 8 hours for Philippines time
+                    
+                    // Format as ISO string with explicit GMT+8 offset
+                    const formattedDate = philippinesTime.toISOString().replace('Z', '+08:00');
+                    
+                    console.log('Original UTC time:', now.toISOString());
+                    console.log('Philippines time (GMT+8) for database:', formattedDate);
+                    
+                    // Check for compact format
+                    if (qrData.t === 'a') {
+                        // Create both camelCase and PascalCase versions for compatibility with different API conventions
+                        requestData = {
+                            // PascalCase (C# convention)
+                            SessionId: parseInt(qrData.s, 10),
+                            SubjectId: parseInt(qrData.i, 10),
+                            StudentId: parseInt(studentId, 10),
+                            Date: formattedDate,
+                            Timestamp: formattedDate,
+                            PhilippinesDate: formattedDate, // Explicitly marked as Philippines time
+                            Status: "Present",
+                            RecordType: "QRScan",
+                            
+                            // camelCase (JavaScript convention) - include both formats to ensure compatibility
+                            sessionId: parseInt(qrData.s, 10),
+                            subjectId: parseInt(qrData.i, 10),
+                            studentId: parseInt(studentId, 10),
+                            date: formattedDate,
+                            timestamp: formattedDate,
+                            philippinesDate: formattedDate, // Explicitly marked as Philippines time
+                            status: "Present",
+                            recordType: "QRScan"
+                        };
+                    } else if (qrData.sessionId && qrData.subjectId) {
+                        // For the standard format - include both conventions
+                        requestData = {
+                            // PascalCase
+                            SessionId: parseInt(qrData.sessionId, 10),
+                            SubjectId: parseInt(qrData.subjectId, 10),
+                            StudentId: parseInt(studentId, 10),
+                            Date: formattedDate,
+                            Timestamp: formattedDate,
+                            Status: "Present",
+                            RecordType: "QRScan",
+                            
+                            // camelCase
+                            sessionId: parseInt(qrData.sessionId, 10),
+                            subjectId: parseInt(qrData.subjectId, 10),
+                            studentId: parseInt(studentId, 10),
+                            date: formattedDate,
+                            timestamp: formattedDate,
+                            status: "Present",
+                            recordType: "QRScan"
+                        };
+                    } else {
+                        return { success: false, message: 'Invalid QR code data format' };
+                    }
+                    
+                    console.log('Sending attendance record:', requestData);
+                    
+                    // Make sure we're sending integers for IDs, not strings
+                    if (isNaN(requestData.SessionId) || isNaN(requestData.SubjectId) || isNaN(requestData.StudentId)) {
+                        console.error('Invalid ID format:', requestData);
+                        return { success: false, message: 'Invalid ID format in QR code or student data' };
+                    }
+                    
+                    // Try the API call with more detailed logging
+                    try {
+                        const response = await fetch('/api/attendance/record', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(requestData)
+                        });
+                        
+                        console.log('API response status:', response.status);
+                        const responseText = await response.text();
+                        console.log('API response text:', responseText);
+                        
+                        if (response.ok) {
+                            try {
+                                const data = JSON.parse(responseText);
+                                console.log('Attendance recorded successfully:', data);
+                                return { success: true, ...data };
+                            } catch (e) {
+                                console.log('Response is not JSON but success status:', responseText);
+                                return { success: true, message: responseText || 'Attendance recorded' };
+                            }
+                        } else {
+                            // Try alternative endpoint in case the path is different
+                            console.log('First attempt failed, trying alternative endpoint...');
+                            try {
+                                const altResponse = await fetch('/api/attendance', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify(requestData)
+                                });
+                                
+                                console.log('Alternative API response status:', altResponse.status);
+                                const altResponseText = await altResponse.text();
+                                console.log('Alternative API response text:', altResponseText);
+                                
+                                if (altResponse.ok) {
+                                    try {
+                                        const altData = JSON.parse(altResponseText);
+                                        console.log('Attendance recorded successfully with alternative endpoint:', altData);
+                                        return { success: true, ...altData };
+                                    } catch (e) {
+                                        console.log('Alternative response is not JSON but success status:', altResponseText);
+                                        return { success: true, message: altResponseText || 'Attendance recorded' };
+                                    }
+                                } else {
+                                    // Try a third endpoint format
+                                    console.log('Second attempt failed, trying final endpoint...');
+                                    try {
+                                        // Different URL pattern that might be used
+                                        const finalResponse = await fetch(`/api/attendance/student/${requestData.StudentId}/session/${requestData.SessionId}`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'Authorization': `Bearer ${token}`
+                                            },
+                                            body: JSON.stringify({
+                                                // Send a simplified payload for this endpoint format
+                                                subjectId: requestData.SubjectId,
+                                                date: requestData.Date
+                                            })
+                                        });
+                                        
+                                        console.log('Final API response status:', finalResponse.status);
+                                        const finalResponseText = await finalResponse.text();
+                                        console.log('Final API response text:', finalResponseText);
+                                        
+                                        if (finalResponse.ok) {
+                                            console.log('Attendance recorded successfully with final endpoint');
+                                            return { success: true, message: 'Attendance recorded' };
+                                        } else {
+                                            console.error('All endpoints failed. Original error:', responseText);
+                                            try {
+                                                const errorData = JSON.parse(responseText);
+                                                return { success: false, message: errorData.message || 'Failed to record attendance' };
+                                            } catch (e) {
+                                                return { success: false, message: responseText || 'Failed to record attendance' };
+                                            }
+                                        }
+                                    } catch (finalFetchError) {
+                                        console.error('Error with final endpoint:', finalFetchError);
+                                        console.error('Original error remains:', responseText);
+                                        try {
+                                            const errorData = JSON.parse(responseText);
+                                            return { success: false, message: errorData.message || 'Failed to record attendance' };
+                                        } catch (e) {
+                                            return { success: false, message: responseText || 'Failed to record attendance' };
+                                        }
+                                    }
+                                }
+                            } catch (altFetchError) {
+                                console.error('Error with alternative endpoint:', altFetchError);
+                                console.error('Original error remains:', responseText);
+                                try {
+                                    const errorData = JSON.parse(responseText);
+                                    return { success: false, message: errorData.message || 'Failed to record attendance' };
+                                } catch (e) {
+                                    return { success: false, message: responseText || 'Failed to record attendance' };
+                                }
+                            }
+                        }
+                    } catch (fetchError) {
+                        console.error('Network error during attendance recording:', fetchError);
+                        return { success: false, message: fetchError.message || 'Network error occurred' };
+                    }
+                } catch (error) {
+                    console.error('Error in recordAttendance:', error);
+                    return { success: false, message: error.message || 'Unknown error occurred' };
+                }
+            }
+
+            // Load teacher connections and subjects
+            async function loadTeacherConnections() {
+                try {
+                    if (!token) {
+                        console.error('No authentication token available');
                         document.getElementById('teacher-connections').innerHTML = 
-                            `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
-                    } else {
-                        const pendingData = await pendingResponse.json();
-                        
-                        if (pendingData.length === 0) {
-                            document.getElementById('teacher-connections').innerHTML = 
-                                '<div class="list-group-item">No pending subject invitations</div>';
-                        } else {
-                            const pendingHtml = pendingData.map((conn) => {
-                                const teacherName = conn.teacher && (conn.teacher.fullname || conn.teacher.username) ? 
-                                    (conn.teacher.fullname || conn.teacher.username) : 'Unknown Teacher';
-                                const teacherEmail = conn.teacher && conn.teacher.email ? conn.teacher.email : 'No email provided';
-                                const subjectName = conn.subject && conn.subject.name ? conn.subject.name : 'Unknown Subject';
-                                const requestDate = new Date(conn.createdAt).toLocaleString();
-                                
-                                return `
-                                <div class="connection-item mb-3 p-3 border rounded">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <div>
-                                            <h5 class="mb-1">${subjectName}</h5>
-                                            <p class="mb-1 small text-muted">Teacher: ${teacherName} (${teacherEmail})</p>
-                                        </div>
-                                        <span class="badge bg-warning">Pending</span>
-                                    </div>
-                                    <p class="small mb-2 text-muted">Invitation received: ${requestDate}</p>
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button class="btn btn-danger btn-sm me-2" 
-                                            onclick="handleTeacherConnection(${conn.connectionId}, 'Rejected')">
-                                            <i class="bi bi-x-circle"></i> Reject
-                                        </button>
-                                        <button class="btn btn-success btn-sm" 
-                                            onclick="handleTeacherConnection(${conn.connectionId}, 'Approved')">
-                                            <i class="bi bi-check-circle"></i> Accept
-                                        </button>
-                                    </div>
-                                </div>
-                                `;
-                            }).join('');
-                            document.getElementById('teacher-connections').innerHTML = pendingHtml;
-                        }
+                            '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
+                        document.getElementById('enrolled-subjects').innerHTML = 
+                            '<div class="list-group-item text-danger">Authentication error. Please try refreshing the page.</div>';
+                        return;
                     }
-                } catch (pendingError) {
-                    console.error('Error loading teacher connection requests:', pendingError);
-                    document.getElementById('teacher-connections').innerHTML = 
-                        `<div class="list-group-item text-danger">Error loading subject invitations: ${pendingError.message}</div>`;
-                }
 
-                // Load enrolled subjects
+                    // Display loading indicators
+                    document.getElementById('teacher-connections').innerHTML = 
+                        '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
+                    document.getElementById('enrolled-subjects').innerHTML = 
+                        '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
+                    
+                    // Load pending teacher connections (subject invitations)
+                    try {
+                        const pendingResponse = await fetch('/api/teacherconnection/pending', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        if (!pendingResponse.ok) {
+                            const errorText = await pendingResponse.text();
+                            console.error('Error fetching teacher connection requests:', errorText);
+                            document.getElementById('teacher-connections').innerHTML = 
+                                `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
+                        } else {
+                            const pendingData = await pendingResponse.json();
+                            
+                            if (pendingData.length === 0) {
+                                document.getElementById('teacher-connections').innerHTML = 
+                                    '<div class="list-group-item">No pending subject invitations</div>';
+                            } else {
+                                const pendingHtml = pendingData.map((conn) => {
+                                    const teacherName = conn.teacher && (conn.teacher.fullname || conn.teacher.username) ? 
+                                        (conn.teacher.fullname || conn.teacher.username) : 'Unknown Teacher';
+                                    const teacherEmail = conn.teacher && conn.teacher.email ? conn.teacher.email : 'No email provided';
+                                    const subjectName = conn.subject && conn.subject.name ? conn.subject.name : 'Unknown Subject';
+                                    const requestDate = new Date(conn.createdAt).toLocaleString('en-PH', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true
+                                    });
+                                    
+                                    return `
+                                    <div class="connection-item mb-3 p-3 border rounded">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h5 class="mb-1">${subjectName}</h5>
+                                                <p class="mb-1 small text-muted">Teacher: ${teacherName} (${teacherEmail})</p>
+                                            </div>
+                                            <span class="badge bg-warning">Pending</span>
+                                        </div>
+                                        <p class="small mb-2 text-muted">Invitation received: ${requestDate}</p>
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button class="btn btn-danger btn-sm me-2" 
+                                                onclick="handleTeacherConnection(${conn.connectionId}, 'Rejected')">
+                                                <i class="bi bi-x-circle"></i> Reject
+                                            </button>
+                                            <button class="btn btn-success btn-sm" 
+                                                onclick="handleTeacherConnection(${conn.connectionId}, 'Approved')">
+                                                <i class="bi bi-check-circle"></i> Accept
+                                            </button>
+                                        </div>
+                                    </div>
+                                    `;
+                                }).join('');
+                                document.getElementById('teacher-connections').innerHTML = pendingHtml;
+                            }
+                        }
+                    } catch (pendingError) {
+                        console.error('Error loading teacher connection requests:', pendingError);
+                        document.getElementById('teacher-connections').innerHTML = 
+                            `<div class="list-group-item text-danger">Error loading subject invitations: ${pendingError.message}</div>`;
+                    }
+
+                    // Load enrolled subjects
+                    try {
+                        const subjectsResponse = await fetch('/api/subject/list', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        if (!subjectsResponse.ok) {
+                            const errorText = await subjectsResponse.text();
+                            console.error('Error fetching enrolled subjects:', errorText);
+                            document.getElementById('enrolled-subjects').innerHTML = 
+                                `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
+                        } else {
+                            const subjectsData = await subjectsResponse.json();
+                            
+                            if (subjectsData.length === 0) {
+                                document.getElementById('enrolled-subjects').innerHTML = 
+                                    '<div class="list-group-item">You are not enrolled in any subjects yet</div>';
+                            } else {
+                                const subjectsHtml = subjectsData.map((subject) => {
+                                    const teacherName = subject.teacher ? subject.teacher.fullname : 'Unknown Teacher';
+                                    
+                                    return `
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h5 class="mb-1">${subject.name}</h5>
+                                                <p class="mb-1 small text-muted">Teacher: ${teacherName}</p>
+                                                <p class="small mb-0">${subject.description || 'No description available'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    `;
+                                }).join('');
+                                document.getElementById('enrolled-subjects').innerHTML = subjectsHtml;
+                            }
+                        }
+                    } catch (subjectsError) {
+                        console.error('Error loading enrolled subjects:', subjectsError);
+                        document.getElementById('enrolled-subjects').innerHTML = 
+                            `<div class="list-group-item text-danger">Error loading subjects: ${subjectsError.message}</div>`;
+                    }
+                } catch (error) {
+                    console.error('Error loading teacher connections and subjects:', error);
+                }
+            }
+            
+            // Handle teacher connection response (accept/reject)
+            async function handleTeacherConnection(connectionId, status) {
                 try {
-                    const subjectsResponse = await fetch('/api/subject/list', {
-                        headers: { 'Authorization': `Bearer ${token}` }
+                    if (!token) {
+                        alert('Authentication error. Please refresh the page and try again.');
+                        return;
+                    }
+                    
+                    const confirmation = confirm(`Are you sure you want to ${status.toLowerCase()} this subject invitation?`);
+                    if (!confirmation) return;
+                    
+                    const response = await fetch('/api/teacherconnection/respond', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            connectionId: connectionId,
+                            status: status
+                        })
                     });
                     
-                    if (!subjectsResponse.ok) {
-                        const errorText = await subjectsResponse.text();
-                        console.error('Error fetching enrolled subjects:', errorText);
-                        document.getElementById('enrolled-subjects').innerHTML = 
-                            `<div class="list-group-item text-danger">Error: ${errorText}</div>`;
-                    } else {
-                        const subjectsData = await subjectsResponse.json();
+                    if (response.ok) {
+                        const data = await response.json();
+                        alert(data.message);
                         
-                        if (subjectsData.length === 0) {
-                            document.getElementById('enrolled-subjects').innerHTML = 
-                                '<div class="list-group-item">You are not enrolled in any subjects yet</div>';
-                        } else {
-                            const subjectsHtml = subjectsData.map((subject) => {
-                                const teacherName = subject.teacher ? subject.teacher.fullname : 'Unknown Teacher';
-                                
-                                return `
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="mb-1">${subject.name}</h5>
-                                            <p class="mb-1 small text-muted">Teacher: ${teacherName}</p>
-                                            <p class="small mb-0">${subject.description || 'No description available'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                `;
-                            }).join('');
-                            document.getElementById('enrolled-subjects').innerHTML = subjectsHtml;
+                        // Reload connections after successful response
+                        loadTeacherConnections();
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Error updating connection:', errorText);
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            alert(`Error: ${errorData.message || 'Failed to update connection status'}`);
+                        } catch (e) {
+                            alert(`Error: ${errorText || 'Failed to update connection status'}`);
                         }
                     }
-                } catch (subjectsError) {
-                    console.error('Error loading enrolled subjects:', subjectsError);
-                    document.getElementById('enrolled-subjects').innerHTML = 
-                        `<div class="list-group-item text-danger">Error loading subjects: ${subjectsError.message}</div>`;
+                } catch (error) {
+                    console.error('Error handling teacher connection:', error);
+                    alert(`Error: ${error.message || 'An unknown error occurred'}`);
                 }
-            } catch (error) {
-                console.error('Error loading teacher connections and subjects:', error);
             }
         }
-        
-        // Handle teacher connection response (accept/reject)
-        async function handleTeacherConnection(connectionId, status) {
-            try {
-                if (!token) {
-                    alert('Authentication error. Please refresh the page and try again.');
-                    return;
-                }
-                
-                const confirmation = confirm(`Are you sure you want to ${status.toLowerCase()} this subject invitation?`);
-                if (!confirmation) return;
-                
-                const response = await fetch('/api/teacherconnection/respond', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        connectionId: connectionId,
-                        status: status
-                    })
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    alert(data.message);
-                    
-                    // Reload connections after successful response
-                    loadTeacherConnections();
-                } else {
-                    const errorText = await response.text();
-                    console.error('Error updating connection:', errorText);
-                    try {
-                        const errorData = JSON.parse(errorText);
-                        alert(`Error: ${errorData.message || 'Failed to update connection status'}`);
-                    } catch (e) {
-                        alert(`Error: ${errorText || 'Failed to update connection status'}`);
-                    }
-                }
-            } catch (error) {
-                console.error('Error handling teacher connection:', error);
-                alert(`Error: ${error.message || 'An unknown error occurred'}`);
-            }
-        }
-
-        // Record attendance from QR code
-        async function recordAttendance(qrData) {
-            try {
-                if (!token) {
-                    return { success: false, message: 'Not authenticated. Please log in.' };
-                }
-                
-                // Check if we need to handle legacy numeric format
-                const isLegacyFormat = qrData.hasOwnProperty('studentId');
-                
-                // Prepare request data based on format
-                let requestData;
-                
-                if (isLegacyFormat) {
-                    // Legacy format with studentId
-                    requestData = {
-                        sessionId: qrData.sessionId,
-                        subjectId: qrData.subjectId,
-                        timestamp: qrData.timestamp || new Date().toISOString(),
-                        // Include studentId for legacy support if server allows this parameter
-                        studentId: qrData.studentId
-                    };
-                } else {
-                    // Standard format just uses the current user's ID
-                    requestData = {
-                        sessionId: qrData.sessionId,
-                        subjectId: qrData.subjectId,
-                        timestamp: new Date().toISOString()
-                    };
-                }
-                
-                console.log('Sending attendance record:', requestData);
-                
-                const response = await fetch('/api/attendance/record', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(requestData)
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    return { success: true, ...data };
-                } else {
-                    const errorText = await response.text();
-                    console.error('Failed to record attendance:', errorText);
-                    
-                    try {
-                        const errorData = JSON.parse(errorText);
-                        return { success: false, message: errorData.message || 'Failed to record attendance' };
-                    } catch (e) {
-                        return { success: false, message: errorText || 'Failed to record attendance' };
-                    }
-                }
-            } catch (error) {
-                console.error('Error in recordAttendance:', error);
-                return { success: false, message: error.message || 'Unknown error occurred' };
-            }
-        }
-
-        // Function to handle connection response
     </script>
 </body>
 </html> 

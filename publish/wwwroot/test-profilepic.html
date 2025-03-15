@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #5469d4;
+            --secondary-color: #4655a8;
+            --accent-color: #f7fafc;
+            --text-color: #2d3748;
+            --light-text: #718096;
+            --success-color: #38a169;
+            --danger-color: #e53e3e;
+            --warning-color: #f6ad55;
+            --info-color: #63b3ed;
+            --border-radius: 10px;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --border-color: #e2e8f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-color);
+            background-color: #f7fafc;
+            line-height: 1.6;
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+        
+        .container {
+            max-width: 900px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(84, 105, 212, 0.3);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background-color: #2f855a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
+        }
+        
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-pic:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .upload-container {
+            position: relative;
+            text-align: center;
+        }
+        
+        .camera-icon {
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(75px);
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .camera-icon:hover {
+            background-color: var(--secondary-color);
+            transform: translateX(75px) scale(1.1);
+        }
+        
+        .preview-container {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .preview-container img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .nav-pills .nav-link {
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-pills .nav-link:hover:not(.active) {
+            background-color: #edf2f7;
+        }
+        
+        .back-button {
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            border-radius: var(--border-radius);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Iyong Profile</h1>
+            <a href="/student-dashboard.html" class="btn btn-outline-secondary back-button">
+                <i class="bi bi-arrow-left me-2"></i>Bumalik sa Dashboard
+            </a>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <div class="upload-container">
+                            <div class="profile-pic" id="profile-pic-container">
+                                <img id="current-profile-pic" src="/images/default-profile.png" alt="Profile Picture">
+                            </div>
+                            <div class="camera-icon" id="camera-icon">
+                                <i class="bi bi-camera-fill"></i>
+                            </div>
+                            <input type="file" id="file-input" accept="image/*">
+                        </div>
+                        <h5 class="my-3" id="display-name">User Name</h5>
+                        <p class="text-muted mb-1" id="display-email">user@example.com</p>
+                        <p class="text-muted mb-4" id="display-username">@username</p>
+                        <div id="upload-status" class="alert d-none mt-3"></div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link active" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="true">
+                                <i class="bi bi-person me-2"></i>Personal Information
+                            </button>
+                            <button class="nav-link" id="v-pills-security-tab" data-bs-toggle="pill" data-bs-target="#v-pills-security" type="button" role="tab" aria-controls="v-pills-security" aria-selected="false">
+                                <i class="bi bi-shield-lock me-2"></i>Security
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <!-- Personal Information Tab -->
+                            <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                <h5 class="card-title mb-4">Personal Information</h5>
+                                <form id="profile-form">
+                                    <div class="mb-3">
+                                        <label for="fullname" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullname" placeholder="Your full name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="username" placeholder="username">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="email@example.com" readonly>
+                                        <small class="text-muted">Email address cannot be changed</small>
+                                    </div>
+                                    <div id="profile-message" class="alert d-none mb-3"></div>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </form>
+                            </div>
+                            
+                            <!-- Security Tab -->
+                            <div class="tab-pane fade" id="v-pills-security" role="tabpanel" aria-labelledby="v-pills-security-tab">
+                                <h5 class="card-title mb-4">Security Settings</h5>
+                                <form id="password-form">
+                                    <div class="mb-3">
+                                        <label for="current-password" class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" id="current-password" placeholder="Enter current password">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="new-password" class="form-label">New Password</label>
+                                        <input type="password" class="form-control" id="new-password" placeholder="Enter new password">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirm-password" class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="confirm-password" placeholder="Confirm new password">
+                                    </div>
+                                    <div id="password-message" class="alert d-none mb-3"></div>
+                                    <button type="submit" class="btn btn-primary">Update Password</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preview panel for image upload -->
+                <div class="card mt-4 preview-container" id="preview-container">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Image Preview</h5>
+                        <div class="text-center">
+                            <img id="preview-img" src="" alt="Preview">
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-outline-secondary" id="cancel-button">Cancel</button>
+                            <button class="btn btn-success" id="upload-button">Upload Picture</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Elements
+        const fileInput = document.getElementById('file-input');
+        const cameraIcon = document.getElementById('camera-icon');
+        const profilePicContainer = document.getElementById('profile-pic-container');
+        const currentProfilePic = document.getElementById('current-profile-pic');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImg = document.getElementById('preview-img');
+        const uploadButton = document.getElementById('upload-button');
+        const cancelButton = document.getElementById('cancel-button');
+        const uploadStatus = document.getElementById('upload-status');
+        
+        // Profile form elements
+        const profileForm = document.getElementById('profile-form');
+        const fullnameInput = document.getElementById('fullname');
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const profileMessage = document.getElementById('profile-message');
+        
+        // Password form elements
+        const passwordForm = document.getElementById('password-form');
+        const currentPasswordInput = document.getElementById('current-password');
+        const newPasswordInput = document.getElementById('new-password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const passwordMessage = document.getElementById('password-message');
+        
+        // Display elements
+        const displayName = document.getElementById('display-name');
+        const displayEmail = document.getElementById('display-email');
+        const displayUsername = document.getElementById('display-username');
+        
+        // Get authentication token from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You need to be logged in to use this page. Redirecting to login...');
+            window.location.href = '/login.html';
+        }
+        
+        // Parse user data
+        let user;
+        try {
+            user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                // Populate profile information
+                fullnameInput.value = user.fullname || '';
+                usernameInput.value = user.username || '';
+                emailInput.value = user.email || '';
+                
+                // Update display elements
+                displayName.textContent = user.fullname || user.username || 'User';
+                displayEmail.textContent = user.email || 'No email';
+                displayUsername.textContent = '@' + user.username || '@user';
+                
+                // Set profile picture if available
+                if (user.profilePic) {
+                    currentProfilePic.src = user.profilePic;
+                } else {
+                    getProfilePicFromServer();
+                }
+            }
+        } catch (e) {
+            console.error('Error parsing user data:', e);
+        }
+        
+        // Open file dialog when clicking camera icon
+        cameraIcon.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // Also allow clicking the profile picture
+        profilePicContainer.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // Show preview when selecting a file
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                console.log(`Selected file: ${file.name}, Size: ${file.size}, Type: ${file.type}`);
+                
+                // Basic validation
+                const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+                if (!validImageTypes.includes(file.type)) {
+                    showAlert(uploadStatus, 'Please select a valid image file (JPEG, PNG, GIF)', 'danger');
+                    return;
+                }
+                
+                if (file.size > 1048576) { // 1MB
+                    showAlert(uploadStatus, 'File size must be less than 1MB', 'danger');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    
+                    // Scroll to preview container
+                    previewContainer.scrollIntoView({ behavior: 'smooth' });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Cancel button for preview
+        cancelButton.addEventListener('click', function() {
+            previewContainer.style.display = 'none';
+            fileInput.value = '';
+        });
+        
+        // Upload profile picture
+        uploadButton.addEventListener('click', function() {
+            const file = fileInput.files[0];
+            if (!file) {
+                showAlert(uploadStatus, 'Please select a file first', 'warning');
+                return;
+            }
+            
+            uploadButton.disabled = true;
+            showAlert(uploadStatus, 'Uploading...', 'info');
+            
+            const formData = new FormData();
+            formData.append('profilePic', file);
+            
+            fetch('/api/student/profilepic', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            })
+            .then(response => {
+                return response.text().then(text => {
+                    let json;
+                    try {
+                        json = JSON.parse(text);
+                    } catch (e) {
+                        return { ok: response.ok, status: response.status, text: text };
+                    }
+                    return { ok: response.ok, status: response.status, json: json };
+                });
+            })
+            .then(result => {
+                uploadButton.disabled = false;
+                
+                if (result.ok) {
+                    showAlert(uploadStatus, 'Profile picture updated successfully!', 'success');
+                    
+                    if (result.json && result.json.profilePicUrl) {
+                        // Update UI
+                        currentProfilePic.src = result.json.profilePicUrl;
+                        
+                        // Update user object
+                        if (user) {
+                            user.profilePic = result.json.profilePicUrl;
+                            localStorage.setItem('user', JSON.stringify(user));
+                        }
+                        
+                        // Hide preview
+                        setTimeout(() => {
+                            previewContainer.style.display = 'none';
+                            fileInput.value = '';
+                        }, 2000);
+                    }
+                } else {
+                    let errorMessage = 'Upload failed';
+                    
+                    if (result.json && result.json.message) {
+                        errorMessage = result.json.message;
+                    } else if (result.text) {
+                        errorMessage = `Error: ${result.text}`;
+                    }
+                    
+                    showAlert(uploadStatus, errorMessage, 'danger');
+                }
+            })
+            .catch(error => {
+                uploadButton.disabled = false;
+                showAlert(uploadStatus, `Network error: ${error.message}`, 'danger');
+            });
+        });
+        
+        // Update profile information
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullname = fullnameInput.value.trim();
+            const username = usernameInput.value.trim();
+            
+            if (!fullname || !username) {
+                showAlert(profileMessage, 'Please fill in all required fields', 'warning');
+                return;
+            }
+            
+            // Disable form
+            const submitButton = profileForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            
+            // Show loading message
+            showAlert(profileMessage, 'Updating profile information...', 'info');
+            
+            fetch('/api/student/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    fullname: fullname,
+                    username: username
+                })
+            })
+            .then(response => {
+                return response.text().then(text => {
+                    let json;
+                    try {
+                        json = JSON.parse(text);
+                    } catch (e) {
+                        return { ok: response.ok, status: response.status, text: text };
+                    }
+                    return { ok: response.ok, status: response.status, json: json };
+                });
+            })
+            .then(result => {
+                submitButton.disabled = false;
+                
+                if (result.ok) {
+                    showAlert(profileMessage, 'Profile updated successfully!', 'success');
+                    
+                    // Update user object
+                    if (user) {
+                        user.fullname = fullname;
+                        user.username = username;
+                        localStorage.setItem('user', JSON.stringify(user));
+                        
+                        // Update display elements
+                        displayName.textContent = fullname || username;
+                        displayUsername.textContent = '@' + username;
+                    }
+                } else {
+                    let errorMessage = 'Update failed';
+                    
+                    if (result.json && result.json.message) {
+                        errorMessage = result.json.message;
+                    } else if (result.text) {
+                        errorMessage = `Error: ${result.text}`;
+                    }
+                    
+                    showAlert(profileMessage, errorMessage, 'danger');
+                }
+            })
+            .catch(error => {
+                submitButton.disabled = false;
+                showAlert(profileMessage, `Network error: ${error.message}`, 'danger');
+            });
+        });
+        
+        // Update password
+        passwordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentPassword = currentPasswordInput.value;
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showAlert(passwordMessage, 'Please fill in all password fields', 'warning');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showAlert(passwordMessage, 'New password and confirmation do not match', 'warning');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showAlert(passwordMessage, 'New password must be at least 6 characters long', 'warning');
+                return;
+            }
+            
+            // Disable form
+            const submitButton = passwordForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            
+            // Show loading message
+            showAlert(passwordMessage, 'Updating password...', 'info');
+            
+            fetch('/api/student/change-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    currentPassword: currentPassword,
+                    newPassword: newPassword
+                })
+            })
+            .then(response => {
+                return response.text().then(text => {
+                    let json;
+                    try {
+                        json = JSON.parse(text);
+                    } catch (e) {
+                        return { ok: response.ok, status: response.status, text: text };
+                    }
+                    return { ok: response.ok, status: response.status, json: json };
+                });
+            })
+            .then(result => {
+                submitButton.disabled = false;
+                
+                if (result.ok) {
+                    showAlert(passwordMessage, 'Password updated successfully!', 'success');
+                    
+                    // Clear form
+                    passwordForm.reset();
+                } else {
+                    let errorMessage = 'Password update failed';
+                    
+                    if (result.json && result.json.message) {
+                        errorMessage = result.json.message;
+                    } else if (result.text) {
+                        errorMessage = `Error: ${result.text}`;
+                    }
+                    
+                    showAlert(passwordMessage, errorMessage, 'danger');
+                }
+            })
+            .catch(error => {
+                submitButton.disabled = false;
+                showAlert(passwordMessage, `Network error: ${error.message}`, 'danger');
+            });
+        });
+        
+        // Get profile pic from server if not in localStorage
+        function getProfilePicFromServer() {
+            fetch('/api/student/profilepic', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    const contentType = response.headers.get('Content-Type');
+                    
+                    if (contentType && contentType.includes('application/json')) {
+                        return response.json().then(data => {
+                            return { type: 'json', data };
+                        });
+                    } else {
+                        return response.blob().then(blob => {
+                            return { type: 'blob', data: blob };
+                        });
+                    }
+                }
+                throw new Error(`Failed to fetch profile pic: ${response.status}`);
+            })
+            .then(result => {
+                if (result.type === 'json' && result.data.profilePicUrl) {
+                    // Update profile pic
+                    currentProfilePic.src = result.data.profilePicUrl;
+                    
+                    // Update user object
+                    if (user) {
+                        user.profilePic = result.data.profilePicUrl;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                } else if (result.type === 'blob') {
+                    const url = URL.createObjectURL(result.data);
+                    currentProfilePic.src = url;
+                }
+            })
+            .catch(error => {
+                console.error('Error getting profile picture:', error);
+            });
+        }
+        
+        // Helper to show alert messages
+        function showAlert(element, message, type) {
+            element.textContent = message;
+            element.className = `alert alert-${type}`;
+            element.classList.remove('d-none');
+            
+            // Scroll to message
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+</html> 
