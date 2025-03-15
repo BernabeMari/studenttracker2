@@ -614,12 +614,12 @@
                         <h3>Pending Connections</h3>
                         <div class="alert alert-info small py-2">
                             <i class="bi bi-info-circle me-1"></i>
-                            Kapag ni-reject mo ang request, maaari pa ring mag-send ng bagong request ang magulang sa ibang araw.
-                            <span class="fw-bold d-block mt-1">Patakaran: </span>
+                            If you reject the request, the parent can still send a new request on another day.
+                            <span class="fw-bold d-block mt-1">Rules: </span>
                             <ul class="mb-0 ps-3">
-                                <li>Pagkatapos ng 3 rejections, hindi na maaaring mag-request muli ang magulang.</li>
-                                <li>Sa bawat rejection, makikita mo kung ilang attempts na ang natitira.</li>
-                                <li>Maaaring tanggapin ang request kahit ilang beses nang na-reject dati.</li>
+                                <li>After 3 rejections, the parent can no longer make new requests.</li>
+                                <li>With each rejection, you will see how many attempts are left.</li>
+                                <li>You can accept a request even if you have rejected it previously.</li>
                             </ul>
                         </div>
                         <div id="pending-connections" class="list-group">
@@ -677,7 +677,7 @@
                     <div class="collapse" id="rejectedConnectionsList">
                         <div class="card-body">
                             <div class="text-muted small mb-3">
-                                Ang mga magulang na ito ay nag-send ng connection request na ni-reject mo. Maaari silang mag-send muli ng bagong request sa ibang pagkakataon.
+                                These parents have sent connection requests that you rejected. They may send a new request again at another time.
                             </div>
                             <div id="rejected-connections" class="list-group">
                                 <div class="text-center py-3 text-muted">
@@ -696,15 +696,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="actionModalLabel">Kumpirmahin ang Aksyon</h5>
+                    <h5 class="modal-title" id="actionModalLabel">Confirm Action</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="actionModalBody">
                     <!-- Content will be filled dynamically -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kanselahin</button>
-                    <button type="button" class="btn btn-primary" id="actionConfirmBtn">Kumpirmahin</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="actionConfirmBtn">Confirm</button>
                 </div>
             </div>
         </div>
@@ -1677,8 +1677,8 @@
                                             </div>
                                             <div class="small mt-1 ${maxReached ? 'text-danger' : 'text-muted'}">
                                                 ${maxReached ? 
-                                                    '<i class="bi bi-lock-fill me-1"></i>Hindi na maaaring mag-request muli' : 
-                                                    '<i class="bi bi-arrow-repeat me-1"></i>Maaaring mag-request ulit'}
+                                                    '<i class="bi bi-lock-fill me-1"></i>Cannot request again.' : 
+                                                    '<i class="bi bi-arrow-repeat me-1"></i>Can request again.'}
                                             </div>
                                         </div>
                                     </div>
@@ -1693,7 +1693,7 @@
                     document.getElementById('rejected-connections').innerHTML = 
                         `<div class="list-group-item text-muted">
                             <i class="bi bi-info-circle me-2"></i>
-                            Hindi ma-access ang rejected connections history sa ngayon.
+                           Rejected connections history cannot be accessed at the moment.
                         </div>`;
                 }
             } catch (error) {

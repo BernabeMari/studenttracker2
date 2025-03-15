@@ -413,7 +413,7 @@
       ]
     },
     {
-      "Route": "student-dashboard.gdq531jozn.html",
+      "Route": "student-dashboard.0pwoaoi75k.html",
       "AssetFile": "student-dashboard.html",
       "Selectors": [],
       "ResponseHeaders": [
@@ -427,7 +427,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "155477"
+          "Value": "155367"
         },
         {
           "Name": "Content-Type",
@@ -435,21 +435,21 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"PDRB56CtNiutx2clAcSRg4p1gXSdLUYNpbRqM+hwurs=\""
+          "Value": "\"hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 15 Mar 2025 13:21:05 GMT"
+          "Value": "Sat, 15 Mar 2025 13:46:56 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "gdq531jozn"
+          "Value": "0pwoaoi75k"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-PDRB56CtNiutx2clAcSRg4p1gXSdLUYNpbRqM+hwurs="
+          "Value": "sha256-hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po="
         },
         {
           "Name": "label",
@@ -472,7 +472,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "155477"
+          "Value": "155367"
         },
         {
           "Name": "Content-Type",
@@ -480,17 +480,17 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"PDRB56CtNiutx2clAcSRg4p1gXSdLUYNpbRqM+hwurs=\""
+          "Value": "\"hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 15 Mar 2025 13:21:05 GMT"
+          "Value": "Sat, 15 Mar 2025 13:46:56 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-PDRB56CtNiutx2clAcSRg4p1gXSdLUYNpbRqM+hwurs="
+          "Value": "sha256-hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po="
         }
       ]
     },
@@ -577,7 +577,7 @@
       ]
     },
     {
-      "Route": "test-profilepic.b1bolbs4ry.html",
+      "Route": "test-profilepic.adurnp1fg4.html",
       "AssetFile": "test-profilepic.html",
       "Selectors": [],
       "ResponseHeaders": [
@@ -591,7 +591,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "29020"
+          "Value": "31310"
         },
         {
           "Name": "Content-Type",
@@ -599,21 +599,21 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"305izkV+GMR0AoL+yYcrCcQxCoPPXesnzJGB3lFgD6o=\""
+          "Value": "\"fh0QjKK+VLt+6Yo2zvLlmkniOtOyn7yiUJu+MDt9C5Q=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+          "Value": "Sat, 15 Mar 2025 14:21:56 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "b1bolbs4ry"
+          "Value": "adurnp1fg4"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-305izkV+GMR0AoL+yYcrCcQxCoPPXesnzJGB3lFgD6o="
+          "Value": "sha256-fh0QjKK+VLt+6Yo2zvLlmkniOtOyn7yiUJu+MDt9C5Q="
         },
         {
           "Name": "label",
@@ -636,7 +636,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "29020"
+          "Value": "31310"
         },
         {
           "Name": "Content-Type",
@@ -644,17 +644,17 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"305izkV+GMR0AoL+yYcrCcQxCoPPXesnzJGB3lFgD6o=\""
+          "Value": "\"fh0QjKK+VLt+6Yo2zvLlmkniOtOyn7yiUJu+MDt9C5Q=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+          "Value": "Sat, 15 Mar 2025 14:21:56 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-305izkV+GMR0AoL+yYcrCcQxCoPPXesnzJGB3lFgD6o="
+          "Value": "sha256-fh0QjKK+VLt+6Yo2zvLlmkniOtOyn7yiUJu+MDt9C5Q="
         }
       ]
     }

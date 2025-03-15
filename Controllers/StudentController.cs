@@ -239,11 +239,200 @@ namespace StudentTracker.Controllers
             }
         }
 
+        [HttpPut("update-profile")]
+        [EnableCors("AllowAll")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileModel model)
+        {
+            try
+            {
+                Console.WriteLine("\n===== PROFILE UPDATE REQUEST =====");
+                Console.WriteLine($"Time: {DateTime.Now}");
+                Console.WriteLine($"Headers:");
+                foreach (var header in Request.Headers)
+                {
+                    Console.WriteLine($"  {header.Key}: {header.Value}");
+                }
+                
+                Console.WriteLine($"Request body: {System.Text.Json.JsonSerializer.Serialize(model)}");
+                
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+                
+                if (userIdClaim == null || userTypeClaim == null)
+                {
+                    Console.WriteLine("User not authenticated");
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                Console.WriteLine($"User ID: {userIdClaim.Value}, Type: {userTypeClaim.Value}");
+                var currentUserId = int.Parse(userIdClaim.Value);
+                
+                if (userTypeClaim.Value != "Student")
+                {
+                    Console.WriteLine("Not a student user");
+                    return BadRequest(new { message = "Only students can update their profile" });
+                }
+
+                var student = await _context.Students.FindAsync(currentUserId);
+                if (student == null)
+                {
+                    Console.WriteLine("Student not found");
+                    return NotFound(new { message = "Student not found" });
+                }
+
+                Console.WriteLine($"Found student: {student.Username}");
+                
+                // Validate username is not already taken (if changed)
+                if (model.Username != student.Username)
+                {
+                    var existingUser = await _context.Students
+                        .FirstOrDefaultAsync(s => s.Username == model.Username);
+                    
+                    if (existingUser != null)
+                    {
+                        Console.WriteLine($"Username {model.Username} is already taken");
+                        return BadRequest(new { message = "Username is already taken" });
+                    }
+                }
+                
+                // Update student properties
+                student.Username = model.Username ?? student.Username;
+                student.Fullname = model.Fullname ?? student.Fullname;
+                
+                // Save changes to database
+                await _context.SaveChangesAsync();
+                Console.WriteLine("Profile updated successfully");
+                Console.WriteLine("===== END PROFILE UPDATE REQUEST =====\n");
+
+                return Ok(new { 
+                    message = "Profile updated successfully",
+                    user = new {
+                        userId = student.StudentId,
+                        student.Username,
+                        student.Email,
+                        student.Fullname,
+                        student.ProfilePic,
+                        UserType = "Student"
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EXCEPTION IN UPDATEPROFILE: {ex.Message}");
+                Console.WriteLine($"STACK TRACE: {ex.StackTrace}");
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+            }
+        }
+        
+        [HttpPost("update-profile")]
+        [EnableCors("AllowAll")]
+        public async Task<IActionResult> UpdateProfilePost([FromBody] UpdateProfileModel model)
+        {
+            // For clients that only support POST, redirect to the PUT endpoint
+            return await UpdateProfile(model);
+        }
+        
+        [HttpPut("change-password")]
+        [EnableCors("AllowAll")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            try
+            {
+                Console.WriteLine("\n===== PASSWORD CHANGE REQUEST =====");
+                Console.WriteLine($"Time: {DateTime.Now}");
+                
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+                
+                if (userIdClaim == null || userTypeClaim == null)
+                {
+                    Console.WriteLine("User not authenticated");
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                Console.WriteLine($"User ID: {userIdClaim.Value}, Type: {userTypeClaim.Value}");
+                var currentUserId = int.Parse(userIdClaim.Value);
+                
+                if (userTypeClaim.Value != "Student")
+                {
+                    Console.WriteLine("Not a student user");
+                    return BadRequest(new { message = "Only students can change their password" });
+                }
+
+                var student = await _context.Students.FindAsync(currentUserId);
+                if (student == null)
+                {
+                    Console.WriteLine("Student not found");
+                    return NotFound(new { message = "Student not found" });
+                }
+
+                Console.WriteLine($"Found student: {student.Username}");
+                
+                // Verify current password
+                if (student.Password != model.CurrentPassword)
+                {
+                    Console.WriteLine("Current password is incorrect");
+                    return BadRequest(new { message = "Current password is incorrect" });
+                }
+                
+                // Validate new password
+                if (string.IsNullOrEmpty(model.NewPassword) || model.NewPassword.Length < 6)
+                {
+                    Console.WriteLine("New password is too short");
+                    return BadRequest(new { message = "New password must be at least 6 characters long" });
+                }
+                
+                if (model.NewPassword != model.ConfirmPassword)
+                {
+                    Console.WriteLine("New password and confirmation do not match");
+                    return BadRequest(new { message = "New password and confirmation do not match" });
+                }
+                
+                // Update password
+                student.Password = model.NewPassword;
+                
+                // Save changes to database
+                await _context.SaveChangesAsync();
+                Console.WriteLine("Password changed successfully");
+                Console.WriteLine("===== END PASSWORD CHANGE REQUEST =====\n");
+
+                return Ok(new { message = "Password changed successfully" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EXCEPTION IN CHANGEPASSWORD: {ex.Message}");
+                Console.WriteLine($"STACK TRACE: {ex.StackTrace}");
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+            }
+        }
+        
+        [HttpPost("change-password")]
+        [EnableCors("AllowAll")]
+        public async Task<IActionResult> ChangePasswordPost([FromBody] ChangePasswordModel model)
+        {
+            // For clients that only support POST, redirect to the PUT endpoint
+            return await ChangePassword(model);
+        }
+
         private bool IsImageFile(string fileName)
         {
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
             var extension = Path.GetExtension(fileName).ToLowerInvariant();
             return allowedExtensions.Contains(extension);
         }
+    }
+    
+    // Model classes for requests
+    public class UpdateProfileModel
+    {
+        public string? Username { get; set; }
+        public string? Fullname { get; set; }
+    }
+    
+    public class ChangePasswordModel
+    {
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 } 

@@ -1,5 +1,10 @@
 C:\Users\octop\source\repos\test\studenttracker2-main\publish\StudentTracker.exe
+C:\Users\octop\source\repos\test\studenttracker2-main\publish\publish\web.config
 C:\Users\octop\source\repos\test\studenttracker2-main\publish\appsettings.json
+C:\Users\octop\source\repos\test\studenttracker2-main\publish\publish\appsettings.json
+C:\Users\octop\source\repos\test\studenttracker2-main\publish\publish\StudentTracker.deps.json
+C:\Users\octop\source\repos\test\studenttracker2-main\publish\publish\StudentTracker.runtimeconfig.json
+C:\Users\octop\source\repos\test\studenttracker2-main\publish\publish\StudentTracker.staticwebassets.endpoints.json
 C:\Users\octop\source\repos\test\studenttracker2-main\publish\StudentTracker.dll
 C:\Users\octop\source\repos\test\studenttracker2-main\publish\StudentTracker.runtimeconfig.json
 C:\Users\octop\source\repos\test\studenttracker2-main\publish\StudentTracker.pdb
