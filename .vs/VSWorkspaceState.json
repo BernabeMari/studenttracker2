@@ -3,6 +3,10 @@
     "",
     "\\wwwroot"
   ],
+<<<<<<< HEAD
   "SelectedNode": "\\wwwroot\\register.html",
+=======
+  "SelectedNode": "\\wwwroot",
+>>>>>>> d4a1f77 (90% done)
   "PreviewInSolutionExplorer": false
 }

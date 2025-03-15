@@ -24,7 +24,11 @@
               "RelativeDocumentMoniker": "wwwroot\\register.html",
               "ToolTip": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\register.html",
               "RelativeToolTip": "wwwroot\\register.html",
+<<<<<<< HEAD
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAaAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAwAAAAAAAAAA==",
+>>>>>>> d4a1f77 (90% done)
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2025-03-14T16:41:43.817Z",
               "EditorCaption": ""

@@ -1,6 +1,10 @@
 {
   "Version": 1,
+<<<<<<< HEAD
   "Hash": "2Phj0n3SJJJdmpC3HXEnoEgr13KHs661nHvf9r+Qz3Q=",
+=======
+  "Hash": "LlP0DuiQZ1ToD1E3N25rYurUaCVmekoT/WykHd1+66o=",
+>>>>>>> d4a1f77 (90% done)
   "Source": "StudentTracker",
   "BasePath": "_content/StudentTracker",
   "Mode": "Default",
@@ -73,8 +77,13 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+<<<<<<< HEAD
       "Fingerprint": "veyvnh80zy",
       "Integrity": "95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI=",
+=======
+      "Fingerprint": "we2mk9kymv",
+      "Integrity": "uM2jXv4QBrlBDwvWCnoOoatIkoYxx4gQkrazcPNCzFg=",
+>>>>>>> d4a1f77 (90% done)
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\login.html"
@@ -115,8 +124,13 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+<<<<<<< HEAD
       "Fingerprint": "w46ho1ssy3",
       "Integrity": "ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY=",
+=======
+      "Fingerprint": "iwu25a68rr",
+      "Integrity": "DgoAMwIxwJf8kYz559m/0eTiDOuH2fWq61FprkEeyrc=",
+>>>>>>> d4a1f77 (90% done)
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\register.html"
@@ -136,8 +150,13 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+<<<<<<< HEAD
       "Fingerprint": "67ywt354rn",
       "Integrity": "3hHGLHCLXMy/Vbm08C7ik8ozxJVyngdUUp1Vuxm7338=",
+=======
+      "Fingerprint": "mf065k0wpz",
+      "Integrity": "TsPJgUWeEfOYh8EXvlA7MdQIfz10UA0Iy74RcSES37I=",
+>>>>>>> d4a1f77 (90% done)
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\student-dashboard.html"
@@ -157,8 +176,13 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+<<<<<<< HEAD
       "Fingerprint": "qzxy2uv037",
       "Integrity": "arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8=",
+=======
+      "Fingerprint": "wkryt0xng4",
+      "Integrity": "4DIX1kYXxnzw+ElLPgXEwCs3jCOQarJiOkHkc6IbG/U=",
+>>>>>>> d4a1f77 (90% done)
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\teacher-dashboard.html"
@@ -209,7 +233,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -246,7 +274,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -291,7 +323,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -336,7 +372,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -361,7 +401,11 @@
         },
         {
           "Name": "Content-Length",
+<<<<<<< HEAD
           "Value": "4989"
+=======
+          "Value": "4885"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Content-Type",
@@ -369,11 +413,19 @@
         },
         {
           "Name": "ETag",
+<<<<<<< HEAD
           "Value": "\"95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI=\""
         },
         {
           "Name": "Last-Modified",
           "Value": "Sat, 15 Mar 2025 02:26:08 GMT"
+=======
+          "Value": "\"uM2jXv4QBrlBDwvWCnoOoatIkoYxx4gQkrazcPNCzFg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -383,12 +435,20 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
+<<<<<<< HEAD
           "Value": "sha256-95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI="
+=======
+          "Value": "sha256-uM2jXv4QBrlBDwvWCnoOoatIkoYxx4gQkrazcPNCzFg="
+>>>>>>> d4a1f77 (90% done)
         }
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "login.veyvnh80zy.html",
+=======
+      "Route": "login.we2mk9kymv.html",
+>>>>>>> d4a1f77 (90% done)
       "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\login.html",
       "Selectors": [],
       "ResponseHeaders": [
@@ -398,7 +458,11 @@
         },
         {
           "Name": "Content-Length",
+<<<<<<< HEAD
           "Value": "4989"
+=======
+          "Value": "4885"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Content-Type",
@@ -406,11 +470,19 @@
         },
         {
           "Name": "ETag",
+<<<<<<< HEAD
           "Value": "\"95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI=\""
         },
         {
           "Name": "Last-Modified",
           "Value": "Sat, 15 Mar 2025 02:26:08 GMT"
+=======
+          "Value": "\"uM2jXv4QBrlBDwvWCnoOoatIkoYxx4gQkrazcPNCzFg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -420,7 +492,11 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
+<<<<<<< HEAD
           "Value": "veyvnh80zy"
+=======
+          "Value": "we2mk9kymv"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "label",
@@ -428,7 +504,11 @@
         },
         {
           "Name": "integrity",
+<<<<<<< HEAD
           "Value": "sha256-95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI="
+=======
+          "Value": "sha256-uM2jXv4QBrlBDwvWCnoOoatIkoYxx4gQkrazcPNCzFg="
+>>>>>>> d4a1f77 (90% done)
         }
       ]
     },
@@ -455,7 +535,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -500,7 +584,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -525,7 +613,11 @@
         },
         {
           "Name": "Content-Length",
+<<<<<<< HEAD
           "Value": "6522"
+=======
+          "Value": "6393"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Content-Type",
@@ -533,11 +625,19 @@
         },
         {
           "Name": "ETag",
+<<<<<<< HEAD
           "Value": "\"ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY=\""
         },
         {
           "Name": "Last-Modified",
           "Value": "Sat, 15 Mar 2025 02:26:30 GMT"
+=======
+          "Value": "\"DgoAMwIxwJf8kYz559m/0eTiDOuH2fWq61FprkEeyrc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -547,12 +647,20 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
+<<<<<<< HEAD
           "Value": "sha256-ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY="
+=======
+          "Value": "sha256-DgoAMwIxwJf8kYz559m/0eTiDOuH2fWq61FprkEeyrc="
+>>>>>>> d4a1f77 (90% done)
         }
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "register.w46ho1ssy3.html",
+=======
+      "Route": "register.iwu25a68rr.html",
+>>>>>>> d4a1f77 (90% done)
       "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\register.html",
       "Selectors": [],
       "ResponseHeaders": [
@@ -562,7 +670,11 @@
         },
         {
           "Name": "Content-Length",
+<<<<<<< HEAD
           "Value": "6522"
+=======
+          "Value": "6393"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Content-Type",
@@ -570,11 +682,19 @@
         },
         {
           "Name": "ETag",
+<<<<<<< HEAD
           "Value": "\"ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY=\""
         },
         {
           "Name": "Last-Modified",
           "Value": "Sat, 15 Mar 2025 02:26:30 GMT"
+=======
+          "Value": "\"DgoAMwIxwJf8kYz559m/0eTiDOuH2fWq61FprkEeyrc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -584,7 +704,11 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
+<<<<<<< HEAD
           "Value": "w46ho1ssy3"
+=======
+          "Value": "iwu25a68rr"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "label",
@@ -592,6 +716,7 @@
         },
         {
           "Name": "integrity",
+<<<<<<< HEAD
           "Value": "sha256-ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY="
         }
       ]
@@ -638,6 +763,9 @@
         {
           "Name": "integrity",
           "Value": "sha256-3hHGLHCLXMy/Vbm08C7ik8ozxJVyngdUUp1Vuxm7338="
+=======
+          "Value": "sha256-DgoAMwIxwJf8kYz559m/0eTiDOuH2fWq61FprkEeyrc="
+>>>>>>> d4a1f77 (90% done)
         }
       ]
     },
@@ -652,7 +780,11 @@
         },
         {
           "Name": "Content-Length",
+<<<<<<< HEAD
           "Value": "144835"
+=======
+          "Value": "155475"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Content-Type",
@@ -660,11 +792,19 @@
         },
         {
           "Name": "ETag",
+<<<<<<< HEAD
           "Value": "\"3hHGLHCLXMy/Vbm08C7ik8ozxJVyngdUUp1Vuxm7338=\""
         },
         {
           "Name": "Last-Modified",
           "Value": "Sat, 15 Mar 2025 05:46:16 GMT"
+=======
+          "Value": "\"TsPJgUWeEfOYh8EXvlA7MdQIfz10UA0Iy74RcSES37I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 09:39:38 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -674,7 +814,56 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
+<<<<<<< HEAD
           "Value": "sha256-3hHGLHCLXMy/Vbm08C7ik8ozxJVyngdUUp1Vuxm7338="
+=======
+          "Value": "sha256-TsPJgUWeEfOYh8EXvlA7MdQIfz10UA0Iy74RcSES37I="
+        }
+      ]
+    },
+    {
+      "Route": "student-dashboard.mf065k0wpz.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\student-dashboard.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "155475"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TsPJgUWeEfOYh8EXvlA7MdQIfz10UA0Iy74RcSES37I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 09:39:38 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "mf065k0wpz"
+        },
+        {
+          "Name": "label",
+          "Value": "student-dashboard.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-TsPJgUWeEfOYh8EXvlA7MdQIfz10UA0Iy74RcSES37I="
+>>>>>>> d4a1f77 (90% done)
         }
       ]
     },
@@ -689,7 +878,11 @@
         },
         {
           "Name": "Content-Length",
+<<<<<<< HEAD
           "Value": "62153"
+=======
+          "Value": "60894"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Content-Type",
@@ -697,11 +890,19 @@
         },
         {
           "Name": "ETag",
+<<<<<<< HEAD
           "Value": "\"arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8=\""
         },
         {
           "Name": "Last-Modified",
           "Value": "Sat, 15 Mar 2025 05:40:45 GMT"
+=======
+          "Value": "\"4DIX1kYXxnzw+ElLPgXEwCs3jCOQarJiOkHkc6IbG/U=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -711,12 +912,20 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
+<<<<<<< HEAD
           "Value": "sha256-arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8="
+=======
+          "Value": "sha256-4DIX1kYXxnzw+ElLPgXEwCs3jCOQarJiOkHkc6IbG/U="
+>>>>>>> d4a1f77 (90% done)
         }
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "teacher-dashboard.qzxy2uv037.html",
+=======
+      "Route": "teacher-dashboard.wkryt0xng4.html",
+>>>>>>> d4a1f77 (90% done)
       "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\teacher-dashboard.html",
       "Selectors": [],
       "ResponseHeaders": [
@@ -726,7 +935,11 @@
         },
         {
           "Name": "Content-Length",
+<<<<<<< HEAD
           "Value": "62153"
+=======
+          "Value": "60894"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Content-Type",
@@ -734,11 +947,19 @@
         },
         {
           "Name": "ETag",
+<<<<<<< HEAD
           "Value": "\"arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8=\""
         },
         {
           "Name": "Last-Modified",
           "Value": "Sat, 15 Mar 2025 05:40:45 GMT"
+=======
+          "Value": "\"4DIX1kYXxnzw+ElLPgXEwCs3jCOQarJiOkHkc6IbG/U=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -748,7 +969,11 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
+<<<<<<< HEAD
           "Value": "qzxy2uv037"
+=======
+          "Value": "wkryt0xng4"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "label",
@@ -756,7 +981,11 @@
         },
         {
           "Name": "integrity",
+<<<<<<< HEAD
           "Value": "sha256-arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8="
+=======
+          "Value": "sha256-4DIX1kYXxnzw+ElLPgXEwCs3jCOQarJiOkHkc6IbG/U="
+>>>>>>> d4a1f77 (90% done)
         }
       ]
     },
@@ -783,7 +1012,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",
@@ -820,7 +1053,11 @@
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Fri, 14 Mar 2025 14:59:14 GMT"
+=======
+          "Value": "Sat, 15 Mar 2025 05:49:29 GMT"
+>>>>>>> d4a1f77 (90% done)
         },
         {
           "Name": "Cache-Control",

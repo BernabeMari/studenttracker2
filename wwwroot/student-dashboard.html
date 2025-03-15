@@ -578,6 +578,12 @@
     </nav>
 
     <div class="container mt-4">
+<<<<<<< HEAD
+=======
+        <!-- Alert container for notifications -->
+        <div id="alert-container"></div>
+        
+>>>>>>> d4a1f77 (90% done)
         <div class="row">
             <!-- Map section - will be full width on mobile -->
             <div class="col-lg-8 mb-4">
@@ -912,6 +918,10 @@
                     console.log('Connected to SignalR Hub');
                     loadConnections();
                     loadTeacherConnections();
+<<<<<<< HEAD
+=======
+                    loadEnrolledSubjects();
+>>>>>>> d4a1f77 (90% done)
                     checkActiveSession();
                     
                     // If was tracking before page refresh, resume tracking
@@ -956,6 +966,201 @@
             }
         }
 
+<<<<<<< HEAD
+=======
+        // Function to load teacher connections (subject invitations)
+        async function loadTeacherConnections() {
+            try {
+                console.log('Loading teacher connections...');
+                const teacherConnectionsContainer = document.getElementById('teacher-connections');
+                teacherConnectionsContainer.innerHTML = '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
+                
+                const response = await fetch('/api/teacherconnection/pending', {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'GET'
+                });
+                
+                console.log('Teacher connections API response status:', response.status);
+                
+                if (response.ok) {
+                    const connections = await response.json();
+                    console.log('Teacher connections data:', connections);
+                    
+                    if (connections.length === 0) {
+                        teacherConnectionsContainer.innerHTML = 
+                            '<div class="alert alert-info py-2">No pending subject invitations.</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    connections.forEach(connection => {
+                        html += `
+                            <div class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-1">${connection.subject.name}</h5>
+                                        <p class="mb-1 text-muted">Teacher: ${connection.teacher.fullname}</p>
+                                        <small class="text-muted">Sent: ${new Date(connection.createdAt).toLocaleString()}</small>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-success me-1 accept-teacher-btn" 
+                                            data-connection-id="${connection.connectionId}">
+                                            <i class="bi bi-check-circle me-1"></i>Accept
+                                        </button>
+                                        <button class="btn btn-sm btn-danger reject-teacher-btn" 
+                                            data-connection-id="${connection.connectionId}">
+                                            <i class="bi bi-x-circle me-1"></i>Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    teacherConnectionsContainer.innerHTML = html;
+                    
+                    // Add event listeners for accept/reject buttons
+                    document.querySelectorAll('.accept-teacher-btn').forEach(button => {
+                        button.addEventListener('click', () => handleTeacherConnectionResponse(button.dataset.connectionId, 'Approved'));
+                    });
+                    
+                    document.querySelectorAll('.reject-teacher-btn').forEach(button => {
+                        button.addEventListener('click', () => handleTeacherConnectionResponse(button.dataset.connectionId, 'Rejected'));
+                    });
+                } else {
+                    const errorText = await response.text();
+                    console.error('Teacher connections API error:', errorText);
+                    teacherConnectionsContainer.innerHTML = 
+                        `<div class="alert alert-danger py-2">Error loading invitations: ${errorText}</div>`;
+                }
+            } catch (error) {
+                console.error('Error loading teacher connections:', error);
+                document.getElementById('teacher-connections').innerHTML = 
+                    `<div class="alert alert-danger py-2">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Function to handle teacher connection response (accept/reject)
+        async function handleTeacherConnectionResponse(connectionId, status) {
+            try {
+                console.log(`Responding to teacher connection ${connectionId} with status ${status}`);
+                
+                const response = await fetch('/api/teacherconnection/respond', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        connectionId: connectionId,
+                        status: status
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Response data:', data);
+                    
+                    // Show success message
+                    const alertClass = status === 'Approved' ? 'success' : 'warning';
+                    const alertMessage = `<div class="alert alert-${alertClass} alert-dismissible fade show" role="alert">
+                        ${data.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                    
+                    document.getElementById('alert-container').innerHTML = alertMessage;
+                    
+                    // Reload connections
+                    await loadTeacherConnections();
+                    
+                    // If approved, also reload enrolled subjects
+                    if (status === 'Approved') {
+                        await loadEnrolledSubjects();
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error responding to connection:', errorText);
+                    
+                    document.getElementById('alert-container').innerHTML = `
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            Error: ${errorText}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error handling connection response:', error);
+                document.getElementById('alert-container').innerHTML = `
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Error: ${error.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Function to load enrolled subjects
+        async function loadEnrolledSubjects() {
+            try {
+                console.log('Loading enrolled subjects...');
+                const enrolledSubjectsContainer = document.getElementById('enrolled-subjects');
+                enrolledSubjectsContainer.innerHTML = '<div class="text-center py-3 text-muted"><i class="bi bi-hourglass me-2"></i>Loading...</div>';
+                
+                const response = await fetch('/api/teacherconnection/connected', {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'GET'
+                });
+                
+                console.log('Enrolled subjects API response status:', response.status);
+                
+                if (response.ok) {
+                    const connections = await response.json();
+                    console.log('Enrolled subjects data:', connections);
+                    
+                    if (connections.length === 0) {
+                        enrolledSubjectsContainer.innerHTML = 
+                            '<div class="alert alert-info py-2">You are not enrolled in any subjects yet.</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    connections.forEach(connection => {
+                        html += `
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-1">${connection.subject.name}</h5>
+                                        <p class="mb-1 text-muted">Teacher: ${connection.teacher.fullname}</p>
+                                        <small class="text-muted">Enrolled: ${new Date(connection.createdAt).toLocaleString()}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    enrolledSubjectsContainer.innerHTML = html;
+                } else {
+                    const errorText = await response.text();
+                    console.error('Enrolled subjects API error:', errorText);
+                    enrolledSubjectsContainer.innerHTML = 
+                        `<div class="alert alert-danger py-2">Error loading subjects: ${errorText}</div>`;
+                }
+            } catch (error) {
+                console.error('Error loading enrolled subjects:', error);
+                document.getElementById('enrolled-subjects').innerHTML = 
+                    `<div class="alert alert-danger py-2">Error: ${error.message}</div>`;
+            }
+        }
+
+>>>>>>> d4a1f77 (90% done)
         // Check for active tracking session on page load
         async function checkActiveSession() {
             try {

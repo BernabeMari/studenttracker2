@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("StudentTracker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f54e7a722a2e391d5ff9d020baa7b432c08fc98a")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d8d6a062ceae87660d27a883038004de0536995")]
+>>>>>>> d4a1f77 (90% done)
 [assembly: System.Reflection.AssemblyProductAttribute("StudentTracker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("StudentTracker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
