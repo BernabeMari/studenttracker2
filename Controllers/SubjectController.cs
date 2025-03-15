@@ -188,5 +188,91 @@ namespace StudentTracker.Controllers
                 Students = students
             });
         }
+
+        [HttpDelete("{subjectId}")]
+        public async Task<IActionResult> DeleteSubject(int subjectId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+                
+                if (userIdClaim == null || userTypeClaim == null)
+                    return Unauthorized(new { message = "User not authenticated" });
+
+                var teacherId = int.Parse(userIdClaim.Value);
+                
+                if (userTypeClaim.Value != "Teacher")
+                    return BadRequest(new { message = "Only teachers can delete subjects" });
+
+                // Find the subject
+                var subject = await _context.Subjects
+                    .FirstOrDefaultAsync(s => s.SubjectId == subjectId);
+                
+                if (subject == null)
+                    return NotFound(new { message = "Subject not found" });
+                
+                // Verify ownership
+                if (subject.TeacherId != teacherId)
+                    return Forbid();
+
+                // Use the execution strategy pattern compatible with SQL Server retrying
+                var executionStrategy = _context.Database.CreateExecutionStrategy();
+                
+                await executionStrategy.ExecuteAsync(async () =>
+                {
+                    using (var transaction = await _context.Database.BeginTransactionAsync())
+                    {
+                        try
+                        {
+                            // 1. Delete attendance records related to this subject
+                            var attendanceRecords = await _context.AttendanceRecords
+                                .Where(ar => ar.SubjectId == subjectId)
+                                .ToListAsync();
+                            
+                            if (attendanceRecords.Any())
+                                _context.AttendanceRecords.RemoveRange(attendanceRecords);
+                            
+                            // 2. Delete attendance sessions related to this subject
+                            var attendanceSessions = await _context.AttendanceSessions
+                                .Where(s => s.SubjectId == subjectId)
+                                .ToListAsync();
+                            
+                            if (attendanceSessions.Any())
+                                _context.AttendanceSessions.RemoveRange(attendanceSessions);
+                            
+                            // 3. Delete student-teacher connections related to this subject
+                            var connections = await _context.StudentTeacherConnections
+                                .Where(stc => stc.SubjectId == subjectId)
+                                .ToListAsync();
+                            
+                            if (connections.Any())
+                                _context.StudentTeacherConnections.RemoveRange(connections);
+                            
+                            // 4. Finally delete the subject
+                            _context.Subjects.Remove(subject);
+                            
+                            // Save all changes
+                            await _context.SaveChangesAsync();
+                            
+                            // Commit transaction
+                            await transaction.CommitAsync();
+                        }
+                        catch
+                        {
+                            // Transaction will automatically rollback when disposed
+                            // if it hasn't been committed
+                            throw;
+                        }
+                    }
+                });
+                
+                return Ok(new { message = $"Subject '{subject.Name}' and all related data deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+            }
+        }
     }
 } 

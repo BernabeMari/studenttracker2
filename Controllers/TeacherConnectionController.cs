@@ -255,5 +255,53 @@ namespace StudentTracker.Controllers
 
             return BadRequest(new { message = "Invalid user type" });
         }
+
+        [HttpDelete("{connectionId}")]
+        public async Task<IActionResult> RemoveConnection(int connectionId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+                
+                if (userIdClaim == null || userTypeClaim == null)
+                    return Unauthorized(new { message = "User not authenticated" });
+
+                var teacherId = int.Parse(userIdClaim.Value);
+                
+                if (userTypeClaim.Value != "Teacher")
+                    return BadRequest(new { message = "Only teachers can remove students from subjects" });
+
+                // Find the connection
+                var connection = await _context.StudentTeacherConnections
+                    .Include(stc => stc.Subject)
+                    .Include(stc => stc.Student)
+                    .FirstOrDefaultAsync(stc => stc.ConnectionId == connectionId);
+                
+                if (connection == null)
+                    return NotFound(new { message = "Connection not found" });
+                
+                // Verify that the subject belongs to the teacher
+                var subject = await _context.Subjects
+                    .FirstOrDefaultAsync(s => s.SubjectId == connection.SubjectId && s.TeacherId == teacherId);
+                
+                if (subject == null)
+                    return Forbid();
+                
+                // Remove the connection
+                _context.StudentTeacherConnections.Remove(connection);
+                await _context.SaveChangesAsync();
+                
+                return Ok(new { 
+                    message = $"Student {connection.Student.Fullname} removed from subject {connection.Subject.Name} successfully",
+                    studentId = connection.StudentId,
+                    subjectId = connection.SubjectId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+            }
+        }
     }
 } 

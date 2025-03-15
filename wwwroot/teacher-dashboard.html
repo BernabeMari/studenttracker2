@@ -306,24 +306,32 @@
                                 </button>
                             </div>
                         </div>
-                        <p class="text-muted small mb-3">Students can scan this QR code to quickly log their attendance for this session.</p>
+                        <p class="text-muted small mb-3">Students can scan this QR code to quickly log their attendance for this subject. Each subject has one persistent session.</p>
                         <div class="d-flex justify-content-center">
                             <div id="qr-code-container" class="text-center d-none">
                                 <div id="qrcode" class="mb-2 bg-white p-2 d-inline-block"></div>
                                 <div class="mt-2">
                                     <span id="attendance-session-id" class="badge bg-secondary mb-2 d-block">Session: </span>
-                                    <button class="btn btn-sm btn-outline-primary me-2" id="download-qr-btn">
-                                        <i class="bi bi-download me-1"></i> Download
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-secondary" id="new-session-btn">
-                                        <i class="bi bi-arrow-repeat me-1"></i> New Session
-                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" id="download-qr-btn">
+                                            <i class="bi bi-download me-1"></i> Download
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" id="new-session-btn">
+                                            <i class="bi bi-arrow-repeat me-1"></i> Refresh QR
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" id="view-attendance-btn">
+                                            <i class="bi bi-list-check me-1"></i> View Attendance
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" id="view-statistics-btn">
+                                            <i class="bi bi-bar-chart me-1"></i> Statistics
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div id="qr-placeholder" class="text-center text-muted">
                                 <div class="border border-dashed p-4 mb-2">
                                     <i class="bi bi-qr-code" style="font-size: 3rem;"></i>
-                                    <p class="mb-0 mt-2">Click "Generate QR Code" to create an attendance session</p>
+                                    <p class="mb-0 mt-2">Click "Generate QR Code" to create an attendance QR code</p>
                                 </div>
                             </div>
                         </div>
@@ -352,6 +360,69 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add a new section for attendance records after the Students table -->
+    <div class="mt-4 attendance-records-section d-none">
+        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+            <span>Attendance Records</span>
+            <button class="btn btn-sm btn-outline-secondary" id="close-attendance-btn">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </h6>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Record ID</th>
+                    </tr>
+                </thead>
+                <tbody id="attendance-records">
+                    <tr>
+                        <td colspan="4" class="text-center">Loading attendance records...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add a new section for attendance statistics -->
+    <div class="mt-4 attendance-stats-section d-none">
+        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+            <span>Attendance Statistics</span>
+            <button class="btn btn-sm btn-outline-secondary" id="close-stats-btn">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </h6>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">Students Present</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush" id="present-students">
+                            <li class="list-group-item text-center">Loading...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-danger text-white">
+                        <h6 class="mb-0">Students Absent</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush" id="absent-students">
+                            <li class="list-group-item text-center">Loading...</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -512,9 +583,12 @@
                                         </small>
                                     </p>
                                 </div>
-                                <div class="card-footer bg-transparent border-top-0">
+                                <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
                                     <button class="btn btn-sm btn-outline-primary" onclick="showSubjectDetails(${subject.subjectId})">
                                         View Details
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${subject.subjectId}, '${subject.name}')">
+                                        <i class="bi bi-trash"></i> Delete
                                     </button>
                                 </div>
                             </div>
@@ -668,6 +742,22 @@
                     // Set up new session button handler
                     document.getElementById('new-session-btn').onclick = () => clearQRCodeSession(subject.subjectId, subject.name);
                     
+                    // Set up attendance records viewing button
+                    document.getElementById('view-attendance-btn').onclick = () => viewAttendanceRecords(subject.subjectId);
+                    
+                    // Set up attendance statistics viewing button
+                    document.getElementById('view-statistics-btn').onclick = () => viewAttendanceStatistics(subject.subjectId);
+                    
+                    // Set up close attendance button
+                    document.getElementById('close-attendance-btn').onclick = () => {
+                        document.querySelector('.attendance-records-section').classList.add('d-none');
+                    };
+                    
+                    // Set up close statistics button
+                    document.getElementById('close-stats-btn').onclick = () => {
+                        document.querySelector('.attendance-stats-section').classList.add('d-none');
+                    };
+                    
                     const studentsTable = document.getElementById('subject-students');
                     if (!subject.students || subject.students.length === 0) {
                         studentsTable.innerHTML = `
@@ -706,19 +796,13 @@
             }
         }
 
-        // Optional: Add a function to remove a student from a subject
+        // Function to remove a student from a subject
         async function removeStudent(connectionId) {
             if (!confirm('Are you sure you want to remove this student from the subject?')) {
                 return;
             }
 
             try {
-                // This would require an additional API endpoint to remove students
-                // For now, we can just show a notification
-                showNotification('info', 'Not Implemented', 'This feature is not yet implemented');
-                
-                // Here's what the actual implementation might look like:
-                /*
                 const response = await fetch(`/api/teacherconnection/${connectionId}`, {
                     method: 'DELETE',
                     headers: {
@@ -727,7 +811,8 @@
                 });
 
                 if (response.ok) {
-                    showNotification('success', 'Student Removed', 'Student removed from subject successfully');
+                    const data = await response.json();
+                    showNotification('success', 'Student Removed', data.message);
                     
                     // Refresh the modal data
                     const subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
@@ -736,7 +821,6 @@
                     const errorData = await response.json();
                     showNotification('error', 'Error', errorData.message || 'Failed to remove student');
                 }
-                */
             } catch (error) {
                 console.error('Error removing student:', error);
                 showNotification('error', 'Error', 'Failed to remove student');
@@ -784,11 +868,11 @@
         // Generate attendance QR code
         async function generateAttendanceQR(subjectId, subjectName) {
             try {
-                // Create a new attendance session
+                // Get or create a session for this subject
                 const sessionData = await createAttendanceSession(subjectId);
                 
                 if (!sessionData) {
-                    showNotification('error', 'Error', 'Failed to create attendance session');
+                    showNotification('error', 'Error', 'Failed to get attendance session');
                     return;
                 }
                 
@@ -834,7 +918,7 @@
                         correctLevel: QRCode.CorrectLevel.H
                     });
                     
-                    showNotification('success', 'QR Code Generated', 'Attendance session created successfully. Students can now scan this code to record their attendance.');
+                    showNotification('success', 'QR Code Generated', 'Using persistent session for this subject. Students can now scan this code to record their attendance.');
                 } catch (qrError) {
                     console.error('Error generating QR code:', qrError);
                     showNotification('error', 'Error', 'Could not generate QR code');
@@ -898,13 +982,13 @@
                 document.getElementById('qr-placeholder').classList.remove('d-none');
                 document.getElementById('qrcode').innerHTML = '';
                 
-                // Generate a new QR code (which will trigger a new session)
+                // Generate a new QR code (which will trigger a new session or get existing one)
                 generateAttendanceQR(subjectId, subjectName);
                 
-                showNotification('success', 'New Session', 'Previous attendance session cleared. New session created.');
+                showNotification('success', 'QR Code Refreshed', 'The QR code has been refreshed with the current session data.');
             } catch (error) {
                 console.error('Error clearing QR session:', error);
-                showNotification('error', 'Error', 'Failed to clear QR code session');
+                showNotification('error', 'Error', 'Failed to refresh QR code');
             }
         }
         
@@ -933,6 +1017,93 @@
             } catch (error) {
                 console.error('Error creating attendance session:', error);
                 return null;
+            }
+        }
+
+        // Add function to delete a subject
+        async function deleteSubject(subjectId, subjectName) {
+            if (!confirm(`Are you sure you want to delete subject "${subjectName}"?\nThis will also delete all related attendance data.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/subject/${subjectId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    showNotification('success', 'Subject Deleted', `"${subjectName}" has been deleted successfully.`);
+                    
+                    // Clear any stored session data for this subject
+                    const sessionKey = `attendance_session_${subjectId}`;
+                    localStorage.removeItem(sessionKey);
+                    
+                    // Refresh the subjects list
+                    loadSubjects();
+                } else {
+                    const errorData = await response.json();
+                    showNotification('error', 'Error', errorData.message || 'Failed to delete subject');
+                }
+            } catch (error) {
+                console.error('Error deleting subject:', error);
+                showNotification('error', 'Error', 'Failed to delete subject. Please try again.');
+            }
+        }
+
+        // Add function to view attendance records
+        async function viewAttendanceRecords(subjectId) {
+            try {
+                const response = await fetch(`/api/attendance/subject/${subjectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const attendanceRecordsTable = document.getElementById('attendance-records');
+                    
+                    // Show the attendance records section
+                    document.querySelector('.attendance-records-section').classList.remove('d-none');
+                    
+                    if (!data.records || data.records.length === 0) {
+                        attendanceRecordsTable.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="text-center">No attendance records found for this subject</td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    attendanceRecordsTable.innerHTML = data.records.map(record => `
+                        <tr>
+                            <td>${record.studentName}</td>
+                            <td>${record.date}</td>
+                            <td>${record.time}</td>
+                            <td>${record.attendanceId}</td>
+                        </tr>
+                    `).join('');
+                    
+                    // Show summary information
+                    attendanceRecordsTable.innerHTML += `
+                        <tr class="table-secondary">
+                            <td colspan="4" class="text-end">
+                                <strong>Total Attendance: ${data.attendanceCount} student(s)</strong>
+                            </td>
+                        </tr>
+                    `;
+                    
+                } else {
+                    console.error('Failed to load attendance records:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load attendance records');
+                }
+            } catch (error) {
+                console.error('Error loading attendance records:', error);
+                showNotification('error', 'Error', 'Failed to load attendance records');
             }
         }
     </script>

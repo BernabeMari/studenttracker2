@@ -42,17 +42,39 @@ namespace StudentTracker.Controllers
                 if (subject == null)
                     return NotFound(new { message = "Subject not found or you don't have access to it" });
 
-                // Create a new attendance session
-                var session = new AttendanceSession
-                {
-                    SubjectId = request.SubjectId,
-                    TeacherId = teacherId,
-                    Date = request.Date,
-                    CreatedAt = DateTime.UtcNow
-                };
+                // Check if there's an existing active session for this subject
+                var existingSession = await _context.AttendanceSessions
+                    .Where(s => s.SubjectId == request.SubjectId && s.TeacherId == teacherId)
+                    .OrderByDescending(s => s.CreatedAt)
+                    .FirstOrDefaultAsync();
 
-                _context.AttendanceSessions.Add(session);
-                await _context.SaveChangesAsync();
+                AttendanceSession session;
+                
+                if (existingSession != null)
+                {
+                    // Reuse the existing session
+                    session = existingSession;
+                    // Update the date if needed
+                    if (request.Date.Date != session.Date.Date)
+                    {
+                        session.Date = request.Date;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    // Create a new attendance session if none exists
+                    session = new AttendanceSession
+                    {
+                        SubjectId = request.SubjectId,
+                        TeacherId = teacherId,
+                        Date = request.Date,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    _context.AttendanceSessions.Add(session);
+                    await _context.SaveChangesAsync();
+                }
 
                 return Ok(new
                 {
@@ -60,7 +82,7 @@ namespace StudentTracker.Controllers
                     subjectId = session.SubjectId,
                     subjectName = subject.Name,
                     date = session.Date,
-                    message = "Attendance session created successfully"
+                    message = "Attendance session retrieved successfully"
                 });
             }
             catch (Exception ex)
@@ -206,6 +228,77 @@ namespace StudentTracker.Controllers
                     subjectId = session.SubjectId,
                     subjectName = session.Subject?.Name,
                     date = session.Date,
+                    attendanceCount = attendanceRecords.Count,
+                    records = attendanceRecords
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+            }
+        }
+
+        [HttpGet("subject/{subjectId}")]
+        public async Task<IActionResult> GetSubjectAttendance(int subjectId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+                
+                if (userIdClaim == null || userTypeClaim == null)
+                    return Unauthorized(new { message = "User not authenticated" });
+
+                var userId = int.Parse(userIdClaim.Value);
+                
+                if (userTypeClaim.Value != "Teacher")
+                    return BadRequest(new { message = "Only teachers can view subject attendance" });
+
+                // Verify the subject belongs to the teacher
+                var subject = await _context.Subjects
+                    .FirstOrDefaultAsync(s => s.SubjectId == subjectId && s.TeacherId == userId);
+                
+                if (subject == null)
+                    return NotFound(new { message = "Subject not found or you don't have access to it" });
+
+                // Get the subject's session
+                var session = await _context.AttendanceSessions
+                    .Where(s => s.SubjectId == subjectId)
+                    .OrderByDescending(s => s.CreatedAt)
+                    .FirstOrDefaultAsync();
+
+                if (session == null)
+                    return Ok(new
+                    {
+                        subjectId = subjectId,
+                        subjectName = subject.Name,
+                        message = "No attendance session exists for this subject yet",
+                        attendanceCount = 0,
+                        records = new object[] { }
+                    });
+
+                // Get all attendance records for this session
+                var attendanceRecords = await _context.AttendanceRecords
+                    .Where(ar => ar.SessionId == session.SessionId)
+                    .Include(ar => ar.Student)
+                    .Select(ar => new
+                    {
+                        attendanceId = ar.AttendanceId,
+                        studentId = ar.StudentId,
+                        studentName = ar.Student != null ? ar.Student.Fullname : "Unknown",
+                        timestamp = ar.Timestamp,
+                        date = ar.Timestamp.ToString("yyyy-MM-dd"),
+                        time = ar.Timestamp.ToString("HH:mm:ss")
+                    })
+                    .OrderByDescending(ar => ar.timestamp)
+                    .ToListAsync();
+
+                return Ok(new
+                {
+                    subjectId = subjectId,
+                    subjectName = subject.Name,
+                    sessionId = session.SessionId,
+                    sessionDate = session.Date,
                     attendanceCount = attendanceRecords.Count,
                     records = attendanceRecords
                 });

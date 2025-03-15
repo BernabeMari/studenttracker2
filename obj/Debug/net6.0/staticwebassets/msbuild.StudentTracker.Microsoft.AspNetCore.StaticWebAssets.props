@@ -120,8 +120,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>uj5kf46jvd</Fingerprint>
-      <Integrity>GnjFcjXZj6d25avXB3P/JpVhTlxmsZN/UPYP0ondl0M=</Integrity>
+      <Fingerprint>q6l8svtcjr</Fingerprint>
+      <Integrity>QmWMK7kOThsRYdlcihpHQIuSGByzYJ5uSRW7DDu0KB4=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\teacher-dashboard.html'))</OriginalItemSpec>
