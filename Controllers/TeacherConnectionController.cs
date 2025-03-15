@@ -4,10 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using StudentTracker.Data;
 using StudentTracker.Models;
 using System.Security.Claims;
-<<<<<<< HEAD
-=======
 using System.Collections.Generic;
->>>>>>> d4a1f77 (90% done)
 
 namespace StudentTracker.Controllers
 {
@@ -51,16 +48,6 @@ namespace StudentTracker.Controllers
             if (subject == null)
                 return NotFound(new { message = "Subject not found or you don't have access to it" });
 
-<<<<<<< HEAD
-            // Check for existing connection
-            bool connectionExists = await _context.StudentTeacherConnections.AnyAsync(stc => 
-                stc.StudentId == request.StudentId && 
-                stc.TeacherId == teacherId && 
-                stc.SubjectId == request.SubjectId);
-
-            if (connectionExists)
-                return BadRequest(new { message = "Connection request already exists" });
-=======
             // Check for existing connection with any status
             var existingConnection = await _context.StudentTeacherConnections
                 .FirstOrDefaultAsync(stc => 
@@ -88,7 +75,6 @@ namespace StudentTracker.Controllers
             // If already rejected 3 times, don't allow more requests
             if (rejectionCount >= 3)
                 return BadRequest(new { message = "This student has rejected your invitation 3 times. You cannot send another invitation." });
->>>>>>> d4a1f77 (90% done)
 
             var connection = new StudentTeacherConnection
             {
@@ -112,45 +98,6 @@ namespace StudentTracker.Controllers
         [HttpPost("respond")]
         public async Task<IActionResult> RespondToRequest([FromBody] ConnectionStatusUpdateModel model)
         {
-<<<<<<< HEAD
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userTypeClaim = User.FindFirst(ClaimTypes.Role);
-            
-            if (userIdClaim == null || userTypeClaim == null)
-                return Unauthorized(new { message = "User not authenticated" });
-
-            var userId = int.Parse(userIdClaim.Value);
-            
-            if (userTypeClaim.Value != "Student")
-                return BadRequest(new { message = "Only students can respond to connection requests" });
-
-            var connection = await _context.StudentTeacherConnections
-                .Include(stc => stc.Subject)
-                .FirstOrDefaultAsync(stc => stc.ConnectionId == model.ConnectionId);
-
-            if (connection == null)
-                return NotFound(new { message = "Connection request not found" });
-
-            if (connection.StudentId != userId)
-                return Forbid();
-
-            if (connection.Status != "Pending")
-                return BadRequest(new { message = "This request has already been processed" });
-
-            if (model.Status != "Approved" && model.Status != "Rejected")
-                return BadRequest(new { message = "Invalid status. Status must be 'Approved' or 'Rejected'" });
-
-            connection.Status = model.Status;
-            connection.UpdatedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(new 
-            { 
-                message = $"Connection request {model.Status.ToLower()} successfully",
-                subjectName = connection.Subject?.Name
-            });
-=======
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -236,80 +183,11 @@ namespace StudentTracker.Controllers
                 Console.WriteLine($"Error in TeacherConnectionController.RespondToRequest: {ex.Message}");
                 return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
             }
->>>>>>> d4a1f77 (90% done)
         }
 
         [HttpGet("pending")]
         public async Task<IActionResult> GetPendingConnections()
         {
-<<<<<<< HEAD
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userTypeClaim = User.FindFirst(ClaimTypes.Role);
-            
-            if (userIdClaim == null || userTypeClaim == null)
-                return Unauthorized(new { message = "User not authenticated" });
-
-            var userId = int.Parse(userIdClaim.Value);
-            var userType = userTypeClaim.Value;
-
-            if (userType == "Student")
-            {
-                var connections = await _context.StudentTeacherConnections
-                    .Where(stc => stc.StudentId == userId && stc.Status == "Pending")
-                    .Include(stc => stc.Teacher)
-                    .Include(stc => stc.Subject)
-                    .Select(stc => new
-                    {
-                        stc.ConnectionId,
-                        stc.Status,
-                        stc.CreatedAt,
-                        Subject = new
-                        {
-                            stc.Subject.SubjectId,
-                            stc.Subject.Name,
-                            stc.Subject.Description
-                        },
-                        Teacher = new
-                        {
-                            stc.Teacher.TeacherId,
-                            stc.Teacher.Fullname,
-                            stc.Teacher.Email
-                        }
-                    })
-                    .ToListAsync();
-
-                return Ok(connections);
-            }
-            else if (userType == "Teacher")
-            {
-                var connections = await _context.StudentTeacherConnections
-                    .Where(stc => stc.TeacherId == userId && stc.Status == "Pending")
-                    .Include(stc => stc.Student)
-                    .Include(stc => stc.Subject)
-                    .Select(stc => new
-                    {
-                        stc.ConnectionId,
-                        stc.Status,
-                        stc.CreatedAt,
-                        Subject = new
-                        {
-                            stc.Subject.SubjectId,
-                            stc.Subject.Name
-                        },
-                        Student = new
-                        {
-                            stc.Student.StudentId,
-                            stc.Student.Fullname,
-                            stc.Student.Email
-                        }
-                    })
-                    .ToListAsync();
-
-                return Ok(connections);
-            }
-
-            return BadRequest(new { message = "Invalid user type" });
-=======
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -390,209 +268,11 @@ namespace StudentTracker.Controllers
                 Console.WriteLine($"Error in TeacherConnectionController.GetPendingConnections: {ex.Message}");
                 return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
             }
->>>>>>> d4a1f77 (90% done)
         }
 
         [HttpGet("connected")]
         public async Task<IActionResult> GetConnectedUsers()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userTypeClaim = User.FindFirst(ClaimTypes.Role);
-            
-            if (userIdClaim == null || userTypeClaim == null)
-                return Unauthorized(new { message = "User not authenticated" });
-
-            var userId = int.Parse(userIdClaim.Value);
-            var userType = userTypeClaim.Value;
-
-            if (userType == "Student")
-            {
-                var connections = await _context.StudentTeacherConnections
-                    .Where(stc => stc.StudentId == userId && stc.Status == "Approved")
-                    .Include(stc => stc.Teacher)
-                    .Include(stc => stc.Subject)
-                    .Select(stc => new
-                    {
-                        stc.ConnectionId,
-                        stc.CreatedAt,
-                        Subject = new
-                        {
-                            stc.Subject.SubjectId,
-                            stc.Subject.Name,
-                            stc.Subject.Description
-                        },
-                        Teacher = new
-                        {
-                            stc.Teacher.TeacherId,
-<<<<<<< HEAD
-=======
-                            stc.Teacher.Username,
->>>>>>> d4a1f77 (90% done)
-                            stc.Teacher.Fullname,
-                            stc.Teacher.Email
-                        }
-                    })
-                    .ToListAsync();
-
-                return Ok(connections);
-            }
-            else if (userType == "Teacher")
-            {
-                // Group students by subject
-                var subjects = await _context.Subjects
-                    .Where(s => s.TeacherId == userId)
-                    .Select(s => new
-                    {
-                        s.SubjectId,
-                        s.Name,
-                        s.Description,
-                        Students = _context.StudentTeacherConnections
-                            .Where(stc => stc.SubjectId == s.SubjectId && stc.Status == "Approved")
-                            .Include(stc => stc.Student)
-                            .Select(stc => new
-                            {
-                                stc.Student.StudentId,
-<<<<<<< HEAD
-=======
-                                stc.Student.Username,
->>>>>>> d4a1f77 (90% done)
-                                stc.Student.Fullname,
-                                stc.Student.Email
-                            })
-                            .ToList()
-                    })
-                    .ToListAsync();
-
-                return Ok(subjects);
-            }
-
-            return BadRequest(new { message = "Invalid user type" });
-        }
-<<<<<<< HEAD
-=======
-        
-        [HttpGet("rejected")]
-        public async Task<IActionResult> GetRejectedConnections()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userTypeClaim = User.FindFirst(ClaimTypes.Role);
-            
-            if (userIdClaim == null || userTypeClaim == null)
-                return Unauthorized(new { message = "User not authenticated" });
-
-            var userId = int.Parse(userIdClaim.Value);
-            var userType = userTypeClaim.Value;
-
-            if (userType == "Student")
-            {
-                var rejectedConnections = await _context.StudentTeacherConnections
-                    .Where(stc => stc.StudentId == userId && stc.Status == "Rejected")
-                    .Include(stc => stc.Teacher)
-                    .Include(stc => stc.Subject)
-                    .Select(stc => new
-                    {
-                        stc.ConnectionId,
-                        stc.Status,
-                        stc.CreatedAt,
-                        stc.UpdatedAt,
-                        Subject = new
-                        {
-                            stc.Subject.SubjectId,
-                            stc.Subject.Name,
-                            stc.Subject.Description
-                        },
-                        Teacher = new
-                        {
-                            stc.Teacher.TeacherId,
-                            stc.Teacher.Username,
-                            stc.Teacher.Fullname,
-                            stc.Teacher.Email
-                        }
-                    })
-                    .ToListAsync();
-
-                return Ok(rejectedConnections);
-            }
-            else if (userType == "Teacher")
-            {
-                var rejectedRequests = await _context.StudentTeacherConnections
-                    .Where(stc => stc.TeacherId == userId && stc.Status == "Rejected")
-                    .Include(stc => stc.Student)
-                    .Include(stc => stc.Subject)
-                    .Select(stc => new
-                    {
-                        stc.ConnectionId,
-                        stc.Status,
-                        stc.CreatedAt,
-                        stc.UpdatedAt,
-                        Subject = new
-                        {
-                            stc.Subject.SubjectId,
-                            stc.Subject.Name,
-                            stc.Subject.Description
-                        },
-                        Student = new
-                        {
-                            stc.Student.StudentId,
-                            stc.Student.Username,
-                            stc.Student.Fullname,
-                            stc.Student.Email
-                        },
-                        RejectionCount = _context.StudentTeacherConnections
-                            .Count(c => c.StudentId == stc.StudentId && 
-                                       c.TeacherId == stc.TeacherId && 
-                                       c.SubjectId == stc.SubjectId && 
-                                       c.Status == "Rejected")
-                    })
-                    .ToListAsync();
-
-                return Ok(rejectedRequests);
-            }
-
-            return BadRequest(new { message = "Invalid user type" });
-        }
->>>>>>> d4a1f77 (90% done)
-
-        [HttpDelete("{connectionId}")]
-        public async Task<IActionResult> RemoveConnection(int connectionId)
-        {
-<<<<<<< HEAD
-=======
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userTypeClaim = User.FindFirst(ClaimTypes.Role);
-            
-            if (userIdClaim == null || userTypeClaim == null)
-                return Unauthorized(new { message = "User not authenticated" });
-
-            var userId = int.Parse(userIdClaim.Value);
-            var userType = userTypeClaim.Value;
-            
-            var connection = await _context.StudentTeacherConnections.FindAsync(connectionId);
-            if (connection == null)
-                return NotFound(new { message = "Connection not found" });
-                
-            if (userType == "Teacher" && connection.TeacherId != userId)
-                return Forbid();
-                
-            if (userType == "Student" && connection.StudentId != userId)
-                return Forbid();
-                
-            _context.StudentTeacherConnections.Remove(connection);
-            await _context.SaveChangesAsync();
-            
-            return Ok(new { message = "Connection removed successfully" });
-        }
-
-        [HttpGet("test")]
-        public IActionResult TestEndpoint()
-        {
-            return Ok(new { message = "TeacherConnection controller is working" });
-        }
-
-        [HttpGet("debug")]
-        public async Task<IActionResult> DebugConnections()
-        {
->>>>>>> d4a1f77 (90% done)
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -601,12 +281,162 @@ namespace StudentTracker.Controllers
                 if (userIdClaim == null || userTypeClaim == null)
                     return Unauthorized(new { message = "User not authenticated" });
 
-<<<<<<< HEAD
-                var teacherId = int.Parse(userIdClaim.Value);
-                
-                if (userTypeClaim.Value != "Teacher")
-                    return BadRequest(new { message = "Only teachers can remove students from subjects" });
+                var userId = int.Parse(userIdClaim.Value);
+                var userType = userTypeClaim.Value;
 
+                Console.WriteLine($"Getting connected users for user {userId} with role {userType}");
+
+                if (userType == "Student")
+                {
+                    var connections = await _context.StudentTeacherConnections
+                        .Where(stc => stc.StudentId == userId && stc.Status == "Approved")
+                        .Include(stc => stc.Teacher)
+                        .Include(stc => stc.Subject)
+                        .OrderBy(stc => stc.Subject.Name)
+                        .Select(stc => new
+                        {
+                            stc.ConnectionId,
+                            stc.Status,
+                            stc.CreatedAt,
+                            stc.UpdatedAt,
+                            Subject = new
+                            {
+                                stc.Subject.SubjectId,
+                                stc.Subject.Name,
+                                stc.Subject.Description
+                            },
+                            Teacher = new
+                            {
+                                stc.Teacher.TeacherId,
+                                stc.Teacher.Username,
+                                stc.Teacher.Fullname,
+                                stc.Teacher.Email
+                            }
+                        })
+                        .ToListAsync();
+
+                    Console.WriteLine($"Found {connections.Count} approved connections for student {userId}");
+                    return Ok(connections);
+                }
+                else if (userType == "Teacher")
+                {
+                    var connections = await _context.StudentTeacherConnections
+                        .Where(stc => stc.TeacherId == userId && stc.Status == "Approved")
+                        .Include(stc => stc.Student)
+                        .Include(stc => stc.Subject)
+                        .OrderBy(stc => stc.Subject.Name)
+                        .ThenBy(stc => stc.Student.Fullname)
+                        .Select(stc => new
+                        {
+                            stc.ConnectionId,
+                            stc.Status,
+                            stc.CreatedAt,
+                            stc.UpdatedAt,
+                            Subject = new
+                            {
+                                stc.Subject.SubjectId,
+                                stc.Subject.Name
+                            },
+                            Student = new
+                            {
+                                stc.Student.StudentId,
+                                stc.Student.Username,
+                                stc.Student.Fullname,
+                                stc.Student.Email
+                            }
+                        })
+                        .ToListAsync();
+
+                    Console.WriteLine($"Found {connections.Count} approved connections for teacher {userId}");
+                    return Ok(connections);
+                }
+
+                return BadRequest(new { message = "Invalid user type" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in TeacherConnectionController.GetConnectedUsers: {ex.Message}");
+                return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+            }
+        }
+        
+        [HttpGet("rejected")]
+        public async Task<IActionResult> GetRejectedConnections()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+                
+                if (userIdClaim == null || userTypeClaim == null)
+                    return Unauthorized(new { message = "User not authenticated" });
+
+                var userId = int.Parse(userIdClaim.Value);
+                var userType = userTypeClaim.Value;
+
+                Console.WriteLine($"Getting rejected connections for user {userId} with role {userType}");
+
+                if (userType == "Teacher")
+                {
+                    var connections = await _context.StudentTeacherConnections
+                        .Where(stc => stc.TeacherId == userId && stc.Status == "Rejected")
+                        .Include(stc => stc.Student)
+                        .Include(stc => stc.Subject)
+                        .OrderByDescending(stc => stc.UpdatedAt)
+                        .Select(stc => new
+                        {
+                            stc.ConnectionId,
+                            stc.Status,
+                            stc.CreatedAt,
+                            stc.UpdatedAt,
+                            Subject = new
+                            {
+                                stc.Subject.SubjectId,
+                                stc.Subject.Name
+                            },
+                            Student = new
+                            {
+                                stc.Student.StudentId,
+                                stc.Student.Username,
+                                stc.Student.Fullname,
+                                stc.Student.Email
+                            },
+                            // Count of rejections for this student-subject pair
+                            RejectionCount = _context.StudentTeacherConnections
+                                .Count(c => c.StudentId == stc.StudentId && 
+                                           c.TeacherId == stc.TeacherId && 
+                                           c.SubjectId == stc.SubjectId && 
+                                           c.Status == "Rejected")
+                        })
+                        .ToListAsync();
+
+                    Console.WriteLine($"Found {connections.Count} rejected connections for teacher {userId}");
+                    return Ok(connections);
+                }
+
+                return BadRequest(new { message = "Invalid user type" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in TeacherConnectionController.GetRejectedConnections: {ex.Message}");
+                return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+            }
+        }
+
+        [HttpDelete("{connectionId}")]
+        public async Task<IActionResult> RemoveConnection(int connectionId)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+            
+            if (userIdClaim == null || userTypeClaim == null)
+                return Unauthorized(new { message = "User not authenticated" });
+
+            var userId = int.Parse(userIdClaim.Value);
+            var userType = userTypeClaim.Value;
+            
+            try
+            {
                 // Find the connection
                 var connection = await _context.StudentTeacherConnections
                     .Include(stc => stc.Subject)
@@ -616,11 +446,24 @@ namespace StudentTracker.Controllers
                 if (connection == null)
                     return NotFound(new { message = "Connection not found" });
                 
-                // Verify that the subject belongs to the teacher
-                var subject = await _context.Subjects
-                    .FirstOrDefaultAsync(s => s.SubjectId == connection.SubjectId && s.TeacherId == teacherId);
+                // Check authorization
+                bool isAuthorized = false;
+                string responseMessage = "";
                 
-                if (subject == null)
+                if (userType == "Teacher" && connection.TeacherId == userId)
+                {
+                    // Teachers can remove any of their connections
+                    isAuthorized = true;
+                    responseMessage = $"Student {connection.Student.Fullname} removed from subject {connection.Subject.Name} successfully";
+                }
+                else if (userType == "Student" && connection.StudentId == userId && connection.Status == "Approved")
+                {
+                    // Students can only remove themselves from approved connections (unenroll)
+                    isAuthorized = true;
+                    responseMessage = $"Successfully unenrolled from {connection.Subject.Name}";
+                }
+                
+                if (!isAuthorized)
                     return Forbid();
                 
                 // Remove the connection
@@ -628,45 +471,55 @@ namespace StudentTracker.Controllers
                 await _context.SaveChangesAsync();
                 
                 return Ok(new { 
-                    message = $"Student {connection.Student.Fullname} removed from subject {connection.Subject.Name} successfully",
+                    message = responseMessage,
                     studentId = connection.StudentId,
                     subjectId = connection.SubjectId
-=======
-                var userId = int.Parse(userIdClaim.Value);
-                var userType = userTypeClaim.Value;
-
-                // Count total connections in database
-                var totalConnections = await _context.StudentTeacherConnections.CountAsync();
-                
-                // Count connections for this user
-                var userConnections = 0;
-                
-                if (userType == "Student")
-                {
-                    userConnections = await _context.StudentTeacherConnections
-                        .CountAsync(stc => stc.StudentId == userId);
-                }
-                else if (userType == "Teacher")
-                {
-                    userConnections = await _context.StudentTeacherConnections
-                        .CountAsync(stc => stc.TeacherId == userId);
-                }
-
-                return Ok(new 
-                { 
-                    userId = userId,
-                    userType = userType,
-                    totalConnectionsInDb = totalConnections,
-                    userConnectionsCount = userConnections,
-                    message = "Debug connection information"
->>>>>>> d4a1f77 (90% done)
                 });
             }
             catch (Exception ex)
             {
-<<<<<<< HEAD
                 return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
-=======
+            }
+        }
+
+        [HttpGet("test")]
+        public IActionResult TestEndpoint()
+        {
+            return Ok(new { message = "Connection API is working" });
+        }
+
+        [HttpGet("debug")]
+        public async Task<IActionResult> DebugConnections()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+                
+                if (userIdClaim == null || userTypeClaim == null)
+                    return Unauthorized(new { message = "User not authenticated" });
+
+                var userId = int.Parse(userIdClaim.Value);
+                var userType = userTypeClaim.Value;
+                
+                var allConnections = await _context.StudentTeacherConnections.ToListAsync();
+                var userConnections = await _context.StudentTeacherConnections
+                    .Where(c => 
+                        (userType == "Student" && c.StudentId == userId) || 
+                        (userType == "Teacher" && c.TeacherId == userId))
+                    .ToListAsync();
+                
+                return Ok(new {
+                    userId,
+                    userType,
+                    totalConnectionsCount = allConnections.Count,
+                    userConnectionsCount = userConnections.Count,
+                    userConnections = userConnections,
+                    message = "Debug connection information"
+                });
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, new { message = $"Debug error: {ex.Message}" });
             }
         }
@@ -681,62 +534,55 @@ namespace StudentTracker.Controllers
                 
                 if (userIdClaim == null || userTypeClaim == null)
                     return Unauthorized(new { message = "User not authenticated" });
-
-                var userId = int.Parse(userIdClaim.Value);
-                var userType = userTypeClaim.Value;
                 
-                if (userType != "Student")
-                    return BadRequest(new { message = "Only students can use this debug endpoint" });
+                int userId = int.Parse(userIdClaim.Value);
+                string userType = userTypeClaim.Value;
                 
-                // Find a teacher
-                var teacher = await _context.Teachers.FirstOrDefaultAsync();
-                if (teacher == null)
-                    return NotFound(new { message = "No teachers found in the system" });
+                // Only for development environment
+                if (!Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.Equals("Development", StringComparison.OrdinalIgnoreCase) ?? true)
+                {
+                    return BadRequest(new { message = "This endpoint is only available in the development environment" });
+                }
                 
-                // Find a subject
-                var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.TeacherId == teacher.TeacherId);
+                if (userType != "Teacher")
+                {
+                    return BadRequest(new { message = "You must be a teacher to create test connections" });
+                }
+                
+                // Get first student in the system
+                var student = await _context.Students.FirstOrDefaultAsync();
+                if (student == null)
+                {
+                    return NotFound(new { message = "No students found in the system" });
+                }
+                
+                // Get first subject owned by this teacher
+                var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.TeacherId == userId);
                 if (subject == null)
-                    return NotFound(new { message = "No subjects found for the teacher" });
+                {
+                    return NotFound(new { message = "No subjects found for this teacher" });
+                }
                 
-                // Create a test connection if one doesn't exist
+                // Check for existing connection
                 var existingConnection = await _context.StudentTeacherConnections
                     .FirstOrDefaultAsync(stc => 
-                        stc.StudentId == userId && 
-                        stc.TeacherId == teacher.TeacherId && 
+                        stc.StudentId == student.StudentId && 
+                        stc.TeacherId == userId && 
                         stc.SubjectId == subject.SubjectId);
                 
                 if (existingConnection != null)
                 {
-                    // If connection exists but is not pending, reset it to pending for testing
-                    if (existingConnection.Status != "Pending")
-                    {
-                        existingConnection.Status = "Pending";
-                        existingConnection.UpdatedAt = DateTime.UtcNow;
-                        await _context.SaveChangesAsync();
-                        
-                        return Ok(new 
-                        { 
-                            message = "Existing connection reset to Pending status",
-                            connectionId = existingConnection.ConnectionId,
-                            teacherName = teacher.Fullname,
-                            subjectName = subject.Name
-                        });
-                    }
-                    
-                    return Ok(new 
-                    { 
-                        message = "Test connection already exists",
-                        connectionId = existingConnection.ConnectionId,
-                        teacherName = teacher.Fullname,
-                        subjectName = subject.Name
+                    return Ok(new { 
+                        message = $"Connection already exists with status: {existingConnection.Status}",
+                        existingConnection
                     });
                 }
                 
-                // Create a test connection
+                // Create new connection
                 var connection = new StudentTeacherConnection
                 {
-                    StudentId = userId,
-                    TeacherId = teacher.TeacherId,
+                    StudentId = student.StudentId,
+                    TeacherId = userId,
                     SubjectId = subject.SubjectId,
                     Status = "Pending",
                     CreatedAt = DateTime.UtcNow
@@ -745,17 +591,18 @@ namespace StudentTracker.Controllers
                 _context.StudentTeacherConnections.Add(connection);
                 await _context.SaveChangesAsync();
                 
-                return Ok(new 
-                { 
+                return Ok(new { 
                     message = "Test connection created successfully",
-                    connectionId = connection.ConnectionId,
-                    teacherName = teacher.Fullname,
-                    subjectName = subject.Name
+                    studentId = student.StudentId,
+                    studentName = student.Fullname,
+                    subjectId = subject.SubjectId,
+                    subjectName = subject.Name,
+                    connectionId = connection.ConnectionId
                 });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = $"Error creating test connection: {ex.Message}" });
+                return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
             }
         }
 
@@ -764,101 +611,53 @@ namespace StudentTracker.Controllers
         {
             try
             {
-                // Include the table structure and counts of each user type
-                var studentCount = await _context.Students.CountAsync();
-                var teacherCount = await _context.Teachers.CountAsync();
-                var subjectCount = await _context.Subjects.CountAsync();
-                var connectionCount = await _context.StudentTeacherConnections.CountAsync();
+                // Direct debug - bypasses authentication
                 
-                // Get the first few entries in the StudentTeacherConnections table
-                var recentConnections = await _context.StudentTeacherConnections
-                    .Include(stc => stc.Student)
-                    .Include(stc => stc.Teacher)
-                    .Include(stc => stc.Subject)
-                    .OrderByDescending(stc => stc.CreatedAt)
+                // Get counts
+                int studentCount = await _context.Students.CountAsync();
+                int teacherCount = await _context.Teachers.CountAsync();
+                int subjectCount = await _context.Subjects.CountAsync();
+                int connectionCount = await _context.StudentTeacherConnections.CountAsync();
+                
+                // Get connection status counts
+                int pendingCount = await _context.StudentTeacherConnections.CountAsync(c => c.Status == "Pending");
+                int approvedCount = await _context.StudentTeacherConnections.CountAsync(c => c.Status == "Approved");
+                int rejectedCount = await _context.StudentTeacherConnections.CountAsync(c => c.Status == "Rejected");
+                
+                // Sample connections
+                var sampleConnections = await _context.StudentTeacherConnections
+                    .Include(c => c.Student)
+                    .Include(c => c.Teacher)
+                    .Include(c => c.Subject)
                     .Take(5)
-                    .Select(stc => new
-                    {
-                        stc.ConnectionId,
-                        stc.StudentId,
-                        StudentName = stc.Student != null ? stc.Student.Fullname : "Unknown",
-                        stc.TeacherId,
-                        TeacherName = stc.Teacher != null ? stc.Teacher.Fullname : "Unknown",
-                        stc.SubjectId,
-                        SubjectName = stc.Subject != null ? stc.Subject.Name : "Unknown",
-                        stc.Status,
-                        stc.CreatedAt,
-                        stc.UpdatedAt
+                    .Select(c => new {
+                        c.ConnectionId,
+                        c.Status,
+                        StudentName = c.Student.Fullname,
+                        TeacherName = c.Teacher.Fullname,
+                        SubjectName = c.Subject.Name,
+                        c.CreatedAt,
+                        c.UpdatedAt
                     })
                     .ToListAsync();
                 
-                // Debug information for database schema
-                var tableData = new Dictionary<string, object>
-                {
-                    { "StudentsCount", studentCount },
-                    { "TeachersCount", teacherCount },
-                    { "SubjectsCount", subjectCount },
-                    { "StudentTeacherConnectionsCount", connectionCount },
-                    { "RecentConnections", recentConnections }
-                };
-                
-                // Add user context
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
-                
-                if (userIdClaim != null && userTypeClaim != null)
-                {
-                    var userId = int.Parse(userIdClaim.Value);
-                    var userType = userTypeClaim.Value;
-                    
-                    tableData.Add("CurrentUserId", userId);
-                    tableData.Add("CurrentUserType", userType);
-                    
-                    // Add user-specific connection information
-                    if (userType == "Student")
-                    {
-                        var studentConnections = await _context.StudentTeacherConnections
-                            .Where(stc => stc.StudentId == userId)
-                            .OrderByDescending(stc => stc.CreatedAt)
-                            .Select(stc => new
-                            {
-                                stc.ConnectionId,
-                                stc.TeacherId,
-                                stc.SubjectId,
-                                stc.Status,
-                                stc.CreatedAt,
-                                stc.UpdatedAt
-                            })
-                            .ToListAsync();
-                        
-                        tableData.Add("UserConnections", studentConnections);
-                    }
-                    else if (userType == "Teacher")
-                    {
-                        var teacherConnections = await _context.StudentTeacherConnections
-                            .Where(stc => stc.TeacherId == userId)
-                            .OrderByDescending(stc => stc.CreatedAt)
-                            .Select(stc => new
-                            {
-                                stc.ConnectionId,
-                                stc.StudentId,
-                                stc.SubjectId,
-                                stc.Status,
-                                stc.CreatedAt,
-                                stc.UpdatedAt
-                            })
-                            .ToListAsync();
-                        
-                        tableData.Add("UserConnections", teacherConnections);
-                    }
-                }
-                
-                return Ok(tableData);
+                return Ok(new {
+                    studentCount,
+                    teacherCount, 
+                    subjectCount,
+                    connectionCount,
+                    statusCounts = new {
+                        pending = pendingCount,
+                        approved = approvedCount,
+                        rejected = rejectedCount
+                    },
+                    sampleConnections,
+                    message = "Direct debug information"
+                });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = $"Direct debug error: {ex.Message}" });
->>>>>>> d4a1f77 (90% done)
             }
         }
     }
