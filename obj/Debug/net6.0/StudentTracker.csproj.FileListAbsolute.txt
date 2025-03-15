@@ -142,6 +142,7 @@ C:\Users\octop\source\repos\test\parent-studenttracker-main\obj\Debug\net6.0\ref
 C:\Users\octop\source\repos\test\parent-studenttracker-main\obj\Debug\net6.0\StudentTracker.pdb
 C:\Users\octop\source\repos\test\parent-studenttracker-main\obj\Debug\net6.0\StudentTracker.genruntimeconfig.cache
 C:\Users\octop\source\repos\test\parent-studenttracker-main\obj\Debug\net6.0\ref\StudentTracker.dll
+<<<<<<< HEAD
 C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\appsettings.json
 C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.staticwebassets.runtime.json
 C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.staticwebassets.endpoints.json
@@ -214,3 +215,5 @@ C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\refint\St
 C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.pdb
 C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.genruntimeconfig.cache
 C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\ref\StudentTracker.dll
+=======
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c

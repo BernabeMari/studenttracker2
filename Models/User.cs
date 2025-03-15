@@ -49,6 +49,7 @@ namespace StudentTracker.Models
         public DateTime CreatedAt { get; set; }
     }
 
+<<<<<<< HEAD
     public class Teacher
     {
         public int TeacherId { get; set; }
@@ -75,6 +76,8 @@ namespace StudentTracker.Models
         public DateTime? UpdatedAt { get; set; }
     }
 
+=======
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
     public class LoginModel
     {
         [Required]
@@ -84,7 +87,11 @@ namespace StudentTracker.Models
         public string Password { get; set; } = string.Empty;
 
         [Required]
+<<<<<<< HEAD
         public string UserType { get; set; } = string.Empty; // "Student", "Parent", or "Teacher"
+=======
+        public string UserType { get; set; } = string.Empty; // "Student" or "Parent"
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
     }
 
     public class RegisterModel : LoginModel

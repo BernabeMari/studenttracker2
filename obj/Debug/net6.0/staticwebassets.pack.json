@@ -1,6 +1,7 @@
 {
   "Files": [
     {
+<<<<<<< HEAD
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\images\\default-profile.png",
       "PackagePath": "staticwebassets\\images\\default-profile.png"
     },
@@ -30,6 +31,33 @@
     },
     {
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\test-profilepic.html",
+=======
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\wwwroot\\images\\default-profile.png",
+      "PackagePath": "staticwebassets\\images\\default-profile.png"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\wwwroot\\login.html",
+      "PackagePath": "staticwebassets\\login.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\wwwroot\\parent-dashboard.html",
+      "PackagePath": "staticwebassets\\parent-dashboard.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\wwwroot\\register.html",
+      "PackagePath": "staticwebassets\\register.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\wwwroot\\student-dashboard.html",
+      "PackagePath": "staticwebassets\\student-dashboard.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\wwwroot\\test-profilepic.html",
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
       "PackagePath": "staticwebassets\\test-profilepic.html"
     },
     {

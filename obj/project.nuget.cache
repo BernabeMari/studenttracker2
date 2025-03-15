@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "t8GTa58Kkd0=",
   "success": true,
   "projectFilePath": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\StudentTracker.csproj",
+=======
+  "dgSpecHash": "lI0EH1y8qWg=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\StudentTracker.csproj",
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
   "expectedPackageFiles": [
     "C:\\Users\\octop\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\octop\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

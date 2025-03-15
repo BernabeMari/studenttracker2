@@ -48,8 +48,13 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
+<<<<<<< HEAD
       <Fingerprint>we2mk9kymv</Fingerprint>
       <Integrity>uM2jXv4QBrlBDwvWCnoOoatIkoYxx4gQkrazcPNCzFg=</Integrity>
+=======
+      <Fingerprint>cgf6sj2p5a</Fingerprint>
+      <Integrity>vLvLhQXYCsxX4XpVTm6S5/IdKgt3uEF+XGO1h84zUYU=</Integrity>
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\login.html'))</OriginalItemSpec>
@@ -84,8 +89,13 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
+<<<<<<< HEAD
       <Fingerprint>iwu25a68rr</Fingerprint>
       <Integrity>DgoAMwIxwJf8kYz559m/0eTiDOuH2fWq61FprkEeyrc=</Integrity>
+=======
+      <Fingerprint>dbwu5htv48</Fingerprint>
+      <Integrity>GZhd66S8PUMAfHF+L4Ah/XkqPATkK6GYx7CVdwylGOQ=</Integrity>
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\register.html'))</OriginalItemSpec>
@@ -102,12 +112,18 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
+<<<<<<< HEAD
       <Fingerprint>jdfyzmivbk</Fingerprint>
       <Integrity>V31n+q+YVj0MnZ5yUjEOrct7gmyx4E7Y0GDI5RT+9vc=</Integrity>
+=======
+      <Fingerprint>lzlfwcz0vu</Fingerprint>
+      <Integrity>ER3FNj4LC5U3j7yyjZPJbZ/wt4W1LJOozJlAYWDfJ58=</Integrity>
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\student-dashboard.html'))</OriginalItemSpec>
     </StaticWebAsset>
+<<<<<<< HEAD
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\teacher-dashboard.html'))">
       <SourceType>Package</SourceType>
       <SourceId>StudentTracker</SourceId>
@@ -126,6 +142,8 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\teacher-dashboard.html'))</OriginalItemSpec>
     </StaticWebAsset>
+=======
+>>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\test-profilepic.html'))">
       <SourceType>Package</SourceType>
       <SourceId>StudentTracker</SourceId>
