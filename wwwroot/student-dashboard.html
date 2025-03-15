@@ -633,7 +633,6 @@
                     </div>
                 </div>
                 
-<<<<<<< HEAD
                 <!-- Teacher Connection Requests Section -->
                 <div class="card mb-4">
                     <div class="card-body">
@@ -664,8 +663,6 @@
                     </div>
                 </div>
                 
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
                 <div class="card mb-4 border-0 shadow-sm">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
                         <h3 class="mb-0 fs-5">Rejected Requests</h3>
@@ -914,10 +911,7 @@
                 .then(() => {
                     console.log('Connected to SignalR Hub');
                     loadConnections();
-<<<<<<< HEAD
                     loadTeacherConnections();
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
                     checkActiveSession();
                     
                     // If was tracking before page refresh, resume tracking
@@ -1645,10 +1639,7 @@
                             
                             // Reload connections to update the UI
                             loadConnections();
-<<<<<<< HEAD
                             loadTeacherConnections();
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
                         } else {
                             let errorText;
                             try {
@@ -2345,11 +2336,45 @@
             function processQRCode(data) {
                 // Try to parse as JSON
                 try {
-                    const jsonData = JSON.parse(data);
+                    let jsonData;
                     
-                    // If it's a school check-in QR code
+                    // Check if the data is a simple number (old format)
+                    if (/^\d+$/.test(data.trim())) {
+                        // Convert numeric ID to a proper attendance request
+                        const studentId = parseInt(data.trim());
+                        console.log('Numeric student ID detected:', studentId);
+                        
+                        // Get current subject from the UI (assuming there is a way to know which subject)
+                        const currentSubject = getCurrentSubject();
+                        
+                        if (!currentSubject) {
+                            resultText.innerHTML = `
+                                <div class="alert alert-warning mb-0">
+                                    <strong>Please Select a Subject</strong><br>
+                                    You need to select a subject before scanning this type of QR code.
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        // Create JSON data with current context
+                        jsonData = {
+                            type: 'attendance',
+                            sessionId: Date.now(), // Generate a temporary session ID
+                            subjectId: currentSubject.id,
+                            subjectName: currentSubject.name,
+                            studentId: studentId,
+                            timestamp: new Date().toISOString()
+                        };
+                    } else {
+                        // Parse as regular JSON
+                        jsonData = JSON.parse(data);
+                    }
+                    
+                    console.log('Parsed QR data:', jsonData);
+                    
+                    // Handle school check-in QR code
                     if (jsonData.type === 'school-checkin') {
-                        // Send check-in data to server
                         console.log('School check-in QR code detected:', jsonData);
                         
                         // You can add API call to record check-in
@@ -2363,6 +2388,42 @@
                             </div>
                         `;
                     }
+                    // Handle attendance QR code
+                    else if (jsonData.type === 'attendance') {
+                        console.log('Attendance QR code detected:', jsonData);
+                        
+                        // Record attendance
+                        recordAttendance(jsonData)
+                            .then(response => {
+                                if (response && response.success) {
+                                    resultText.innerHTML = `
+                                        <div class="alert alert-success mb-0">
+                                            <strong>Attendance Recorded!</strong><br>
+                                            Subject: ${jsonData.subjectName}<br>
+                                            Session: ${jsonData.sessionId}<br>
+                                            Time: ${new Date().toLocaleTimeString()}
+                                        </div>
+                                    `;
+                                } else {
+                                    const errorMessage = response ? response.message : 'Failed to record attendance';
+                                    resultText.innerHTML = `
+                                        <div class="alert alert-danger mb-0">
+                                            <strong>Error Recording Attendance</strong><br>
+                                            ${errorMessage}
+                                        </div>
+                                    `;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error recording attendance:', error);
+                                resultText.innerHTML = `
+                                    <div class="alert alert-danger mb-0">
+                                        <strong>Error Recording Attendance</strong><br>
+                                        ${error.message || 'Unknown error occurred'}
+                                    </div>
+                                `;
+                            });
+                    }
                     // Handle other QR code types
                     else {
                         resultText.innerHTML = `
@@ -2373,29 +2434,38 @@
                             </div>
                         `;
                     }
-                } catch (e) {
-                    // It's not JSON, just display the raw text
+                } catch (error) {
+                    console.error('Error processing QR code:', error);
+                    
+                    // If not JSON, treat as raw data
                     resultText.innerHTML = `
                         <div class="alert alert-info mb-0">
-                            <strong>QR Code Content:</strong><br>
-                            ${data}
+                            <strong>QR Code Scanned (Plain Text):</strong><br>
+                            Data: ${data}
                         </div>
                     `;
-                    
-                    // If it looks like a URL, provide a link
-                    if (data.startsWith('http://') || data.startsWith('https://')) {
-                        resultText.innerHTML += `
-                            <div class="mt-2">
-                                <a href="${data}" target="_blank" class="btn btn-sm btn-primary">
-                                    <i class="bi bi-box-arrow-up-right me-1"></i> Open Link
-                                </a>
-                            </div>
-                        `;
-                    }
                 }
             }
         }
-<<<<<<< HEAD
+
+        // Helper function to get current subject
+        function getCurrentSubject() {
+            // This function should return the current subject selected by the user
+            // If there's a subject selection dropdown, you can get its value
+            // Or you can store the current subject in a variable when the user selects it
+            
+            // For example:
+            const subjectSelect = document.getElementById('subject-select');
+            if (subjectSelect && subjectSelect.value) {
+                return {
+                    id: parseInt(subjectSelect.value),
+                    name: subjectSelect.options[subjectSelect.selectedIndex].text
+                };
+            }
+            
+            // If there's no way to determine the subject, return null
+            return null;
+        }
 
         // Load teacher connections and subjects
         async function loadTeacherConnections() {
@@ -2563,9 +2633,69 @@
             }
         }
 
+        // Record attendance from QR code
+        async function recordAttendance(qrData) {
+            try {
+                if (!token) {
+                    return { success: false, message: 'Not authenticated. Please log in.' };
+                }
+                
+                // Check if we need to handle legacy numeric format
+                const isLegacyFormat = qrData.hasOwnProperty('studentId');
+                
+                // Prepare request data based on format
+                let requestData;
+                
+                if (isLegacyFormat) {
+                    // Legacy format with studentId
+                    requestData = {
+                        sessionId: qrData.sessionId,
+                        subjectId: qrData.subjectId,
+                        timestamp: qrData.timestamp || new Date().toISOString(),
+                        // Include studentId for legacy support if server allows this parameter
+                        studentId: qrData.studentId
+                    };
+                } else {
+                    // Standard format just uses the current user's ID
+                    requestData = {
+                        sessionId: qrData.sessionId,
+                        subjectId: qrData.subjectId,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+                
+                console.log('Sending attendance record:', requestData);
+                
+                const response = await fetch('/api/attendance/record', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return { success: true, ...data };
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to record attendance:', errorText);
+                    
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        return { success: false, message: errorData.message || 'Failed to record attendance' };
+                    } catch (e) {
+                        return { success: false, message: errorText || 'Failed to record attendance' };
+                    }
+                }
+            } catch (error) {
+                console.error('Error in recordAttendance:', error);
+                return { success: false, message: error.message || 'Unknown error occurred' };
+            }
+        }
+
         // Function to handle connection response
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
     </script>
 </body>
 </html> 

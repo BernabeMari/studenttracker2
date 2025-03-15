@@ -1,7 +1,6 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
     "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\StudentTracker.csproj": {}
   },
   "projects": {
@@ -13,19 +12,6 @@
         "projectPath": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\StudentTracker.csproj",
         "packagesPath": "C:\\Users\\octop\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\obj\\",
-=======
-    "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\StudentTracker.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\StudentTracker.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\StudentTracker.csproj",
-        "projectName": "StudentTracker",
-        "projectPath": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\StudentTracker.csproj",
-        "packagesPath": "C:\\Users\\octop\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\octop\\source\\repos\\test\\parent-studenttracker-main\\obj\\",
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

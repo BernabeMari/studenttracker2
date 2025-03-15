@@ -6,6 +6,8 @@
     <title>Teacher Dashboard - Student Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary-color: #5469d4;
@@ -123,6 +125,13 @@
             top: 1rem;
             right: 1rem;
             z-index: 9999;
+        }
+        
+        .border-dashed {
+            border-style: dashed !important;
+            border-width: 2px !important;
+            border-color: #ccc !important;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -286,6 +295,40 @@
                         <h6 class="fw-bold">Description</h6>
                         <p id="subject-modal-description">No description available</p>
                     </div>
+                    
+                    <!-- QR Code Section for Attendance -->
+                    <div class="mb-4 p-3 border rounded bg-light">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="fw-bold">Attendance QR Code</h6>
+                            <div>
+                                <button class="btn btn-sm btn-primary" id="generate-qr-btn">
+                                    <i class="bi bi-qr-code me-1"></i> Generate QR Code
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">Students can scan this QR code to quickly log their attendance for this session.</p>
+                        <div class="d-flex justify-content-center">
+                            <div id="qr-code-container" class="text-center d-none">
+                                <div id="qrcode" class="mb-2 bg-white p-2 d-inline-block"></div>
+                                <div class="mt-2">
+                                    <span id="attendance-session-id" class="badge bg-secondary mb-2 d-block">Session: </span>
+                                    <button class="btn btn-sm btn-outline-primary me-2" id="download-qr-btn">
+                                        <i class="bi bi-download me-1"></i> Download
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" id="new-session-btn">
+                                        <i class="bi bi-arrow-repeat me-1"></i> New Session
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="qr-placeholder" class="text-center text-muted">
+                                <div class="border border-dashed p-4 mb-2">
+                                    <i class="bi bi-qr-code" style="font-size: 3rem;"></i>
+                                    <p class="mb-0 mt-2">Click "Generate QR Code" to create an attendance session</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div>
                         <h6 class="fw-bold">Students</h6>
                         <div class="table-responsive">
@@ -562,6 +605,69 @@
                     document.getElementById('subject-modal-title').textContent = subject.name;
                     document.getElementById('subject-modal-description').textContent = subject.description || 'No description available';
                     
+                    // Store subject ID in modal dataset for reference
+                    const modalElement = document.getElementById('subjectDetailsModal');
+                    modalElement.dataset.subjectId = subject.subjectId;
+                    
+                    // Check for existing session data in localStorage
+                    const sessionKey = `attendance_session_${subject.subjectId}`;
+                    const existingSession = localStorage.getItem(sessionKey);
+                    
+                    if (existingSession) {
+                        // If we have an existing session, restore it
+                        const sessionData = JSON.parse(existingSession);
+                        
+                        // Show the QR code container and hide the placeholder
+                        document.getElementById('qr-code-container').classList.remove('d-none');
+                        document.getElementById('qr-placeholder').classList.add('d-none');
+                        
+                        // Update the session ID display
+                        const sessionSpan = document.getElementById('attendance-session-id');
+                        sessionSpan.textContent = `Session: ${sessionData.sessionId}`;
+                        sessionSpan.dataset.sessionId = sessionData.sessionId;
+                        
+                        // Generate QR code with the session data
+                        const qrContainer = document.getElementById('qrcode');
+                        qrContainer.innerHTML = '';
+                        
+                        // Create QR data with the saved information
+                        const qrData = JSON.stringify({
+                            type: 'attendance',
+                            sessionId: sessionData.sessionId,
+                            subjectId: subject.subjectId,
+                            subjectName: subject.name,
+                            timestamp: sessionData.timestamp
+                        });
+                        
+                        // Generate QR code using the qrcodejs library
+                        try {
+                            new QRCode(qrContainer, {
+                                text: qrData,
+                                width: 200,
+                                height: 200,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        } catch (qrError) {
+                            console.error('Error regenerating QR code:', qrError);
+                        }
+                    } else {
+                        // No existing session, show the placeholder
+                        document.getElementById('qr-code-container').classList.add('d-none');
+                        document.getElementById('qr-placeholder').classList.remove('d-none');
+                    }
+                    
+                    // Set up QR code generation button
+                    const generateQrBtn = document.getElementById('generate-qr-btn');
+                    generateQrBtn.onclick = () => generateAttendanceQR(subject.subjectId, subject.name);
+                    
+                    // Set up download button handler
+                    document.getElementById('download-qr-btn').onclick = downloadQRCode;
+                    
+                    // Set up new session button handler
+                    document.getElementById('new-session-btn').onclick = () => clearQRCodeSession(subject.subjectId, subject.name);
+                    
                     const studentsTable = document.getElementById('subject-students');
                     if (!subject.students || subject.students.length === 0) {
                         studentsTable.innerHTML = `
@@ -673,6 +779,161 @@
             toastElement.addEventListener('hidden.bs.toast', () => {
                 toastElement.remove();
             });
+        }
+        
+        // Generate attendance QR code
+        async function generateAttendanceQR(subjectId, subjectName) {
+            try {
+                // Create a new attendance session
+                const sessionData = await createAttendanceSession(subjectId);
+                
+                if (!sessionData) {
+                    showNotification('error', 'Error', 'Failed to create attendance session');
+                    return;
+                }
+                
+                // Show the QR code container and hide the placeholder
+                document.getElementById('qr-code-container').classList.remove('d-none');
+                document.getElementById('qr-placeholder').classList.add('d-none');
+                
+                // Update the session ID display
+                const sessionSpan = document.getElementById('attendance-session-id');
+                sessionSpan.textContent = `Session: ${sessionData.sessionId}`;
+                sessionSpan.dataset.sessionId = sessionData.sessionId;
+                
+                // Generate QR code with the session data
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+                
+                // Create QR data with all necessary information
+                const timestamp = new Date().toISOString();
+                const qrData = JSON.stringify({
+                    type: 'attendance',
+                    sessionId: sessionData.sessionId,
+                    subjectId: subjectId,
+                    subjectName: subjectName,
+                    timestamp: timestamp
+                });
+                
+                // Save session data to localStorage for persistence
+                const sessionKey = `attendance_session_${subjectId}`;
+                const sessionToSave = {
+                    sessionId: sessionData.sessionId,
+                    timestamp: timestamp
+                };
+                localStorage.setItem(sessionKey, JSON.stringify(sessionToSave));
+                
+                // Generate QR code using the qrcodejs library
+                try {
+                    new QRCode(qrContainer, {
+                        text: qrData,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    
+                    showNotification('success', 'QR Code Generated', 'Attendance session created successfully. Students can now scan this code to record their attendance.');
+                } catch (qrError) {
+                    console.error('Error generating QR code:', qrError);
+                    showNotification('error', 'Error', 'Could not generate QR code');
+                }
+            } catch (error) {
+                console.error('Error creating attendance QR code:', error);
+                showNotification('error', 'Error', 'Failed to generate QR code');
+            }
+        }
+        
+        // Download QR code as image
+        function downloadQRCode() {
+            try {
+                const canvas = document.querySelector('#qrcode img');
+                if (!canvas) {
+                    showNotification('error', 'Error', 'No QR code to download');
+                    return;
+                }
+                
+                // Create a temporary canvas to draw the QR code
+                const tempCanvas = document.createElement('canvas');
+                const context = tempCanvas.getContext('2d');
+                // Set canvas dimensions to match the QR code
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                // Draw the QR code image to the canvas
+                context.drawImage(canvas, 0, 0);
+                
+                // Create a download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = tempCanvas.toDataURL('image/png');
+                
+                // Get subject name and session ID for filename
+                const subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
+                const sessionId = document.getElementById('attendance-session-id').dataset.sessionId;
+                
+                // Create filename with subject ID and session ID
+                downloadLink.download = `attendance-qr-subject-${subjectId}-session-${sessionId}.png`;
+                
+                // Trigger the download
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                showNotification('success', 'Download Started', 'QR code image is being downloaded');
+            } catch (error) {
+                console.error('Error downloading QR code:', error);
+                showNotification('error', 'Error', 'Could not download QR code');
+            }
+        }
+        
+        // Clear existing QR code session and create a new one
+        function clearQRCodeSession(subjectId, subjectName) {
+            try {
+                // Clear the previous session from localStorage
+                const sessionKey = `attendance_session_${subjectId}`;
+                localStorage.removeItem(sessionKey);
+                
+                // Reset UI to show placeholder
+                document.getElementById('qr-code-container').classList.add('d-none');
+                document.getElementById('qr-placeholder').classList.remove('d-none');
+                document.getElementById('qrcode').innerHTML = '';
+                
+                // Generate a new QR code (which will trigger a new session)
+                generateAttendanceQR(subjectId, subjectName);
+                
+                showNotification('success', 'New Session', 'Previous attendance session cleared. New session created.');
+            } catch (error) {
+                console.error('Error clearing QR session:', error);
+                showNotification('error', 'Error', 'Failed to clear QR code session');
+            }
+        }
+        
+        // Create a new attendance session on the server
+        async function createAttendanceSession(subjectId) {
+            try {
+                const response = await fetch('/api/attendance/create-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        subjectId: subjectId,
+                        date: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to create attendance session:', errorText);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error creating attendance session:', error);
+                return null;
+            }
         }
     </script>
 </body>

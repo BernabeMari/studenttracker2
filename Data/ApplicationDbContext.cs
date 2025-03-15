@@ -12,18 +12,14 @@ namespace StudentTracker.Data
 
         public DbSet<Student> Students => Set<Student>();
         public DbSet<Parent> Parents => Set<Parent>();
-<<<<<<< HEAD
         public DbSet<Teacher> Teachers => Set<Teacher>();
         public DbSet<StudentParentConnection> StudentParentConnections => Set<StudentParentConnection>();
         public DbSet<LocationTracking> LocationTrackings => Set<LocationTracking>();
         public DbSet<TrackingSession> TrackingSessions => Set<TrackingSession>();
         public DbSet<Subject> Subjects => Set<Subject>();
         public DbSet<StudentTeacherConnection> StudentTeacherConnections => Set<StudentTeacherConnection>();
-=======
-        public DbSet<StudentParentConnection> StudentParentConnections => Set<StudentParentConnection>();
-        public DbSet<LocationTracking> LocationTrackings => Set<LocationTracking>();
-        public DbSet<TrackingSession> TrackingSessions => Set<TrackingSession>();
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
+        public DbSet<AttendanceSession> AttendanceSessions => Set<AttendanceSession>();
+        public DbSet<AttendanceRecord> AttendanceRecords => Set<AttendanceRecord>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,7 +42,6 @@ namespace StudentTracker.Data
                 .HasIndex(p => p.Email)
                 .IsUnique();
 
-<<<<<<< HEAD
             modelBuilder.Entity<Teacher>()
                 .HasIndex(t => t.Username)
                 .IsUnique();
@@ -65,8 +60,6 @@ namespace StudentTracker.Data
                 .HasIndex(stc => new { stc.StudentId, stc.TeacherId, stc.SubjectId })
                 .IsUnique();
 
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
             // Configure relationships
             modelBuilder.Entity<StudentParentConnection>()
                 .HasOne(sp => sp.Student)
@@ -80,7 +73,6 @@ namespace StudentTracker.Data
                 .HasForeignKey(sp => sp.ParentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-<<<<<<< HEAD
             // Configure Subject relationships
             modelBuilder.Entity<Subject>()
                 .HasOne(s => s.Teacher)
@@ -107,8 +99,38 @@ namespace StudentTracker.Data
                 .HasForeignKey(stc => stc.SubjectId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
+            // Configure only the delete behavior for AttendanceSession relationships
+            modelBuilder.Entity<AttendanceSession>()
+                .HasOne(a => a.Subject)
+                .WithMany()
+                .HasForeignKey(a => a.SubjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AttendanceSession>()
+                .HasOne(a => a.Teacher)
+                .WithMany()
+                .HasForeignKey(a => a.TeacherId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure AttendanceRecord relationships
+            modelBuilder.Entity<AttendanceRecord>()
+                .HasOne(a => a.Session)
+                .WithMany()
+                .HasForeignKey(a => a.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AttendanceRecord>()
+                .HasOne(a => a.Student)
+                .WithMany()
+                .HasForeignKey(a => a.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AttendanceRecord>()
+                .HasOne(a => a.Subject)
+                .WithMany()
+                .HasForeignKey(a => a.SubjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Configure decimal precision
             modelBuilder.Entity<LocationTracking>()
                 .HasKey(lt => lt.LocationId);

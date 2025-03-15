@@ -70,7 +70,6 @@ namespace StudentTracker.Controllers
 
                 return Ok(new { message = "Registration successful" });
             }
-<<<<<<< HEAD
             else if (model.UserType == "Teacher")
             {
                 if (await _context.Teachers.AnyAsync(t => t.Username == model.Username))
@@ -93,8 +92,6 @@ namespace StudentTracker.Controllers
 
                 return Ok(new { message = "Registration successful" });
             }
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
 
             return BadRequest("Invalid user type");
         }
@@ -147,7 +144,6 @@ namespace StudentTracker.Controllers
                     }
                 });
             }
-<<<<<<< HEAD
             else if (model.UserType == "Teacher")
             {
                 var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Username == model.Username);
@@ -171,8 +167,6 @@ namespace StudentTracker.Controllers
                     }
                 });
             }
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
 
             return BadRequest("Invalid user type");
         }

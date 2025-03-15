@@ -29,10 +29,7 @@
                                     <option value="">Select User Type</option>
                                     <option value="Student">Student</option>
                                     <option value="Parent">Parent</option>
-<<<<<<< HEAD
                                     <option value="Teacher">Teacher</option>
-=======
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
@@ -79,7 +76,6 @@
                     const data = await response.json();
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
-<<<<<<< HEAD
                     if (data.user.userType === 'Student') {
                         window.location.href = '/student-dashboard.html';
                     } else if (data.user.userType === 'Parent') {
@@ -87,11 +83,6 @@
                     } else if (data.user.userType === 'Teacher') {
                         window.location.href = '/teacher-dashboard.html';
                     }
-=======
-                    window.location.href = data.user.userType === 'Student' 
-                        ? '/student-dashboard.html' 
-                        : '/parent-dashboard.html';
->>>>>>> 8b7e4d7a541335e8cb2c0f11f449f889ac63074c
                 } else {
                     const errorText = await response.text();
                     console.error('Login error:', errorText);
