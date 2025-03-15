@@ -311,7 +311,7 @@
                             <div id="qr-code-container" class="text-center d-none">
                                 <div id="qrcode" class="mb-2 bg-white p-2 d-inline-block"></div>
                                 <div class="mt-2">
-                                    <span id="attendance-session-id" class="badge bg-secondary mb-2 d-block">Session: </span>
+                                    <span id="attendance-session-id" class="badge bg-secondary mb-2 d-block">Date: </span>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-primary" id="download-qr-btn">
                                             <i class="bi bi-download me-1"></i> Download
@@ -357,72 +357,71 @@
                             </table>
                         </div>
                     </div>
+                    
+                    <!-- Add a new section for attendance records inside the modal body -->
+                    <div class="mt-4 attendance-records-section d-none">
+                        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+                            <span>Attendance Records</span>
+                            <button class="btn btn-sm btn-outline-secondary" id="close-attendance-btn">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendance-records">
+                                    <tr>
+                                        <td colspan="3" class="text-center">Loading attendance records...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Add a new section for attendance statistics inside the modal body -->
+                    <div class="mt-4 attendance-stats-section d-none">
+                        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+                            <span>Attendance Statistics</span>
+                            <button class="btn btn-sm btn-outline-secondary" id="close-stats-btn">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">Students Present</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush" id="present-students">
+                                            <li class="list-group-item text-center">Loading...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-danger text-white">
+                                        <h6 class="mb-0">Students Absent</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush" id="absent-students">
+                                            <li class="list-group-item text-center">Loading...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add a new section for attendance records after the Students table -->
-    <div class="mt-4 attendance-records-section d-none">
-        <h6 class="fw-bold d-flex justify-content-between align-items-center">
-            <span>Attendance Records</span>
-            <button class="btn btn-sm btn-outline-secondary" id="close-attendance-btn">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </h6>
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Record ID</th>
-                    </tr>
-                </thead>
-                <tbody id="attendance-records">
-                    <tr>
-                        <td colspan="4" class="text-center">Loading attendance records...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Add a new section for attendance statistics -->
-    <div class="mt-4 attendance-stats-section d-none">
-        <h6 class="fw-bold d-flex justify-content-between align-items-center">
-            <span>Attendance Statistics</span>
-            <button class="btn btn-sm btn-outline-secondary" id="close-stats-btn">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </h6>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header bg-success text-white">
-                        <h6 class="mb-0">Students Present</h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush" id="present-students">
-                            <li class="list-group-item text-center">Loading...</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header bg-danger text-white">
-                        <h6 class="mb-0">Students Absent</h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush" id="absent-students">
-                            <li class="list-group-item text-center">Loading...</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -697,20 +696,48 @@
                         
                         // Update the session ID display
                         const sessionSpan = document.getElementById('attendance-session-id');
-                        sessionSpan.textContent = `Session: ${sessionData.sessionId}`;
+                        
+                        // Use Philippines time zone (GMT+8) for displays
+                        const philippinesOptions = { 
+                            timeZone: 'Asia/Manila',
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        };
+                        
+                        // Get time in Philippines time zone
+                        let dateToUse = new Date();
+                        
+                        // Use stored timestamp if available
+                        if (sessionData.timestamp) {
+                            dateToUse = new Date(sessionData.timestamp);
+                        }
+                        
+                        // Format the date using Philippines timezone
+                        const formattedDate = dateToUse.toLocaleDateString('en-PH', philippinesOptions);
+                        
+                        console.log('Using Philippines time for stored session:', dateToUse.toString());
+                        console.log('Formatted date for display:', formattedDate);
+                        
+                        sessionSpan.textContent = `Date: ${formattedDate}`;
                         sessionSpan.dataset.sessionId = sessionData.sessionId;
                         
                         // Generate QR code with the session data
                         const qrContainer = document.getElementById('qrcode');
                         qrContainer.innerHTML = '';
                         
-                        // Create QR data with the saved information
+                        // Create QR data with minimal necessary information
+                        // We're using abbreviated keys to reduce QR code size:
+                        // t = type (a for attendance)
+                        // s = sessionId 
+                        // i = subjectId
+                        // d = date in YYYY-MM-DD format
                         const qrData = JSON.stringify({
-                            type: 'attendance',
-                            sessionId: sessionData.sessionId,
-                            subjectId: subject.subjectId,
-                            subjectName: subject.name,
-                            timestamp: sessionData.timestamp
+                            t: 'a', 
+                            s: sessionData.sessionId,
+                            i: subject.subjectId,
+                            d: new Date().toISOString().split('T')[0]
                         });
                         
                         // Generate QR code using the qrcodejs library
@@ -742,14 +769,35 @@
                     // Set up new session button handler
                     document.getElementById('new-session-btn').onclick = () => clearQRCodeSession(subject.subjectId, subject.name);
                     
-                    // Set up attendance records viewing button
-                    document.getElementById('view-attendance-btn').onclick = () => viewAttendanceRecords(subject.subjectId);
+                    // Set up the view attendance button with enhanced error handling
+                    document.getElementById('view-attendance-btn').onclick = function() {
+                        // Show loading state
+                        const attendanceRecordsTable = document.getElementById('attendance-records');
+                        attendanceRecordsTable.innerHTML = `
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                    Loading attendance records...
+                                </td>
+                            </tr>
+                        `;
+
+                        // Make sure the attendance records section is visible
+                        const recordsSection = document.querySelector('.attendance-records-section');
+                        recordsSection.classList.remove('d-none');
+                        recordsSection.style.display = 'block'; // Explicitly set display style
+
+                        // Hide the statistics section if it's open
+                        document.querySelector('.attendance-stats-section').classList.add('d-none');
+                        
+                        viewAttendanceRecords(subjectId);
+                    };
                     
                     // Set up attendance statistics viewing button
                     document.getElementById('view-statistics-btn').onclick = () => viewAttendanceStatistics(subject.subjectId);
                     
-                    // Set up close attendance button
-                    document.getElementById('close-attendance-btn').onclick = () => {
+                    // Ensure close attendance button works properly
+                    document.getElementById('close-attendance-btn').onclick = function() {
                         document.querySelector('.attendance-records-section').classList.add('d-none');
                     };
                     
@@ -882,28 +930,51 @@
                 
                 // Update the session ID display
                 const sessionSpan = document.getElementById('attendance-session-id');
-                sessionSpan.textContent = `Session: ${sessionData.sessionId}`;
+                const currentDate = new Date();
+                
+                // Use Philippines time zone (GMT+8) for displays
+                const philippinesOptions = { 
+                    timeZone: 'Asia/Manila',
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+                
+                // Get time in Philippines time zone
+                const philippinesTime = new Date(currentDate.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+                const timestamp = philippinesTime.toISOString();
+                const formattedDate = currentDate.toLocaleDateString('en-PH', philippinesOptions);
+                
+                console.log('Using Philippines time for QR code:', philippinesTime.toString());
+                console.log('Formatted date for display:', formattedDate);
+                
+                sessionSpan.textContent = `Date: ${formattedDate}`;
                 sessionSpan.dataset.sessionId = sessionData.sessionId;
                 
                 // Generate QR code with the session data
                 const qrContainer = document.getElementById('qrcode');
                 qrContainer.innerHTML = '';
                 
-                // Create QR data with all necessary information
-                const timestamp = new Date().toISOString();
+                // Create QR data with minimal necessary information
+                // We're using abbreviated keys to reduce QR code size:
+                // t = type (a for attendance)
+                // s = sessionId 
+                // i = subjectId
+                // d = date in YYYY-MM-DD format
                 const qrData = JSON.stringify({
-                    type: 'attendance',
-                    sessionId: sessionData.sessionId,
-                    subjectId: subjectId,
-                    subjectName: subjectName,
-                    timestamp: timestamp
+                    t: 'a', 
+                    s: sessionData.sessionId,
+                    i: subjectId,
+                    d: new Date().toISOString().split('T')[0]
                 });
                 
                 // Save session data to localStorage for persistence
                 const sessionKey = `attendance_session_${subjectId}`;
                 const sessionToSave = {
                     sessionId: sessionData.sessionId,
-                    timestamp: timestamp
+                    timestamp: timestamp,
+                    formattedDate: formattedDate
                 };
                 localStorage.setItem(sessionKey, JSON.stringify(sessionToSave));
                 
@@ -955,8 +1026,12 @@
                 const subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
                 const sessionId = document.getElementById('attendance-session-id').dataset.sessionId;
                 
-                // Create filename with subject ID and session ID
-                downloadLink.download = `attendance-qr-subject-${subjectId}-session-${sessionId}.png`;
+                // Get today's date for the filename
+                const today = new Date();
+                const dateString = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                
+                // Create filename with subject ID and date
+                downloadLink.download = `attendance-qr-subject-${subjectId}-${dateString}.png`;
                 
                 // Trigger the download
                 document.body.appendChild(downloadLink);
@@ -1056,7 +1131,18 @@
         // Add function to view attendance records
         async function viewAttendanceRecords(subjectId) {
             try {
-                const response = await fetch(`/api/attendance/subject/${subjectId}`, {
+                console.log('Viewing attendance records for subject ID:', subjectId);
+                
+                if (!subjectId) {
+                    console.error('No subject ID provided to viewAttendanceRecords');
+                    showNotification('error', 'Error', 'No subject selected');
+                    return;
+                }
+                
+                const apiUrl = `/api/attendance/subject/${subjectId}`;
+                console.log('Fetching attendance from:', apiUrl);
+                
+                const response = await fetch(apiUrl, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -1065,44 +1151,107 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    const attendanceRecordsTable = document.getElementById('attendance-records');
+                    console.log('Attendance data received:', data);
                     
-                    // Show the attendance records section
-                    document.querySelector('.attendance-records-section').classList.remove('d-none');
+                    // Debug what's in the records array
+                    if (data.records && data.records.length > 0) {
+                        console.log('First record:', data.records[0]);
+                    }
                     
                     if (!data.records || data.records.length === 0) {
+                        const attendanceRecordsTable = document.getElementById('attendance-records');
                         attendanceRecordsTable.innerHTML = `
                             <tr>
-                                <td colspan="4" class="text-center">No attendance records found for this subject</td>
+                                <td colspan="3" class="text-center">No attendance records found for this subject</td>
                             </tr>
                         `;
                         return;
                     }
                     
-                    attendanceRecordsTable.innerHTML = data.records.map(record => `
-                        <tr>
-                            <td>${record.studentName}</td>
-                            <td>${record.date}</td>
-                            <td>${record.time}</td>
-                            <td>${record.attendanceId}</td>
-                        </tr>
-                    `).join('');
+                    // Clear previous content and append rows one by one instead of using innerHTML
+                    const attendanceRecordsTable = document.getElementById('attendance-records');
+                    attendanceRecordsTable.innerHTML = '';
                     
-                    // Show summary information
-                    attendanceRecordsTable.innerHTML += `
-                        <tr class="table-secondary">
-                            <td colspan="4" class="text-end">
-                                <strong>Total Attendance: ${data.attendanceCount} student(s)</strong>
-                            </td>
-                        </tr>
+                    // Create table rows for each record
+                    data.records.forEach(record => {
+                        // Format the date and time for better readability
+                        let scanDate = record.date || 'N/A';
+                        let scanTime = record.time || 'N/A';
+                        
+                        // If timestamp is available, use it to create a nicer format
+                        if (record.timestamp) {
+                            try {
+                                // Create a proper Philippines time display by using the Asia/Manila timezone
+                                const recordTimestamp = new Date(record.timestamp);
+                                
+                                // Ensure we're showing Philippines time (GMT+8)
+                                const philippinesOptions = { 
+                                    timeZone: 'Asia/Manila',
+                                    weekday: 'short',
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                };
+                                
+                                // Format time with explicit time zone setting
+                                const timeOptions = {
+                                    timeZone: 'Asia/Manila',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: true
+                                };
+                                
+                                scanDate = recordTimestamp.toLocaleDateString('en-PH', philippinesOptions);
+                                scanTime = recordTimestamp.toLocaleTimeString('en-PH', timeOptions);
+                            } catch (e) {
+                                console.error('Error formatting timestamp:', e);
+                            }
+                        }
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${record.studentName || 'Unknown'}</td>
+                            <td>${scanDate}</td>
+                            <td>${scanTime}</td>
+                        `;
+                        attendanceRecordsTable.appendChild(row);
+                    });
+                    
+                    // Add summary row
+                    const summaryRow = document.createElement('tr');
+                    summaryRow.className = 'table-secondary';
+                    summaryRow.innerHTML = `
+                        <td colspan="3" class="text-end">
+                            <strong>Total Attendance: ${data.attendanceCount} student(s)</strong>
+                        </td>
                     `;
+                    attendanceRecordsTable.appendChild(summaryRow);
                     
                 } else {
                     console.error('Failed to load attendance records:', await response.text());
+                    const attendanceRecordsTable = document.getElementById('attendance-records');
+                    attendanceRecordsTable.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="text-center text-danger">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Error loading attendance records. Please try again.
+                            </td>
+                        </tr>
+                    `;
                     showNotification('error', 'Error', 'Failed to load attendance records');
                 }
             } catch (error) {
                 console.error('Error loading attendance records:', error);
+                const attendanceRecordsTable = document.getElementById('attendance-records');
+                attendanceRecordsTable.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="text-center text-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Error loading attendance records: ${error.message || 'Unknown error'}
+                        </td>
+                    </tr>
+                `;
                 showNotification('error', 'Error', 'Failed to load attendance records');
             }
         }

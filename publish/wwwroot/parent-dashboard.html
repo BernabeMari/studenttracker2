@@ -704,7 +704,7 @@
             
             // Show loading state
             sendRequestBtn.disabled = true;
-            sendRequestBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Ipinapadala...';
+            sendRequestBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Sending...';
 
             try {
                 const response = await fetch('/api/connection/request', {
@@ -717,7 +717,7 @@
                 });
 
                 // Reset button state
-                sendRequestBtn.innerHTML = 'Ipadala ang Request';
+                sendRequestBtn.innerHTML = 'Send Request';
                 
                 // Always attempt to parse JSON, even for error responses
                 let responseData;
@@ -725,7 +725,7 @@
                     responseData = await response.json();
                 } catch (jsonError) {
                     console.error('Error parsing JSON response:', jsonError);
-                    responseData = { message: 'May naganap na error. Pakisubukang muli.' };
+                    responseData = { message: 'An error occurred. Please try again.' };
                 }
 
                 if (response.ok) {
@@ -733,15 +733,15 @@
                     sendRequestBtn.disabled = true;
                     
                     // Show success modal or alert
-                    alert('Matagumpay na naipadala ang connection request!');
+                    alert('Connection request successfully sent!');
                     loadConnectedStudents(); // Refresh the list
                 } else {
                     // Display error message from server or fallback message
-                    errorMessage.textContent = responseData.message || 'Hindi matagumpay ang pagpapadala ng request. Pakisubukang muli.';
+                    errorMessage.textContent = responseData.message || 'The request could not be sent successfully. Please try again.';
                     errorMessage.classList.remove('d-none');
                     
                     // Special handling for rejection limit errors
-                    if (responseData.message && responseData.message.includes('na-reject na ng 3 beses')) {
+                    if (responseData.message && responseData.message.includes('Rejected 3 times.')) {
                         errorMessage.classList.remove('alert-danger');
                         errorMessage.classList.add('alert-warning');
                         
@@ -750,13 +750,11 @@
                         <div class="text-center mb-3">
                             <i class="bi bi-exclamation-triangle-fill text-warning fs-1"></i>
                         </div>
-                        <p class="fw-bold">Hindi na maaaring mag-request sa estudyanteng ito.</p>
+                        <p class="fw-bold">You can no longer request this student.</p>
                         <p>${responseData.message}</p>
                         <div class="alert alert-secondary small mt-3">
                             <i class="bi bi-info-circle me-1"></i>
-                            Ayon sa aming patakaran, kapag nare-reject ang request ng 3 beses, 
-                            hindi na maaaring mag-request muli sa parehong estudyante. 
-                            Maaari kang mag-request sa ibang estudyante.
+                            According to our policy, if a request is rejected 3 times, you can no longer request the same student again. You may request a different student.
                         </div>`;
                         
                         errorMessage.innerHTML = errorHTML;
@@ -770,12 +768,12 @@
                 }
             } catch (error) {
                 console.error('Error sending connection request:', error);
-                errorMessage.textContent = 'May naganap na error sa network. Pakisubukang muli.';
+                errorMessage.textContent = 'A network error occurred. Please try again.';
                 errorMessage.classList.remove('d-none');
                 errorMessage.classList.add('alert-danger');
                 
                 // Reset button
-                sendRequestBtn.innerHTML = 'Ipadala ang Request';
+                sendRequestBtn.innerHTML = 'Send Request';
                 sendRequestBtn.disabled = false;
             }
         });

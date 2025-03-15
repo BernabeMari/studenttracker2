@@ -180,7 +180,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Iyong Profile</h1>
             <a href="/student-dashboard.html" class="btn btn-outline-secondary back-button">
-                <i class="bi bi-arrow-left me-2"></i>Bumalik sa Dashboard
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
             </a>
         </div>
         
@@ -407,64 +407,53 @@
             uploadButton.disabled = true;
             showAlert(uploadStatus, 'Uploading...', 'info');
             
+            // Create form data with the correct parameter name
             const formData = new FormData();
             formData.append('profilePic', file);
             
+            // Use the working API endpoint
             fetch('/api/student/profilepic', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
+                    // Don't set Content-Type when using FormData
                 },
                 body: formData
             })
             .then(response => {
-                return response.text().then(text => {
-                    let json;
-                    try {
-                        json = JSON.parse(text);
-                    } catch (e) {
-                        return { ok: response.ok, status: response.status, text: text };
-                    }
-                    return { ok: response.ok, status: response.status, json: json };
-                });
-            })
-            .then(result => {
-                uploadButton.disabled = false;
-                
-                if (result.ok) {
-                    showAlert(uploadStatus, 'Profile picture updated successfully!', 'success');
-                    
-                    if (result.json && result.json.profilePicUrl) {
-                        // Update UI
-                        currentProfilePic.src = result.json.profilePicUrl;
-                        
-                        // Update user object
-                        if (user) {
-                            user.profilePic = result.json.profilePicUrl;
-                            localStorage.setItem('user', JSON.stringify(user));
-                        }
-                        
-                        // Hide preview
-                        setTimeout(() => {
-                            previewContainer.style.display = 'none';
-                            fileInput.value = '';
-                        }, 2000);
-                    }
+                if (response.ok) {
+                    return response.json();
                 } else {
-                    let errorMessage = 'Upload failed';
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message || 'Failed to upload profile picture');
+                    });
+                }
+            })
+            .then(data => {
+                uploadButton.disabled = false;
+                showAlert(uploadStatus, 'Profile picture updated successfully!', 'success');
+                
+                // Update UI with the new profile pic
+                if (data.profilePicUrl) {
+                    currentProfilePic.src = data.profilePicUrl;
                     
-                    if (result.json && result.json.message) {
-                        errorMessage = result.json.message;
-                    } else if (result.text) {
-                        errorMessage = `Error: ${result.text}`;
+                    // Update user object
+                    if (user) {
+                        user.profilePic = data.profilePicUrl;
+                        localStorage.setItem('user', JSON.stringify(user));
                     }
                     
-                    showAlert(uploadStatus, errorMessage, 'danger');
+                    // Hide preview
+                    setTimeout(() => {
+                        previewContainer.style.display = 'none';
+                        fileInput.value = '';
+                    }, 2000);
                 }
             })
             .catch(error => {
+                console.error('Error uploading profile picture:', error);
                 uploadButton.disabled = false;
-                showAlert(uploadStatus, `Network error: ${error.message}`, 'danger');
+                showAlert(uploadStatus, error.message || 'Failed to upload profile picture', 'danger');
             });
         });
         
@@ -480,6 +469,12 @@
                 return;
             }
             
+            // Validate username format (alphanumeric characters only)
+            if (!/^[a-zA-Z0-9]+$/.test(username)) {
+                showAlert(profileMessage, 'Username can only contain letters and numbers, no spaces or special characters', 'warning');
+                return;
+            }
+            
             // Disable form
             const submitButton = profileForm.querySelector('button[type="submit"]');
             submitButton.disabled = true;
@@ -487,60 +482,85 @@
             // Show loading message
             showAlert(profileMessage, 'Updating profile information...', 'info');
             
+            // Simple request data for new API
+            const requestData = {
+                username: username,
+                fullname: fullname
+            };
+            
+            // Display debug log if needed
+            if (window.debugMode) {
+                console.log('Updating profile with data:', requestData);
+            }
+            
+            // Use the new API endpoint
             fetch('/api/student/update-profile', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    fullname: fullname,
-                    username: username
-                })
+                body: JSON.stringify(requestData)
             })
             .then(response => {
-                return response.text().then(text => {
-                    let json;
-                    try {
-                        json = JSON.parse(text);
-                    } catch (e) {
-                        return { ok: response.ok, status: response.status, text: text };
-                    }
-                    return { ok: response.ok, status: response.status, json: json };
-                });
-            })
-            .then(result => {
-                submitButton.disabled = false;
-                
-                if (result.ok) {
-                    showAlert(profileMessage, 'Profile updated successfully!', 'success');
-                    
-                    // Update user object
-                    if (user) {
-                        user.fullname = fullname;
-                        user.username = username;
-                        localStorage.setItem('user', JSON.stringify(user));
-                        
-                        // Update display elements
-                        displayName.textContent = fullname || username;
-                        displayUsername.textContent = '@' + username;
-                    }
+                if (response.ok) {
+                    return response.json().then(data => {
+                        handleSuccessfulUpdate(data);
+                    });
                 } else {
-                    let errorMessage = 'Update failed';
-                    
-                    if (result.json && result.json.message) {
-                        errorMessage = result.json.message;
-                    } else if (result.text) {
-                        errorMessage = `Error: ${result.text}`;
-                    }
-                    
-                    showAlert(profileMessage, errorMessage, 'danger');
+                    // Try the POST method as fallback
+                    return fetch('/api/student/update-profile', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(requestData)
+                    }).then(postResponse => {
+                        if (postResponse.ok) {
+                            return postResponse.json().then(data => {
+                                handleSuccessfulUpdate(data);
+                            });
+                        } else {
+                            return postResponse.json()
+                                .then(errorData => {
+                                    submitButton.disabled = false;
+                                    showAlert(profileMessage, `Update failed: ${errorData.message || 'Unknown error'}`, 'danger');
+                                })
+                                .catch(() => {
+                                    submitButton.disabled = false;
+                                    showAlert(profileMessage, 'Update failed. Please try again later.', 'danger');
+                                });
+                        }
+                    });
                 }
             })
             .catch(error => {
+                console.error('Error updating profile:', error);
                 submitButton.disabled = false;
-                showAlert(profileMessage, `Network error: ${error.message}`, 'danger');
+                showAlert(profileMessage, 'Error connecting to the server. Please try again later.', 'danger');
             });
+            
+            function handleSuccessfulUpdate(data) {
+                submitButton.disabled = false;
+                showAlert(profileMessage, data.message || 'Profile updated successfully!', 'success');
+                
+                // Update user object with returned data
+                if (data.user) {
+                    user = {
+                        ...user,
+                        username: data.user.Username || data.user.username,
+                        fullname: data.user.Fullname || data.user.fullname,
+                        profilePic: data.user.ProfilePic || data.user.profilePic,
+                        userType: data.user.UserType || data.user.userType || 'Student'
+                    };
+                    localStorage.setItem('user', JSON.stringify(user));
+                    
+                    // Update display elements
+                    displayName.textContent = user.fullname || user.username;
+                    displayUsername.textContent = '@' + user.username;
+                }
+            }
         });
         
         // Update password
@@ -573,52 +593,68 @@
             // Show loading message
             showAlert(passwordMessage, 'Updating password...', 'info');
             
+            // Simple request data for new API
+            const requestData = {
+                currentPassword: currentPassword,
+                newPassword: newPassword,
+                confirmPassword: confirmPassword
+            };
+            
+            // Use the new API endpoint
             fetch('/api/student/change-password', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    currentPassword: currentPassword,
-                    newPassword: newPassword
-                })
+                body: JSON.stringify(requestData)
             })
             .then(response => {
-                return response.text().then(text => {
-                    let json;
-                    try {
-                        json = JSON.parse(text);
-                    } catch (e) {
-                        return { ok: response.ok, status: response.status, text: text };
-                    }
-                    return { ok: response.ok, status: response.status, json: json };
-                });
-            })
-            .then(result => {
-                submitButton.disabled = false;
-                
-                if (result.ok) {
-                    showAlert(passwordMessage, 'Password updated successfully!', 'success');
-                    
-                    // Clear form
-                    passwordForm.reset();
+                if (response.ok) {
+                    return response.json().then(data => {
+                        handleSuccessfulPasswordUpdate(data);
+                    });
                 } else {
-                    let errorMessage = 'Password update failed';
-                    
-                    if (result.json && result.json.message) {
-                        errorMessage = result.json.message;
-                    } else if (result.text) {
-                        errorMessage = `Error: ${result.text}`;
-                    }
-                    
-                    showAlert(passwordMessage, errorMessage, 'danger');
+                    // Try the POST method as fallback
+                    return fetch('/api/student/change-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(requestData)
+                    }).then(postResponse => {
+                        if (postResponse.ok) {
+                            return postResponse.json().then(data => {
+                                handleSuccessfulPasswordUpdate(data);
+                            });
+                        } else {
+                            return postResponse.json()
+                                .then(errorData => {
+                                    submitButton.disabled = false;
+                                    showAlert(passwordMessage, `Password update failed: ${errorData.message || 'Unknown error'}`, 'danger');
+                                })
+                                .catch(() => {
+                                    submitButton.disabled = false;
+                                    showAlert(passwordMessage, 'Password update failed. Please try again later.', 'danger');
+                                });
+                        }
+                    });
                 }
             })
             .catch(error => {
+                console.error('Error updating password:', error);
                 submitButton.disabled = false;
-                showAlert(passwordMessage, `Network error: ${error.message}`, 'danger');
+                showAlert(passwordMessage, 'Error connecting to the server. Please try again later.', 'danger');
             });
+            
+            function handleSuccessfulPasswordUpdate(data) {
+                submitButton.disabled = false;
+                showAlert(passwordMessage, data.message || 'Password updated successfully!', 'success');
+                
+                // Clear form
+                passwordForm.reset();
+            }
         });
         
         // Get profile pic from server if not in localStorage
