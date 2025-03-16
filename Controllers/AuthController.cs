@@ -30,49 +30,63 @@ namespace StudentTracker.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] RegisterModel model, IFormFile? profilePic = null)
+        public async Task<IActionResult> Register(
+            [FromForm] RegisterModel model, 
+            [FromForm(Name = "profilePic")] IFormFile? profilePic = null)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                
+                return BadRequest(new { message = string.Join(", ", errors) });
+            }
+
             try
             {
-                // Validate the profile picture if provided
+                // Validate the profile picture if provided (only if one is actually uploaded)
                 if (profilePic != null && profilePic.Length > 0 && model.UserType == "Student")
                 {
                     // Check file type
                     if (!IsImageFile(profilePic.FileName))
                     {
-                        return BadRequest("Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.");
+                        return BadRequest(new { message = "Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed." });
                     }
 
                     // Check file size (limit to 5MB)
                     if (profilePic.Length > 5 * 1024 * 1024)
                     {
-                        return BadRequest("File size exceeds the limit of 5MB.");
+                        return BadRequest(new { message = "File size exceeds the limit of 5MB." });
                     }
                 }
 
                 string? profilePicBase64 = null;
-                if (model.UserType == "Student" && (profilePic == null || profilePic.Length == 0))
+                if (model.UserType == "Student")
                 {
-                    // Set a reference to the default profile image path
+                    // Always set a default profile when no image is uploaded
                     profilePicBase64 = "default-profile";
-                }
-                else if (profilePic != null && profilePic.Length > 0 && model.UserType == "Student")
-                {
-                    using (var memoryStream = new MemoryStream())
+                    
+                    // Only process the profile pic if one was uploaded
+                    if (profilePic != null && profilePic.Length > 0)
                     {
-                        await profilePic.CopyToAsync(memoryStream);
-                        var imageBytes = memoryStream.ToArray();
-                        profilePicBase64 = Convert.ToBase64String(imageBytes);
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await profilePic.CopyToAsync(memoryStream);
+                            var imageBytes = memoryStream.ToArray();
+                            profilePicBase64 = Convert.ToBase64String(imageBytes);
+                        }
                     }
                 }
 
                 if (model.UserType == "Student")
                 {
                     if (await _context.Students.AnyAsync(s => s.Username == model.Username))
-                        return BadRequest("Username already exists");
+                        return BadRequest(new { message = "Username already exists" });
 
                     if (await _context.Students.AnyAsync(s => s.Email == model.Email))
-                        return BadRequest("Email already exists");
+                        return BadRequest(new { message = "Email already exists" });
 
                     var student = new Student
                     {
@@ -108,10 +122,10 @@ namespace StudentTracker.Controllers
                 else if (model.UserType == "Parent")
                 {
                     if (await _context.Parents.AnyAsync(p => p.Username == model.Username))
-                        return BadRequest("Username already exists");
+                        return BadRequest(new { message = "Username already exists" });
 
                     if (await _context.Parents.AnyAsync(p => p.Email == model.Email))
-                        return BadRequest("Email already exists");
+                        return BadRequest(new { message = "Email already exists" });
 
                     var parent = new Parent
                     {
@@ -147,10 +161,10 @@ namespace StudentTracker.Controllers
                 else if (model.UserType == "Teacher")
                 {
                     if (await _context.Teachers.AnyAsync(t => t.Username == model.Username))
-                        return BadRequest("Username already exists");
+                        return BadRequest(new { message = "Username already exists" });
 
                     if (await _context.Teachers.AnyAsync(t => t.Email == model.Email))
-                        return BadRequest("Email already exists");
+                        return BadRequest(new { message = "Email already exists" });
 
                     var teacher = new Teacher
                     {
@@ -184,11 +198,12 @@ namespace StudentTracker.Controllers
                     });
                 }
 
-                return BadRequest("Invalid user type");
+                return BadRequest(new { message = "Invalid user type" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred during registration: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, 
+                    new { message = "Registration failed. Internal server error.", error = ex.Message });
             }
         }
 

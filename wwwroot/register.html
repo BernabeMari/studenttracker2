@@ -226,12 +226,16 @@
                         <div id="error-message" class="alert alert-danger d-none"></div>
                         
                         <form id="register-form">
-                            <div class="text-center mb-2" id="avatar-label">Profile Picture (Students only - Optional)</div>
+                            <div class="text-center mb-2" id="avatar-label">
+                                Profile Picture (Optional)
+                                <span class="form-text d-block">Upload your profile photo if you'd like</span>
+                            </div>
                             <div class="avatar-upload" id="avatar-upload">
                                 <img id="avatar-preview" src="" alt="Profile picture">
                                 <span class="upload-icon"><i class="bi bi-camera"></i></span>
                                 <input type="file" class="file-input" id="profile-pic" accept="image/*">
                             </div>
+                            <div class="form-text text-center mb-3" id="avatar-help">You can skip this step if you prefer not to upload a profile picture.</div>
                             
                             <div class="mb-3">
                                 <label for="fullname" class="form-label">Full Name</label>
@@ -291,12 +295,15 @@
         // Show/hide avatar upload based on user type
         function updateAvatarVisibility() {
             const avatarLabel = document.getElementById('avatar-label');
+            const avatarHelp = document.getElementById('avatar-help');
             if (userTypeSelect.value === 'Student') {
                 avatarUpload.style.display = 'block';
                 avatarLabel.style.display = 'block';
+                avatarHelp.style.display = 'block';
             } else {
                 avatarUpload.style.display = 'none';
                 avatarLabel.style.display = 'none';
+                avatarHelp.style.display = 'none';
             }
         }
         
@@ -362,8 +369,11 @@
                 formData.append('fullname', fullname);
                 
                 // If there's a profile pic and the user is a student, append it (but it's optional)
-                if (profilePic && userType === 'Student') {
+                if (profilePic && userType === 'Student' && profilePic.size > 0) {
+                    console.log('Attaching profile picture to request:', profilePic.name);
                     formData.append('profilePic', profilePic);
+                } else {
+                    console.log('No profile picture attached or zero size file');
                 }
                 
                 // Add error handling specifically for profile picture errors
@@ -466,16 +476,29 @@
                             }, 3000);
                         }
                     } else {
-                        const responseData = await response.json();
-                        console.error('Registration error:', responseData);
-                        
-                        // Check if there's a specific error message about profile pic
-                        if (responseData.errors && responseData.errors.profilePic) {
-                            errorMessage.textContent = `Profile picture error: ${responseData.errors.profilePic[0]}`;
-                        } else if (responseData.title && responseData.title.includes("validation errors")) {
-                            errorMessage.textContent = "Please check all fields and try again.";
-                        } else {
-                            errorMessage.textContent = responseData.message || 'Registration failed. Please try again.';
+                        try {
+                            const responseData = await response.json();
+                            console.error('Registration error:', responseData);
+                            
+                            // Check if there's a specific error message about profile pic
+                            if (responseData.errors && responseData.errors.profilePic) {
+                                // This should not happen as profile pic is optional, but handle it just in case
+                                errorMessage.textContent = `Profile picture error: ${responseData.errors.profilePic[0]}. Note that profile picture is optional.`;
+                                console.error('Profile picture error despite being optional:', responseData.errors.profilePic);
+                            } else if (responseData.title && responseData.title.includes("validation errors")) {
+                                errorMessage.textContent = "Please check all fields and try again.";
+                            } else if (responseData.message) {
+                                // Display the message from our custom JSON responses
+                                errorMessage.textContent = responseData.message;
+                            } else {
+                                errorMessage.textContent = 'Registration failed. Please try again.';
+                            }
+                        } catch (jsonError) {
+                            // Handle non-JSON responses
+                            const errorText = await response.text();
+                            console.error('Registration error (non-JSON):', jsonError);
+                            console.error('Response text:', errorText);
+                            errorMessage.textContent = errorText || 'Registration failed. Please try again.';
                         }
                         errorMessage.classList.remove('d-none');
                     }
