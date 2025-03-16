@@ -543,51 +543,6 @@
             background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
-        
-        /* Return to track button styling */
-        .return-to-track-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .return-to-track-btn:hover {
-            background-color: var(--primary-dark);
-            transform: scale(1.05);
-        }
-        
-        .return-to-track-btn i {
-            font-size: 1.2rem;
-        }
-        
-        .return-to-track-btn.hidden {
-            display: none;
-        }
-        
-        /* Map edge marker styling */
-        .edge-marker {
-            border: 3px solid #ff5722 !important;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
-        }
     </style>
 </head>
 <body>
@@ -882,24 +837,11 @@
                 // Initialize Leaflet map
                 map = L.map('map').setView([0, 0], 2);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors',
-                    subdomains: ['a', 'b', 'c'],
-                    secure: true,
-                    minZoom: 3,
-                    maxZoom: 19
+                    attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
                 
                 // Add school marker
                 addSchoolToMap();
-                
-                // Add return to track button
-                addReturnToTrackButton();
-                
-                // Set up user interaction detection to prevent auto-zooming
-                setupMapInteractionDetection();
-                
-                // Monitor map movements to check if marker is at edge
-                map.on('moveend', checkMarkerAtEdge);
                 
                 // Log map dimensions after initialization
                 console.log('Map container dimensions after init:', 
@@ -1555,7 +1497,7 @@
                                         rejectionInfo = `
                                         <div class="small text-warning mb-2">
                                             <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                         Rejected ${rejections} times (max: 3)
+                                            Nare-reject na ${rejections} beses (max: 3)
                                         </div>`;
                                     }
                                 }
@@ -1657,7 +1599,7 @@
                             document.getElementById('rejected-connections').innerHTML = 
                                 `<div class="list-group-item text-muted">
                                     <i class="bi bi-info-circle me-2"></i>
-                                    Ang history ng mga ni-reject na requests ay hindi pa available sa current version.
+                                    The history of rejected requests is not yet available in the current version.
                                 </div>`;
                         } else {
                             const errorText = await rejectedResponse.text();
@@ -1671,7 +1613,7 @@
                         
                         if (rejectedData.length === 0) {
                             document.getElementById('rejected-connections').innerHTML = 
-                                '<div class="list-group-item text-muted">Wala kang ni-reject na connection requests.</div>';
+                                '<div class="list-group-item text-muted">You have no rejected connection requests.</div>';
                         } else {
                             // Group by parent and count rejections
                             const parentRejections = {};
@@ -1776,7 +1718,7 @@
                 
                 // Get the parent name if available from the button's parent element
                 const connectionItem = event.target.closest('.connection-item');
-                let parentName = 'ang magulang';
+                let parentName = 'the parent';
                 if (connectionItem) {
                     const nameElement = connectionItem.querySelector('h5');
                     if (nameElement && nameElement.textContent) {
@@ -1794,16 +1736,16 @@
                         <div class="text-center mb-3">
                             <i class="bi bi-exclamation-triangle text-warning fs-1"></i>
                         </div>
-                        <p>Sigurado ka bang gusto mong i-reject ang connection request ni <strong>${parentName}</strong>?</p>
+                        <p>Are you sure you want to reject the connection request from <strong>${parentName}</strong>?</p>
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle me-2"></i>
-                            <strong>Note:</strong> Kapag ni-reject mo ang request, maaaring mag-send muli ang magulang ng 
-                            bagong request sa ibang araw. Maaari ka ring mag-accept ng ibang magulang nang walang limitasyon.
+                            <strong>Note:</strong> If you reject this request, the parent may send a new request 
+                            on another day. You can also accept other parents without limitation.
                         </div>
                     `;
                     
                     // Update confirm button
-                    actionConfirmBtn.textContent = 'I-reject';
+                    actionConfirmBtn.textContent = 'Reject';
                     actionConfirmBtn.className = 'btn btn-danger';
                     
                     // Set up the confirm action
@@ -1878,22 +1820,22 @@
                             
                             // Show different messages depending on accept/reject
                             if (accept) {
-                                alert(`Connection request kay ${parentName} ay tinanggap. Maaari na nilang makita ang iyong lokasyon kapag naka-active ang tracking.`);
+                                alert(`Connection request from ${parentName} has been accepted. They can now see your location when tracking is active.`);
                             } else {
                                 // Show rejection message with rejection count if available
-                                let rejectMsg = `Connection request kay ${parentName} ay tinanggihan.`;
+                                let rejectMsg = `Connection request from ${parentName} has been rejected.`;
                                 
                                 if (responseData.rejectionCount) {
-                                    rejectMsg += ` Ito ay ang ika-${responseData.rejectionCount} rejection para sa magulang na ito.`;
+                                    rejectMsg += ` This is the ${responseData.rejectionCount}th rejection for this parent.`;
                                     
                                     if (responseData.maxRejectionsReached) {
-                                        rejectMsg += ` Hindi na sila maaaring mag-send ng bagong request.`;
+                                        rejectMsg += ` They can no longer send new requests.`;
                                     } else {
                                         const remainingAttempts = 3 - responseData.rejectionCount;
-                                        rejectMsg += ` Maaari pa silang mag-send ng ${remainingAttempts} pang ${remainingAttempts > 1 ? 'requests' : 'request'}.`;
+                                        rejectMsg += ` They can still send ${remainingAttempts} more ${remainingAttempts > 1 ? 'requests' : 'request'}.`;
                                     }
                                 } else {
-                                    rejectMsg += ` Maaari silang mag-send muli ng request sa ibang pagkakataon.`;
+                                    rejectMsg += ` They can send another request at a later time.`;
                                 }
                                 
                                 alert(rejectMsg);
@@ -1977,60 +1919,63 @@
         // Function to get profile pic from server (using test-profilepic.html approach)
         function getProfilePicFromServer() {
             console.log('DEBUG: Calling getProfilePicFromServer()');
-            
-            // If we already have a profile pic from login, use it
-            if (user.profilePic && user.profilePic.startsWith('data:image')) {
-                console.log('DEBUG: Using profile pic from user object');
-                if (currentProfilePic) currentProfilePic.src = user.profilePic;
-                return;
-            }
-
-            fetch('/api/student/profilepic', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                // Check content type to determine how to handle the response
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    return response.json().then(data => ({ type: 'json', data }));
-                } else {
-                    return response.blob().then(blob => ({ type: 'blob', blob }));
-                }
-            })
-            .then(result => {
-                if (result.type === 'json' && result.data.profilePicUrl) {
-                    console.log('DEBUG: Got profile pic URL:', typeof result.data.profilePicUrl);
-                    let profilePicUrl = result.data.profilePicUrl;
-                    
-                    // If it's a base64 string without data URL prefix, add it
-                    if (profilePicUrl && typeof profilePicUrl === 'string' && !profilePicUrl.startsWith('data:')) {
-                        profilePicUrl = 'data:image/jpeg;base64,' + profilePicUrl;
+            try {
+                console.log('DEBUG: Attempting to fetch profile pic from server');
+                
+                // Use the API endpoint
+                fetch('/api/student/profilepic', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     }
-                    
-                    if (currentProfilePic) currentProfilePic.src = profilePicUrl;
-                    console.log('DEBUG: Set profile pic src');
-                    
-                    // Store in user object for later use
-                    user.profilePic = profilePicUrl;
-                    localStorage.setItem('user', JSON.stringify(user));
-                }
-                else if (result.type === 'blob') {
-                    // Handle direct blob response
-                    const url = URL.createObjectURL(result.blob);
-                    if (currentProfilePic) currentProfilePic.src = url;
-                    console.log('DEBUG: Set profile pic from blob');
-                    
-                    // Store blob URL (this will be valid for the current session)
-                    user.profilePic = url;
-                    localStorage.setItem('user', JSON.stringify(user));
-                }
-            })
-            .catch(err => {
+                })
+                .then(response => {
+                    console.log(`DEBUG: Profile pic fetch response status: ${response.status}`);
+                    if (response.ok) {
+                        // Check Content-Type
+                        const contentType = response.headers.get('Content-Type');
+                        console.log(`DEBUG: Response content type: ${contentType}`);
+                        
+                        if (contentType && contentType.includes('application/json')) {
+                            return response.json().then(data => {
+                                console.log('DEBUG: Received JSON response for profile pic');
+                                return { type: 'json', data };
+                            });
+                        } else {
+                            return response.blob().then(blob => {
+                                console.log(`DEBUG: Received blob response for profile pic, type: ${blob.type}, size: ${blob.size}`);
+                                return { type: 'blob', data: blob };
+                            });
+                        }
+                    }
+                    throw new Error(`Failed to fetch profile pic: ${response.status}`);
+                })
+                .then(result => {
+                    if (result.type === 'json' && result.data.profilePicUrl) {
+                        console.log('DEBUG: Setting profile pic from JSON response URL');
+                        
+                        // Update all profile picture elements
+                        if (currentProfilePic) currentProfilePic.src = result.data.profilePicUrl;
+                        
+                        // Update local storage
+                        if (user) {
+                            user.profilePic = result.data.profilePicUrl;
+                            localStorage.setItem('user', JSON.stringify(user));
+                        }
+                    } else if (result.type === 'blob') {
+                        console.log('DEBUG: Setting profile pic from blob response');
+                        const url = URL.createObjectURL(result.data);
+                        
+                        // Update all profile picture elements
+                        if (currentProfilePic) currentProfilePic.src = url;
+                    }
+                })
+                .catch(error => {
+                    console.error('DEBUG: Error getting profile pic:', error);
+                });
+            } catch (err) {
                 console.error('DEBUG: Exception in getProfilePicFromServer:', err);
-            });
+            }
         }
         
         // Drag and Drop Functionality
@@ -2376,6 +2321,14 @@
                 routeLayer = null;
             }
             
+            // Clear existing waypoints
+            waypoints.forEach(waypoint => {
+                if (map.hasLayer(waypoint)) {
+                    map.removeLayer(waypoint);
+                }
+            });
+            waypoints = [];
+            
             // OSRM API URL - free and no token needed
             const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${SCHOOL_COORDINATES.longitude},${SCHOOL_COORDINATES.latitude}?overview=full&geometries=polyline`;
             
@@ -2388,42 +2341,22 @@
                         const geometry = data.routes[0].geometry;
                         
                         // Decode the polyline
-                        const coordinates = L.Polyline.fromEncoded(geometry).getLatLngs();
+                        const coordinates = decodePolyline(geometry);
                         
-                        // Create a road-like styling with dual layers
-                        // First create the "road outline" - a wider, darker line
-                        const roadOutline = L.polyline(coordinates, {
-                            color: '#2c3e50',  // dark gray/blue for road outline
-                            weight: 8,         // thicker line for outer edge
+                        // Create a polyline layer
+                        routeLayer = L.polyline(coordinates, {
+                            color: '#3388ff',
+                            weight: 6,
                             opacity: 0.7,
-                            lineCap: 'round',
-                            lineJoin: 'round',
-                            className: 'route-outline'
+                            className: 'route-path'
                         }).addTo(map);
                         
-                        // Then create the "road surface" - a narrower, lighter line on top
-                        const roadSurface = L.polyline(coordinates, {
-                            color: '#3498db',  // blue for the road surface
-                            weight: 5,         // thinner line for the road itself
-                            opacity: 0.8,
-                            lineCap: 'round',
-                            lineJoin: 'round',
-                            className: 'route-surface'
-                        }).addTo(map);
-                        
-                        // Store both layers as a group
-                        routeLayer = L.layerGroup([roadOutline, roadSurface]);
-                        
-                        // Add some waypoint markers along the route to simulate road markers
+                        // Add waypoint markers at intervals along the route
                         addWaypoints(coordinates);
                         
-                        // Only center if user hasn't manually moved the map
-                        if (!map.userHasManuallyMoved) {
-                            map.setView([startLat, startLng], 15);
-                        }
-                        
-                        // Check if marker is at edge
-                        setTimeout(checkMarkerAtEdge, 500);
+                        // Fit map to show the entire route
+                        const bounds = routeLayer.getBounds();
+                        map.fitBounds(bounds, { padding: [50, 50] });
                         
                         console.log('Route to school drawn successfully');
                     } else {
@@ -2441,26 +2374,56 @@
         
         // Function to add waypoint markers along the route for visual effect
         function addWaypoints(coordinates) {
-            // Clear any existing waypoints
-            if (window.waypoints) {
-                window.waypoints.forEach(wp => map.removeLayer(wp));
-            }
-            window.waypoints = [];
-            
             // Add waypoints at intervals (every N points)
-            const interval = Math.max(Math.floor(coordinates.length / 8), 1);
+            const interval = Math.max(Math.floor(coordinates.length / 10), 1);
             
             for (let i = interval; i < coordinates.length - interval; i += interval) {
                 const waypoint = L.circleMarker(coordinates[i], {
-                    radius: 3,
-                    color: '#2c3e50',
-                    fillColor: '#ffffff',
+                    radius: 4,
+                    color: 'white',
+                    fillColor: '#3388ff',
                     fillOpacity: 1,
-                    weight: 1
+                    weight: 2,
+                    className: 'waypoint-marker'
                 }).addTo(map);
                 
-                window.waypoints.push(waypoint);
+                waypoints.push(waypoint);
             }
+        }
+        
+        // Function to decode a polyline string into coordinates
+        function decodePolyline(str) {
+            const coordinates = [];
+            let index = 0, lat = 0, lng = 0;
+            
+            while (index < str.length) {
+                let b, shift = 0, result = 0;
+                
+                do {
+                    b = str.charCodeAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                
+                const dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                lat += dlat;
+                
+                shift = 0;
+                result = 0;
+                
+                do {
+                    b = str.charCodeAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                
+                const dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                lng += dlng;
+                
+                coordinates.push([lat / 1e5, lng / 1e5]);
+            }
+            
+            return coordinates;
         }
         
         // Fallback function to draw a direct line to school
@@ -2468,50 +2431,22 @@
             // Clear existing route
             if (routeLayer) {
                 map.removeLayer(routeLayer);
-                routeLayer = null;
             }
             
-            // Clear any existing waypoints
-            if (window.waypoints) {
-                window.waypoints.forEach(wp => map.removeLayer(wp));
-                window.waypoints = [];
-            }
-            
-            // Draw a direct line between points with a better style
-            const roadOutline = L.polyline([
+            // Draw a direct line between points
+            routeLayer = L.polyline([
                 [startLat, startLng],
                 [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
             ], {
-                color: '#2c3e50',
-                weight: 8,
+                color: '#3388ff',
+                weight: 5,
                 opacity: 0.7,
                 dashArray: '10, 10',
-                lineCap: 'round',
-                lineJoin: 'round',
-                className: 'route-outline'
+                className: 'route-path'
             }).addTo(map);
             
-            const roadSurface = L.polyline([
-                [startLat, startLng],
-                [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
-            ], {
-                color: '#3498db',
-                weight: 5,
-                opacity: 0.8,
-                dashArray: '10, 10',
-                lineCap: 'round',
-                lineJoin: 'round',
-                className: 'route-surface'
-            }).addTo(map);
-            
-            // Store both layers as a group
-            routeLayer = L.layerGroup([roadOutline, roadSurface]);
-            
-            // Only center if user hasn't manually moved the map
-            if (!map.userHasManuallyMoved) {
-                map.setView([startLat, startLng], 15);
-            }
-            
+            // Fit bounds to show both points
+            map.fitBounds(routeLayer.getBounds(), { padding: [50, 50] });
             console.log('Direct line to school drawn as fallback');
         }
 
@@ -3197,93 +3132,6 @@
                     console.error('Error handling teacher connection:', error);
                     alert(`Error: ${error.message || 'An unknown error occurred'}`);
                 }
-            }
-        }
-
-        // Add return to track button
-        function addReturnToTrackButton() {
-            // Create return to track button
-            const returnBtn = document.createElement('button');
-            returnBtn.className = 'return-to-track-btn hidden';
-            returnBtn.id = 'return-to-track-btn';
-            returnBtn.innerHTML = '<i class="bi bi-geo-alt-fill"></i>';
-            returnBtn.title = 'Return to your location';
-            
-            // Add button to map container
-            document.querySelector('.leaflet-control-container').appendChild(returnBtn);
-            
-            // Add click event listener
-            returnBtn.addEventListener('click', () => {
-                if (currentMarker) {
-                    const latLng = currentMarker.getLatLng();
-                    map.setView(latLng, 15);
-                    checkMarkerAtEdge(); // Update edge status after centering
-                }
-            });
-        }
-        
-        // Check if marker is at edge of visible map
-        function checkMarkerAtEdge() {
-            if (!currentMarker || !map) return;
-            
-            const returnBtn = document.getElementById('return-to-track-btn');
-            if (!returnBtn) return;
-            
-            const markerLatLng = currentMarker.getLatLng();
-            const bounds = map.getBounds();
-            
-            // Calculate the visible bounds with some padding
-            const visibleBounds = bounds.pad(-0.3); // Negative padding creates smaller bounds
-            
-            // Check if marker is outside these inner bounds (near the edge)
-            const isAtEdge = !visibleBounds.contains(markerLatLng);
-            
-            // Show button and highlight marker when at edge
-            if (isAtEdge) {
-                returnBtn.classList.remove('hidden');
-                
-                // Add edge styling to marker
-                const markerElement = currentMarker.getElement();
-                if (markerElement) {
-                    const iconDiv = markerElement.querySelector('.marker-icon');
-                    if (iconDiv) {
-                        iconDiv.classList.add('edge-marker');
-                    }
-                }
-            } else {
-                returnBtn.classList.add('hidden');
-                
-                // Remove edge styling from marker
-                const markerElement = currentMarker.getElement();
-                if (markerElement) {
-                    const iconDiv = markerElement.querySelector('.marker-icon');
-                    if (iconDiv) {
-                        iconDiv.classList.remove('edge-marker');
-                    }
-                }
-            }
-        }
-
-        // Add event listeners to detect when user manually moves the map
-        function setupMapInteractionDetection() {
-            // Flag to track if user has manually moved the map
-            map.userHasManuallyMoved = false;
-            
-            // Add event listeners for user interactions
-            map.on('dragstart', function() {
-                map.userHasManuallyMoved = true;
-            });
-            
-            map.on('zoomstart', function() {
-                map.userHasManuallyMoved = true;
-            });
-            
-            // Reset the flag when user explicitly returns to track
-            const returnBtn = document.getElementById('return-to-track-btn');
-            if (returnBtn) {
-                returnBtn.addEventListener('click', function() {
-                    map.userHasManuallyMoved = false;
-                });
             }
         }
     </script>

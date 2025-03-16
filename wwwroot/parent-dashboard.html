@@ -110,25 +110,9 @@
             box-shadow: 0 0 4px rgba(0,0,0,0.3);
         }
         
-        .waypoint-direction-marker {
-            background: transparent;
-        }
-        
-        .direction-arrow {
-            font-size: 14px;
-            color: #2c3e50;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-            transform-origin: center;
-            width: 16px;
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
         @keyframes routePulse {
-            0%, 100% { stroke-opacity: 0.9; }
-            50% { stroke-opacity: 0.6; }
+            0%, 100% { stroke-opacity: 0.7; }
+            50% { stroke-opacity: 0.4; }
         }
         
         /* Student card styling */
@@ -332,159 +316,6 @@
                 padding: 15px;
             }
         }
-        
-        /* Return to track button styling */
-        .return-to-track-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .return-to-track-btn:hover {
-            background-color: var(--primary-dark);
-            transform: scale(1.05);
-        }
-        
-        .return-to-track-btn i {
-            font-size: 1.2rem;
-        }
-        
-        .return-to-track-btn.hidden {
-            display: none;
-        }
-        
-        /* Map edge marker styling */
-        .edge-marker {
-            border: 3px solid #ff5722 !important;
-            animation: pulse 1.5s infinite;
-            cursor: pointer !important;
-            z-index: 1000 !important;
-            transform: scale(1.15) !important;
-            position: relative;
-            box-shadow: 0 0 10px rgba(255, 87, 34, 0.7) !important;
-        }
-        
-        /* Add an explicit 'Click to center' tooltip to edge markers */
-        .edge-marker::before {
-            content: "Click to center";
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        
-        .edge-marker:hover::before {
-            opacity: 1;
-        }
-        
-        /* Add a flashing arrow indicator to edge markers */
-        .edge-marker::after {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 10px solid #ff5722;
-            animation: bounce 1s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-5px); }
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
-        }
-
-        /* Add this CSS to your existing styles for return feedback */
-        .return-feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .return-feedback i {
-            font-size: 16px;
-        }
-
-        .return-feedback.fade-out {
-            animation: fadeOut 0.5s ease-in forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -60%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        /* Navigation mode indicator */
-        .navigation-mode {
-            display: none; /* Hide the navigation mode indicator */
-        }
-
-        /* Route styling */
-        .route-outline {
-            stroke-opacity: 0.7;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.2));
-        }
-        
-        .route-surface {
-            stroke-opacity: 0.9;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            animation: routePulse 2s infinite;
-        }
-        
-        @keyframes routePulse {
-            0%, 100% { stroke-opacity: 0.9; }
-            50% { stroke-opacity: 0.6; }
-        }
     </style>
 </head>
 <body>
@@ -608,10 +439,7 @@
         // Initialize map
         const map = L.map('map').setView([0, 0], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            subdomains: ['a', 'b', 'c'],
-            secure: true,
-            minZoom: 3,
-            maxZoom: 19
+            attribution: '© OpenStreetMap contributors'
         }).addTo(map);
         
         // Add school marker
@@ -628,15 +456,6 @@
         let activeStudentId = null;
         let activeStudentName = null;
         let lastActiveLocation = null; // Store last known location of active student
-
-        // Add return to track button
-        addReturnToTrackButton();
-        
-        // Setup map interaction detection
-        setupMapInteractionDetection();
-        
-        // Monitor map movements to check if markers are at the edge
-        map.on('moveend', checkMarkerAtEdge);
 
         // Initialize SignalR
         const connection = new signalR.HubConnectionBuilder()
@@ -668,13 +487,10 @@
             // Update student status in the list
             updateStudentStatus(studentId, false);
             
-            // If this is the active student, update the UI and clear the route
+            // If this is the active student, update the UI
             if (activeStudentId === studentId) {
                 document.getElementById('currently-monitoring').innerHTML = 
                     `<span class="text-warning">Student ${studentMarkers[studentId]?.fullname || studentMarkers[studentId]?.username || activeStudentName} stopped sharing location</span>`;
-                
-                // Clear route when student stops tracking
-                clearRoute();
             }
         });
         
@@ -736,7 +552,7 @@
             // Add new marker with custom icon - use fullname from studentMarkers object
             const customIcon = L.divIcon({
                 className: 'custom-map-marker',
-                html: `<div class="marker-icon"><img src="${(studentMarkers[studentId].profilePic && studentMarkers[studentId].profilePic !== 'default-profile') ? studentMarkers[studentId].profilePic : '/images/default-profile.png'}" class="marker-profile-pic" alt="Profile"></div>`,
+                html: `<div class="marker-icon"><img src="${studentMarkers[studentId].profilePic || '/images/default-profile.png'}" class="marker-profile-pic" alt="Profile"></div>`,
                 iconSize: [40, 40],
                 iconAnchor: [20, 40],
                 popupAnchor: [0, -40]
@@ -1120,41 +936,20 @@
                         // Decode the polyline
                         const coordinates = decodePolyline(geometry);
                         
-                        // Create a road-like styling with dual layers
-                        // First create the "road outline" - a wider, darker line
-                        const roadOutline = L.polyline(coordinates, {
-                            color: '#2c3e50',  // dark gray/blue for road outline
-                            weight: 8,         // thicker line for outer edge
+                        // Create a polyline layer
+                        routeLayer = L.polyline(coordinates, {
+                            color: '#3388ff',
+                            weight: 6,
                             opacity: 0.7,
-                            lineCap: 'round',
-                            lineJoin: 'round',
-                            className: 'route-outline'
+                            className: 'route-path'
                         }).addTo(map);
-                        
-                        // Then create the "road surface" - a narrower, lighter line on top
-                        const roadSurface = L.polyline(coordinates, {
-                            color: '#3498db',  // blue for the road surface
-                            weight: 5,         // thinner line for the road itself
-                            opacity: 0.8,
-                            lineCap: 'round',
-                            lineJoin: 'round',
-                            className: 'route-surface'
-                        }).addTo(map);
-                        
-                        // Store both layers as a group
-                        routeLayer = L.layerGroup([roadOutline, roadSurface]);
                         
                         // Add waypoint markers at intervals along the route
                         addWaypoints(coordinates);
                         
-                        // Center on student position instead of fitting to route bounds
-                        // This prevents automatic zoom-out
-                        if (!map.userHasManuallyMoved) {
-                            map.setView([startLat, startLng], 15);
-                        }
-                        
-                        // Check if marker is at edge
-                        setTimeout(checkMarkerAtEdge, 500);
+                        // Fit map to show the entire route
+                        const bounds = routeLayer.getBounds();
+                        map.fitBounds(bounds, { padding: [50, 50] });
                         
                         console.log('Route to school drawn successfully');
                     } else {
@@ -1172,50 +967,20 @@
         
         // Function to add waypoint markers along the route for visual effect
         function addWaypoints(coordinates) {
-            // Clear any existing waypoints
-            clearWaypoints();
-            
             // Add waypoints at intervals (every N points)
-            const interval = Math.max(Math.floor(coordinates.length / 12), 1);
+            const interval = Math.max(Math.floor(coordinates.length / 10), 1);
             
             for (let i = interval; i < coordinates.length - interval; i += interval) {
-                // Add directional markers to show the direction of travel
-                if (i % (interval * 3) === 0) {
-                    // Calculate direction (if we have enough points)
-                    let direction = 0;
-                    if (i > 0 && i < coordinates.length - 1) {
-                        const prev = coordinates[i-interval];
-                        const current = coordinates[i];
-                        direction = Math.atan2(current[0] - prev[0], current[1] - prev[1]) * 180 / Math.PI;
-                    }
-                    
-                    // Create a directional marker
-                    const arrowIcon = L.divIcon({
-                        className: 'waypoint-direction-marker',
-                        html: `<div class="direction-arrow" style="transform: rotate(${direction}deg)">➤</div>`,
-                        iconSize: [16, 16],
-                        iconAnchor: [8, 8]
-                    });
-                    
-                    const directionMarker = L.marker(coordinates[i], {
-                        icon: arrowIcon,
-                        interactive: false
-                    }).addTo(map);
-                    
-                    waypoints.push(directionMarker);
-                } else {
-                    // Regular waypoint dot
-                    const waypoint = L.circleMarker(coordinates[i], {
-                        radius: 3,
-                        color: '#2c3e50',
-                        fillColor: '#ffffff',
-                        fillOpacity: 1,
-                        weight: 1,
-                        className: 'waypoint-marker'
-                    }).addTo(map);
-                    
-                    waypoints.push(waypoint);
-                }
+                const waypoint = L.circleMarker(coordinates[i], {
+                    radius: 4,
+                    color: 'white',
+                    fillColor: '#3388ff',
+                    fillOpacity: 1,
+                    weight: 2,
+                    className: 'waypoint-marker'
+                }).addTo(map);
+                
+                waypoints.push(waypoint);
             }
         }
         
@@ -1259,63 +1024,30 @@
             // Clear existing route
             clearRoute();
             
-            // Draw a direct line between points with a better style
-            const roadOutline = L.polyline([
+            // Draw a direct line between points
+            routeLayer = L.polyline([
                 [startLat, startLng],
                 [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
             ], {
-                color: '#2c3e50',
-                weight: 8,
+                color: '#3388ff',
+                weight: 5,
                 opacity: 0.7,
                 dashArray: '10, 10',
-                lineCap: 'round',
-                lineJoin: 'round',
-                className: 'route-outline'
+                className: 'route-path'
             }).addTo(map);
             
-            const roadSurface = L.polyline([
-                [startLat, startLng],
-                [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
-            ], {
-                color: '#3498db',
-                weight: 5,
-                opacity: 0.8,
-                dashArray: '10, 10',
-                lineCap: 'round',
-                lineJoin: 'round',
-                className: 'route-surface'
-            }).addTo(map);
-            
-            // Store both layers
-            routeLayer = L.layerGroup([roadOutline, roadSurface]);
-            
-            // Only center if user hasn't manually moved the map
-            if (!map.userHasManuallyMoved) {
-                map.setView([startLat, startLng], 15);
-            }
-            
+            // Fit bounds to show both points
+            map.fitBounds(routeLayer.getBounds(), { padding: [50, 50] });
             console.log('Direct line to school drawn as fallback');
         }
         
         // Function to clear route and waypoints
         function clearRoute() {
             if (routeLayer) {
-                // If routeLayer is a LayerGroup, remove all layers
-                if (routeLayer instanceof L.LayerGroup) {
-                    routeLayer.eachLayer(layer => {
-                        map.removeLayer(layer);
-                    });
-                } else {
-                    map.removeLayer(routeLayer);
-                }
+                map.removeLayer(routeLayer);
                 routeLayer = null;
             }
             
-            clearWaypoints();
-        }
-        
-        // Function to clear waypoints
-        function clearWaypoints() {
             // Clear existing waypoints
             waypoints.forEach(waypoint => {
                 if (map.hasLayer(waypoint)) {
@@ -1339,14 +1071,11 @@
             // Create unique ID for this toast
             const toastId = 'toast-' + Date.now();
             
-            // Check if profilePic is valid
-            const hasValidProfilePic = profilePic && profilePic !== 'default-profile';
-            
             // Create the toast element
             const toastHtml = `
                 <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header ${type === 'success' ? 'bg-success text-white' : type === 'warning' ? 'bg-warning' : ''}">
-                        ${hasValidProfilePic ? 
+                        ${profilePic ? 
                             `<img src="${profilePic}" class="rounded me-2" alt="Profile" style="width: 20px; height: 20px; object-fit: cover;">` : 
                             `<i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>`
                         }
@@ -1426,257 +1155,6 @@
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
             return R * c; // Distance in meters
-        }
-        
-
-        // Add return to track button
-        function addReturnToTrackButton() {
-            // Create return to track button
-            const returnBtn = document.createElement('button');
-            returnBtn.className = 'return-to-track-btn hidden';
-            returnBtn.id = 'return-to-track-btn';
-            returnBtn.innerHTML = '<i class="bi bi-geo-alt-fill"></i>';
-            returnBtn.title = 'Return to active student';
-            
-            // Add button to map container
-            document.querySelector('.leaflet-control-container').appendChild(returnBtn);
-            
-            // Add click event listener
-            returnBtn.addEventListener('click', () => {
-                if (activeStudentId && lastActiveLocation) {
-                    map.setView([lastActiveLocation.latitude, lastActiveLocation.longitude], 15);
-                    checkMarkerAtEdge(); // Update edge status after centering
-                }
-            });
-        }
-        
-        // Check if active student marker is at edge of visible map
-        function checkMarkerAtEdge() {
-            if (!activeStudentId || !lastActiveLocation || !map) return;
-            
-            const returnBtn = document.getElementById('return-to-track-btn');
-            if (!returnBtn) return;
-            
-            const marker = studentMarkers[activeStudentId];
-            if (!marker) return;
-            
-            const markerLatLng = marker.getLatLng();
-            const bounds = map.getBounds();
-            
-            // Calculate the visible bounds with some padding
-            const visibleBounds = bounds.pad(-0.3); // Negative padding creates smaller bounds
-            
-            // Check if marker is outside these inner bounds (near the edge)
-            const isAtEdge = !visibleBounds.contains(markerLatLng);
-            
-            // Store the edge state on the marker for reference
-            marker.isAtEdge = isAtEdge;
-            
-            // Show button and highlight marker when at edge
-            if (isAtEdge) {
-                returnBtn.classList.remove('hidden');
-                
-                // Add edge styling to marker
-                const markerElement = marker.getElement();
-                if (markerElement) {
-                    const iconDiv = markerElement.querySelector('.marker-icon');
-                    if (iconDiv) {
-                        iconDiv.classList.add('edge-marker');
-                    }
-                }
-            } else {
-                returnBtn.classList.add('hidden');
-                
-                // Remove edge styling from marker
-                const markerElement = marker.getElement();
-                if (markerElement) {
-                    const iconDiv = markerElement.querySelector('.marker-icon');
-                    if (iconDiv) {
-                        iconDiv.classList.remove('edge-marker');
-                    }
-                }
-            }
-        }
-
-        // Function to update student marker on map
-        function updateStudentMarker(studentId, latitude, longitude, timestamp) {
-            // Update the last known location if this is the active student
-            if (studentId === activeStudentId) {
-                lastActiveLocation = { latitude, longitude };
-                
-                // Check if we need to auto-follow the student (unless user has manually zoomed/panned)
-                const userHasManuallyMoved = map.userHasManuallyMoved || false;
-                
-                if (!userHasManuallyMoved) {
-                    // Auto-center map on the active student
-                    map.setView([latitude, longitude], 15);
-                }
-            }
-            
-            // Get or create marker for this student
-            let marker = studentMarkers[studentId];
-            const student = connectedStudents.find(s => s.id === studentId);
-            
-            if (!student) {
-                console.warn('Student not found in connected students list:', studentId);
-                return;
-            }
-            
-            // Remove old marker if exists
-            if (marker) {
-                map.removeLayer(marker);
-            }
-            
-            // Create custom icon for marker
-            const customIcon = L.divIcon({
-                className: 'custom-map-marker',
-                html: `<div class="marker-icon ${studentId === activeStudentId ? 'active-student' : ''}">
-                        <img src="${(student.profilePic && student.profilePic !== 'default-profile') ? student.profilePic : '/images/default-profile.png'}" class="student-marker-img" alt="${student.name}" 
-                            onerror="this.src='/images/default-profile.png'; this.onerror=null;">
-                      </div>`,
-                iconSize: [32, 32],
-                iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
-            });
-            
-            // Create new marker with info popup
-            marker = L.marker([latitude, longitude], { icon: customIcon })
-                .bindPopup(`
-                    <div class="map-popup">
-                        <div class="popup-header">
-                            <i class="bi bi-person-badge me-2"></i>
-                            <strong>${student.name}</strong>
-                        </div>
-                        <div class="popup-content">
-                            <div class="popup-info">Last Update: ${new Date(timestamp).toLocaleTimeString()}</div>
-                            <div class="popup-info">Latitude: ${latitude.toFixed(6)}</div>
-                            <div class="popup-info">Longitude: ${longitude.toFixed(6)}</div>
-                            ${studentId === activeStudentId ? 
-                                '<div class="mt-2 text-success"><i class="bi bi-check-circle-fill me-1"></i> Currently tracking</div>' : 
-                                `<button class="btn btn-sm btn-primary mt-2 track-student-btn" data-student-id="${studentId}">
-                                    <i class="bi bi-broadcast me-1"></i> Track this student
-                                </button>`
-                            }
-                        </div>
-                    </div>
-                `)
-                .addTo(map);
-            
-            // Add click event to track button inside popup
-            marker.on('popupopen', () => {
-                const trackBtn = document.querySelector(`.track-student-btn[data-student-id="${studentId}"]`);
-                if (trackBtn) {
-                    trackBtn.addEventListener('click', () => {
-                        startTrackingStudent(studentId);
-                        marker.closePopup();
-                    });
-                }
-            });
-            
-            // Set initial edge state
-            marker.isAtEdge = false;
-            
-            // Add click event to center on student when their marker is clicked
-            marker.on('click', function(e) {
-                // If this is the active student's marker and it's at the edge, 
-                // auto-center the map regardless of whether the popup is being opened
-                if (studentId === activeStudentId && marker.isAtEdge) {
-                    // Prevent the default popup behavior if we're returning to track
-                    if (marker.isAtEdge) {
-                        L.DomEvent.stopPropagation(e);
-                        marker.closePopup();
-                    }
-                    
-                    // Center map on student location
-                    map.setView([latitude, longitude], 15);
-                    
-                    // Reset the manual movement flag when user explicitly clicks on an edge marker
-                    map.userHasManuallyMoved = false;
-                    
-                    // Show brief visual feedback that we're returning to track
-                    const flashFeedback = document.createElement('div');
-                    flashFeedback.className = 'return-feedback';
-                    flashFeedback.innerHTML = '<i class="bi bi-arrow-return-left"></i> Returning to track';
-                    document.body.appendChild(flashFeedback);
-                    
-                    // Remove the feedback after animation completes
-                    setTimeout(() => {
-                        flashFeedback.classList.add('fade-out');
-                        setTimeout(() => {
-                            document.body.removeChild(flashFeedback);
-                        }, 500);
-                    }, 1000);
-                    
-                    // Update edge status after centering
-                    setTimeout(() => {
-                        checkMarkerAtEdge();
-                    }, 100);
-                }
-            });
-            
-            // Store marker in student markers
-            studentMarkers[studentId] = marker;
-            
-            // If this is the active student, update the map view and route
-            if (studentId === activeStudentId) {
-                // Only update the view if the user hasn't manually moved the map
-                if (!map.userHasManuallyMoved) {
-                    map.setView([latitude, longitude], 15);
-                }
-                
-                // Always draw the route regardless of manual movement
-                drawRouteToSchool(latitude, longitude);
-                
-                // Always check if marker is at edge
-                checkMarkerAtEdge();
-            }
-            
-            return marker;
-        }
-
-        // Add event listeners to detect when user manually moves the map
-        function setupMapInteractionDetection() {
-            // Flag to track if user has manually moved the map
-            map.userHasManuallyMoved = false;
-            
-            // Create navigation mode indicator but keep it hidden
-            const navigationIndicator = document.createElement('div');
-            navigationIndicator.className = 'navigation-mode';
-            document.querySelector('.leaflet-control-container').appendChild(navigationIndicator);
-            
-            // Update indicator function (will still update the class but indicator remains hidden)
-            function updateNavigationMode() {
-                if (map.userHasManuallyMoved) {
-                    navigationIndicator.className = 'navigation-mode free-mode';
-                } else {
-                    navigationIndicator.className = 'navigation-mode tracking-mode';
-                }
-            }
-            
-            // Add event listeners for user interactions
-            map.on('dragstart', function() {
-                map.userHasManuallyMoved = true;
-                updateNavigationMode();
-            });
-            
-            map.on('zoomstart', function() {
-                map.userHasManuallyMoved = true;
-                updateNavigationMode();
-            });
-            
-            // Reset the flag when user explicitly returns to track
-            document.getElementById('return-to-track-btn').addEventListener('click', function() {
-                map.userHasManuallyMoved = false;
-                updateNavigationMode();
-            });
-            
-            // Initial update
-            updateNavigationMode();
-        }
-        
-        // Initialize map interaction detection after map is created
-        if (map) {
-            setupMapInteractionDetection();
         }
     </script>
 </body>
