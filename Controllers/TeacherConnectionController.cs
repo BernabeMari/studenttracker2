@@ -274,46 +274,46 @@ namespace StudentTracker.Controllers
         public async Task<IActionResult> GetConnectedUsers()
         {
             try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userTypeClaim = User.FindFirst(ClaimTypes.Role);
-                
-                if (userIdClaim == null || userTypeClaim == null)
-                    return Unauthorized(new { message = "User not authenticated" });
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userTypeClaim = User.FindFirst(ClaimTypes.Role);
+            
+            if (userIdClaim == null || userTypeClaim == null)
+                return Unauthorized(new { message = "User not authenticated" });
 
-                var userId = int.Parse(userIdClaim.Value);
-                var userType = userTypeClaim.Value;
+            var userId = int.Parse(userIdClaim.Value);
+            var userType = userTypeClaim.Value;
 
                 Console.WriteLine($"Getting connected users for user {userId} with role {userType}");
 
-                if (userType == "Student")
-                {
-                    var connections = await _context.StudentTeacherConnections
-                        .Where(stc => stc.StudentId == userId && stc.Status == "Approved")
-                        .Include(stc => stc.Teacher)
-                        .Include(stc => stc.Subject)
+            if (userType == "Student")
+            {
+                var connections = await _context.StudentTeacherConnections
+                    .Where(stc => stc.StudentId == userId && stc.Status == "Approved")
+                    .Include(stc => stc.Teacher)
+                    .Include(stc => stc.Subject)
                         .OrderBy(stc => stc.Subject.Name)
-                        .Select(stc => new
+                    .Select(stc => new
+                    {
+                        stc.ConnectionId,
+                        stc.Status,
+                        stc.CreatedAt,
+                        stc.UpdatedAt,
+                        Subject = new
                         {
-                            stc.ConnectionId,
-                            stc.Status,
-                            stc.CreatedAt,
-                            stc.UpdatedAt,
-                            Subject = new
-                            {
-                                stc.Subject.SubjectId,
-                                stc.Subject.Name,
-                                stc.Subject.Description
-                            },
-                            Teacher = new
-                            {
-                                stc.Teacher.TeacherId,
-                                stc.Teacher.Username,
-                                stc.Teacher.Fullname,
-                                stc.Teacher.Email
-                            }
-                        })
-                        .ToListAsync();
+                            stc.Subject.SubjectId,
+                            stc.Subject.Name,
+                            stc.Subject.Description
+                        },
+                        Teacher = new
+                        {
+                            stc.Teacher.TeacherId,
+                            stc.Teacher.Username,
+                            stc.Teacher.Fullname,
+                            stc.Teacher.Email
+                        }
+                    })
+                    .ToListAsync();
 
                     Console.WriteLine($"Found {connections.Count} approved connections for student {userId}");
                     return Ok(connections);
@@ -379,43 +379,43 @@ namespace StudentTracker.Controllers
                 if (userType == "Teacher")
                 {
                     var connections = await _context.StudentTeacherConnections
-                        .Where(stc => stc.TeacherId == userId && stc.Status == "Rejected")
-                        .Include(stc => stc.Student)
-                        .Include(stc => stc.Subject)
+                    .Where(stc => stc.TeacherId == userId && stc.Status == "Rejected")
+                    .Include(stc => stc.Student)
+                    .Include(stc => stc.Subject)
                         .OrderByDescending(stc => stc.UpdatedAt)
-                        .Select(stc => new
+                    .Select(stc => new
+                    {
+                        stc.ConnectionId,
+                        stc.Status,
+                        stc.CreatedAt,
+                        stc.UpdatedAt,
+                        Subject = new
                         {
-                            stc.ConnectionId,
-                            stc.Status,
-                            stc.CreatedAt,
-                            stc.UpdatedAt,
-                            Subject = new
-                            {
-                                stc.Subject.SubjectId,
+                            stc.Subject.SubjectId,
                                 stc.Subject.Name
-                            },
-                            Student = new
-                            {
-                                stc.Student.StudentId,
-                                stc.Student.Username,
-                                stc.Student.Fullname,
-                                stc.Student.Email
-                            },
+                        },
+                        Student = new
+                        {
+                            stc.Student.StudentId,
+                            stc.Student.Username,
+                            stc.Student.Fullname,
+                            stc.Student.Email
+                        },
                             // Count of rejections for this student-subject pair
-                            RejectionCount = _context.StudentTeacherConnections
-                                .Count(c => c.StudentId == stc.StudentId && 
-                                           c.TeacherId == stc.TeacherId && 
-                                           c.SubjectId == stc.SubjectId && 
-                                           c.Status == "Rejected")
-                        })
-                        .ToListAsync();
+                        RejectionCount = _context.StudentTeacherConnections
+                            .Count(c => c.StudentId == stc.StudentId && 
+                                       c.TeacherId == stc.TeacherId && 
+                                       c.SubjectId == stc.SubjectId && 
+                                       c.Status == "Rejected")
+                    })
+                    .ToListAsync();
 
                     Console.WriteLine($"Found {connections.Count} rejected connections for teacher {userId}");
                     return Ok(connections);
-                }
-
-                return BadRequest(new { message = "Invalid user type" });
             }
+
+            return BadRequest(new { message = "Invalid user type" });
+        }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in TeacherConnectionController.GetRejectedConnections: {ex.Message}");
@@ -534,7 +534,7 @@ namespace StudentTracker.Controllers
                 
                 if (userIdClaim == null || userTypeClaim == null)
                     return Unauthorized(new { message = "User not authenticated" });
-                
+
                 int userId = int.Parse(userIdClaim.Value);
                 string userType = userTypeClaim.Value;
                 

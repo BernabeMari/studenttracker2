@@ -209,7 +209,15 @@ namespace StudentTracker.Controllers
                 }
                 
                 Console.WriteLine("Returning profile picture");
-                return Ok(new { profilePicUrl = student.ProfilePic });
+                // If it doesn't already have a data URL prefix, add one for base64 images
+                string profilePicUrl = student.ProfilePic;
+                if (!profilePicUrl.StartsWith("data:"))
+                {
+                    // Assuming JPEG format - adjust if needed based on your application
+                    profilePicUrl = $"data:image/jpeg;base64,{profilePicUrl}";
+                }
+                
+                return Ok(new { profilePicUrl = profilePicUrl });
             }
             catch (Exception ex)
             {

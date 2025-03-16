@@ -436,18 +436,18 @@
                 // Update UI with the new profile pic
                 if (data.profilePicUrl) {
                     currentProfilePic.src = data.profilePicUrl;
-                    
-                    // Update user object
-                    if (user) {
+                        
+                        // Update user object
+                        if (user) {
                         user.profilePic = data.profilePicUrl;
-                        localStorage.setItem('user', JSON.stringify(user));
-                    }
-                    
-                    // Hide preview
-                    setTimeout(() => {
-                        previewContainer.style.display = 'none';
-                        fileInput.value = '';
-                    }, 2000);
+                            localStorage.setItem('user', JSON.stringify(user));
+                        }
+                        
+                        // Hide preview
+                        setTimeout(() => {
+                            previewContainer.style.display = 'none';
+                            fileInput.value = '';
+                        }, 2000);
                 }
             })
             .catch(error => {

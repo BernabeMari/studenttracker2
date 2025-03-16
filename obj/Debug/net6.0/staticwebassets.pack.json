@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\images\\default-profile.png"
     },
     {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\images\\student.png",
+      "PackagePath": "staticwebassets\\images\\student.png"
+    },
+    {
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },

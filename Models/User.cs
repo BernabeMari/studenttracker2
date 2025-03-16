@@ -46,6 +46,8 @@ namespace StudentTracker.Models
         [StringLength(100)]
         public string Fullname { get; set; } = string.Empty;
         
+        public string ProfilePic { get; set; } = string.Empty;
+        
         public DateTime CreatedAt { get; set; }
     }
 

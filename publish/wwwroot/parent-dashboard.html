@@ -316,6 +316,51 @@
                 padding: 15px;
             }
         }
+        
+        /* Return to track button styling */
+        .return-to-track-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .return-to-track-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .return-to-track-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .return-to-track-btn.hidden {
+            display: none;
+        }
+        
+        /* Map edge marker styling */
+        .edge-marker {
+            border: 3px solid #ff5722 !important;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
+        }
     </style>
 </head>
 <body>
@@ -456,6 +501,12 @@
         let activeStudentId = null;
         let activeStudentName = null;
         let lastActiveLocation = null; // Store last known location of active student
+
+        // Add return to track button
+        addReturnToTrackButton();
+        
+        // Monitor map movements to check if markers are at the edge
+        map.on('moveend', checkMarkerAtEdge);
 
         // Initialize SignalR
         const connection = new signalR.HubConnectionBuilder()
@@ -947,9 +998,12 @@
                         // Add waypoint markers at intervals along the route
                         addWaypoints(coordinates);
                         
-                        // Fit map to show the entire route
-                        const bounds = routeLayer.getBounds();
-                        map.fitBounds(bounds, { padding: [50, 50] });
+                        // Center on student position instead of fitting to route bounds
+                        // This prevents automatic zoom-out
+                        map.setView([startLat, startLng], 15);
+                        
+                        // Check if marker is at edge
+                        setTimeout(checkMarkerAtEdge, 500);
                         
                         console.log('Route to school drawn successfully');
                     } else {
@@ -1155,6 +1209,161 @@
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
             return R * c; // Distance in meters
+        }
+
+        // Add return to track button
+        function addReturnToTrackButton() {
+            // Create return to track button
+            const returnBtn = document.createElement('button');
+            returnBtn.className = 'return-to-track-btn hidden';
+            returnBtn.id = 'return-to-track-btn';
+            returnBtn.innerHTML = '<i class="bi bi-geo-alt-fill"></i>';
+            returnBtn.title = 'Return to active student';
+            
+            // Add button to map container
+            document.querySelector('.leaflet-control-container').appendChild(returnBtn);
+            
+            // Add click event listener
+            returnBtn.addEventListener('click', () => {
+                if (activeStudentId && lastActiveLocation) {
+                    map.setView([lastActiveLocation.latitude, lastActiveLocation.longitude], 15);
+                    checkMarkerAtEdge(); // Update edge status after centering
+                }
+            });
+        }
+        
+        // Check if active student marker is at edge of visible map
+        function checkMarkerAtEdge() {
+            if (!activeStudentId || !lastActiveLocation || !map) return;
+            
+            const returnBtn = document.getElementById('return-to-track-btn');
+            if (!returnBtn) return;
+            
+            const marker = studentMarkers[activeStudentId];
+            if (!marker) return;
+            
+            const markerLatLng = marker.getLatLng();
+            const bounds = map.getBounds();
+            
+            // Calculate the visible bounds with some padding
+            const visibleBounds = bounds.pad(-0.3); // Negative padding creates smaller bounds
+            
+            // Check if marker is outside these inner bounds (near the edge)
+            const isAtEdge = !visibleBounds.contains(markerLatLng);
+            
+            // Show button and highlight marker when at edge
+            if (isAtEdge) {
+                returnBtn.classList.remove('hidden');
+                
+                // Add edge styling to marker
+                const markerElement = marker.getElement();
+                if (markerElement) {
+                    const iconDiv = markerElement.querySelector('.marker-icon');
+                    if (iconDiv) {
+                        iconDiv.classList.add('edge-marker');
+                    }
+                }
+            } else {
+                returnBtn.classList.add('hidden');
+                
+                // Remove edge styling from marker
+                const markerElement = marker.getElement();
+                if (markerElement) {
+                    const iconDiv = markerElement.querySelector('.marker-icon');
+                    if (iconDiv) {
+                        iconDiv.classList.remove('edge-marker');
+                    }
+                }
+            }
+        }
+
+        // Function to update student marker on map
+        function updateStudentMarker(studentId, latitude, longitude, timestamp) {
+            // Update the last known location if this is the active student
+            if (studentId === activeStudentId) {
+                lastActiveLocation = { latitude, longitude };
+            }
+            
+            // Get or create marker for this student
+            let marker = studentMarkers[studentId];
+            const student = connectedStudents.find(s => s.id === studentId);
+            
+            if (!student) {
+                console.warn('Student not found in connected students list:', studentId);
+                return;
+            }
+            
+            // Remove old marker if exists
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            
+            // Create custom icon for marker
+            const customIcon = L.divIcon({
+                className: 'custom-map-marker',
+                html: `<div class="marker-icon ${studentId === activeStudentId ? 'active-student' : ''}">
+                        <img src="${student.profilePic || '/images/default-profile.png'}" class="student-marker-img" alt="${student.name}" 
+                            onerror="this.src='/images/default-profile.png'; this.onerror=null;">
+                      </div>`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -32]
+            });
+            
+            // Create new marker with info popup
+            marker = L.marker([latitude, longitude], { icon: customIcon })
+                .bindPopup(`
+                    <div class="map-popup">
+                        <div class="popup-header">
+                            <i class="bi bi-person-badge me-2"></i>
+                            <strong>${student.name}</strong>
+                        </div>
+                        <div class="popup-content">
+                            <div class="popup-info">Last Update: ${new Date(timestamp).toLocaleTimeString()}</div>
+                            <div class="popup-info">Latitude: ${latitude.toFixed(6)}</div>
+                            <div class="popup-info">Longitude: ${longitude.toFixed(6)}</div>
+                            ${studentId === activeStudentId ? 
+                                '<div class="mt-2 text-success"><i class="bi bi-check-circle-fill me-1"></i> Currently tracking</div>' : 
+                                `<button class="btn btn-sm btn-primary mt-2 track-student-btn" data-student-id="${studentId}">
+                                    <i class="bi bi-broadcast me-1"></i> Track this student
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                `)
+                .addTo(map);
+            
+            // Add click event to track button inside popup
+            marker.on('popupopen', () => {
+                const trackBtn = document.querySelector(`.track-student-btn[data-student-id="${studentId}"]`);
+                if (trackBtn) {
+                    trackBtn.addEventListener('click', () => {
+                        startTrackingStudent(studentId);
+                        marker.closePopup();
+                    });
+                }
+            });
+            
+            // Add click event to center on student when their marker is clicked
+            marker.on('click', function() {
+                // Only auto-center if this is the active student we're tracking
+                if (studentId === activeStudentId) {
+                    map.setView([latitude, longitude], 15);
+                    checkMarkerAtEdge(); // Update edge status after centering
+                }
+            });
+            
+            // Store marker in student markers
+            studentMarkers[studentId] = marker;
+            
+            // If this is the active student, update the map view and route
+            if (studentId === activeStudentId) {
+                map.setView([latitude, longitude], 15);
+                drawRouteToSchool(latitude, longitude);
+                checkMarkerAtEdge(); // Check if marker is at edge
+            }
+            
+            return marker;
         }
     </script>
 </body>

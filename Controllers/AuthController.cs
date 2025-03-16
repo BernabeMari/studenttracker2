@@ -7,6 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BCrypt.Net;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace StudentTracker.Controllers
 {
@@ -17,6 +19,10 @@ namespace StudentTracker.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
 
+        // Admin credentials - hardcoded for security (not stored in the database)
+        private const string AdminUsername = "zyb20";
+        private const string AdminPassword = "Bernabe202003!";
+
         public AuthController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
@@ -24,151 +30,295 @@ namespace StudentTracker.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterModel model)
+        public async Task<IActionResult> Register([FromForm] RegisterModel model, IFormFile? profilePic = null)
         {
-            if (model.UserType == "Student")
+            try
             {
-                if (await _context.Students.AnyAsync(s => s.Username == model.Username))
-                    return BadRequest("Username already exists");
-
-                if (await _context.Students.AnyAsync(s => s.Email == model.Email))
-                    return BadRequest("Email already exists");
-
-                var student = new Student
+                // Validate the profile picture if provided
+                if (profilePic != null && profilePic.Length > 0 && model.UserType == "Student")
                 {
-                    Username = model.Username,
-                    Password = model.Password,
-                    Email = model.Email,
-                    Fullname = model.Fullname,
-                    CreatedAt = DateTime.UtcNow
-                };
+                    // Check file type
+                    if (!IsImageFile(profilePic.FileName))
+                    {
+                        return BadRequest("Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.");
+                    }
 
-                _context.Students.Add(student);
-                await _context.SaveChangesAsync();
+                    // Check file size (limit to 5MB)
+                    if (profilePic.Length > 5 * 1024 * 1024)
+                    {
+                        return BadRequest("File size exceeds the limit of 5MB.");
+                    }
+                }
 
-                return Ok(new { message = "Registration successful" });
+                string? profilePicBase64 = null;
+                if (model.UserType == "Student" && (profilePic == null || profilePic.Length == 0))
+                {
+                    // Set a reference to the default profile image path
+                    profilePicBase64 = "default-profile";
+                }
+                else if (profilePic != null && profilePic.Length > 0 && model.UserType == "Student")
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await profilePic.CopyToAsync(memoryStream);
+                        var imageBytes = memoryStream.ToArray();
+                        profilePicBase64 = Convert.ToBase64String(imageBytes);
+                    }
+                }
+
+                if (model.UserType == "Student")
+                {
+                    if (await _context.Students.AnyAsync(s => s.Username == model.Username))
+                        return BadRequest("Username already exists");
+
+                    if (await _context.Students.AnyAsync(s => s.Email == model.Email))
+                        return BadRequest("Email already exists");
+
+                    var student = new Student
+                    {
+                        Username = model.Username,
+                        Password = model.Password,
+                        Email = model.Email,
+                        Fullname = model.Fullname,
+                        CreatedAt = DateTime.UtcNow,
+                        ProfilePic = profilePicBase64
+                    };
+
+                    _context.Students.Add(student);
+                    await _context.SaveChangesAsync();
+
+                    // Auto login after registration
+                    var token = GenerateJwtToken(student.StudentId, student.Username, student.Email, "Student");
+
+                    return Ok(new
+                    {
+                        token,
+                        user = new
+                        {
+                            userId = student.StudentId,
+                            student.Username,
+                            student.Email,
+                            student.Fullname,
+                            student.ProfilePic,
+                            UserType = "Student"
+                        },
+                        message = "Registration successful"
+                    });
+                }
+                else if (model.UserType == "Parent")
+                {
+                    if (await _context.Parents.AnyAsync(p => p.Username == model.Username))
+                        return BadRequest("Username already exists");
+
+                    if (await _context.Parents.AnyAsync(p => p.Email == model.Email))
+                        return BadRequest("Email already exists");
+
+                    var parent = new Parent
+                    {
+                        Username = model.Username,
+                        Password = model.Password,
+                        Email = model.Email,
+                        Fullname = model.Fullname,
+                        CreatedAt = DateTime.UtcNow,
+                        ProfilePic = string.Empty
+                    };
+
+                    _context.Parents.Add(parent);
+                    await _context.SaveChangesAsync();
+
+                    // Auto login after registration
+                    var token = GenerateJwtToken(parent.ParentId, parent.Username, parent.Email, "Parent");
+
+                    return Ok(new
+                    {
+                        token,
+                        user = new
+                        {
+                            userId = parent.ParentId,
+                            parent.Username,
+                            parent.Email,
+                            parent.Fullname,
+                            parent.ProfilePic,
+                            UserType = "Parent"
+                        },
+                        message = "Registration successful"
+                    });
+                }
+                else if (model.UserType == "Teacher")
+                {
+                    if (await _context.Teachers.AnyAsync(t => t.Username == model.Username))
+                        return BadRequest("Username already exists");
+
+                    if (await _context.Teachers.AnyAsync(t => t.Email == model.Email))
+                        return BadRequest("Email already exists");
+
+                    var teacher = new Teacher
+                    {
+                        Username = model.Username,
+                        Password = model.Password,
+                        Email = model.Email,
+                        Fullname = model.Fullname,
+                        CreatedAt = DateTime.UtcNow,
+                        ProfilePic = string.Empty
+                    };
+
+                    _context.Teachers.Add(teacher);
+                    await _context.SaveChangesAsync();
+
+                    // Auto login after registration
+                    var token = GenerateJwtToken(teacher.TeacherId, teacher.Username, teacher.Email, "Teacher");
+
+                    return Ok(new
+                    {
+                        token,
+                        user = new
+                        {
+                            userId = teacher.TeacherId,
+                            teacher.Username,
+                            teacher.Email,
+                            teacher.Fullname,
+                            teacher.ProfilePic,
+                            UserType = "Teacher"
+                        },
+                        message = "Registration successful"
+                    });
+                }
+
+                return BadRequest("Invalid user type");
             }
-            else if (model.UserType == "Parent")
+            catch (Exception ex)
             {
-                if (await _context.Parents.AnyAsync(p => p.Username == model.Username))
-                    return BadRequest("Username already exists");
-
-                if (await _context.Parents.AnyAsync(p => p.Email == model.Email))
-                    return BadRequest("Email already exists");
-
-                var parent = new Parent
-                {
-                    Username = model.Username,
-                    Password = model.Password,
-                    Email = model.Email,
-                    Fullname = model.Fullname,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                _context.Parents.Add(parent);
-                await _context.SaveChangesAsync();
-
-                return Ok(new { message = "Registration successful" });
+                return StatusCode(500, $"An error occurred during registration: {ex.Message}");
             }
-            else if (model.UserType == "Teacher")
-            {
-                if (await _context.Teachers.AnyAsync(t => t.Username == model.Username))
-                    return BadRequest("Username already exists");
-
-                if (await _context.Teachers.AnyAsync(t => t.Email == model.Email))
-                    return BadRequest("Email already exists");
-
-                var teacher = new Teacher
-                {
-                    Username = model.Username,
-                    Password = model.Password,
-                    Email = model.Email,
-                    Fullname = model.Fullname,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                _context.Teachers.Add(teacher);
-                await _context.SaveChangesAsync();
-
-                return Ok(new { message = "Registration successful" });
-            }
-
-            return BadRequest("Invalid user type");
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if (model.UserType == "Student")
+            try
             {
-                var student = await _context.Students.FirstOrDefaultAsync(s => s.Username == model.Username);
-
-                if (student == null || student.Password != model.Password)
-                    return Unauthorized("Invalid username or password");
-
-                var token = GenerateJwtToken(student.StudentId, student.Username, student.Email, "Student");
-
-                return Ok(new
+                if (model.UserType == "Student")
                 {
-                    token,
-                    user = new
+                    var student = await _context.Students.FirstOrDefaultAsync(s => s.Username == model.Username);
+
+                    if (student == null || student.Password != model.Password)
+                        return Unauthorized("Invalid username or password");
+
+                    // Handle profile pic - set default if null or special marker
+                    string profilePic = student.ProfilePic ?? "default-profile";
+                    
+                    var token = GenerateJwtToken(student.StudentId, student.Username, student.Email, "Student");
+
+                    return Ok(new
                     {
-                        userId = student.StudentId,
-                        student.Username,
-                        student.Email,
-                        student.Fullname,
-                        student.ProfilePic,
-                        UserType = "Student"
-                    }
-                });
+                        token,
+                        user = new
+                        {
+                            userId = student.StudentId,
+                            student.Username,
+                            student.Email,
+                            student.Fullname,
+                            ProfilePic = profilePic,
+                            UserType = "Student"
+                        }
+                    });
+                }
+                else if (model.UserType == "Parent")
+                {
+                    var parent = await _context.Parents.FirstOrDefaultAsync(p => p.Username == model.Username);
+
+                    if (parent == null || parent.Password != model.Password)
+                        return Unauthorized("Invalid username or password");
+
+                    // Handle profile pic - set default if null or special marker
+                    string profilePic = parent.ProfilePic ?? "default-profile";
+                    
+                    var token = GenerateJwtToken(parent.ParentId, parent.Username, parent.Email, "Parent");
+
+                    return Ok(new
+                    {
+                        token,
+                        user = new
+                        {
+                            userId = parent.ParentId,
+                            parent.Username,
+                            parent.Email,
+                            parent.Fullname,
+                            ProfilePic = profilePic,
+                            UserType = "Parent"
+                        }
+                    });
+                }
+                else if (model.UserType == "Teacher")
+                {
+                    var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Username == model.Username);
+
+                    if (teacher == null || teacher.Password != model.Password)
+                        return Unauthorized("Invalid username or password");
+
+                    // Handle profile pic - set default if null or special marker
+                    string profilePic = teacher.ProfilePic ?? "default-profile";
+                    
+                    var token = GenerateJwtToken(teacher.TeacherId, teacher.Username, teacher.Email, "Teacher");
+
+                    return Ok(new
+                    {
+                        token,
+                        user = new
+                        {
+                            userId = teacher.TeacherId,
+                            teacher.Username,
+                            teacher.Email,
+                            teacher.Fullname,
+                            ProfilePic = profilePic,
+                            UserType = "Teacher"
+                        }
+                    });
+                }
+
+                return BadRequest("Invalid user type");
             }
-            else if (model.UserType == "Parent")
+            catch (Exception ex)
             {
-                var parent = await _context.Parents.FirstOrDefaultAsync(p => p.Username == model.Username);
-
-                if (parent == null || parent.Password != model.Password)
-                    return Unauthorized("Invalid username or password");
-
-                var token = GenerateJwtToken(parent.ParentId, parent.Username, parent.Email, "Parent");
-
-                return Ok(new
-                {
-                    token,
-                    user = new
-                    {
-                        userId = parent.ParentId,
-                        parent.Username,
-                        parent.Email,
-                        parent.Fullname,
-                        UserType = "Parent"
-                    }
-                });
+                Console.WriteLine($"Login error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return StatusCode(500, $"An error occurred during login: {ex.Message}");
             }
-            else if (model.UserType == "Teacher")
+        }
+
+        [HttpPost("adminLogin")]
+        public IActionResult AdminLogin([FromBody] LoginModel model)
+        {
+            try
             {
-                var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Username == model.Username);
-
-                if (teacher == null || teacher.Password != model.Password)
-                    return Unauthorized("Invalid username or password");
-
-                var token = GenerateJwtToken(teacher.TeacherId, teacher.Username, teacher.Email, "Teacher");
-
-                return Ok(new
+                // Check hardcoded admin credentials
+                if (model.Username == AdminUsername && model.Password == AdminPassword)
                 {
-                    token,
-                    user = new
-                    {
-                        userId = teacher.TeacherId,
-                        teacher.Username,
-                        teacher.Email,
-                        teacher.Fullname,
-                        teacher.ProfilePic,
-                        UserType = "Teacher"
-                    }
-                });
-            }
+                    var token = GenerateJwtToken(0, AdminUsername, "admin@system.com", "Admin");
 
-            return BadRequest("Invalid user type");
+                    return Ok(new
+                    {
+                        token,
+                        user = new
+                        {
+                            userId = 0,
+                            Username = AdminUsername,
+                            Email = "admin@system.com",
+                            Fullname = "System Administrator",
+                            ProfilePic = "default-profile",
+                            UserType = "Admin"
+                        }
+                    });
+                }
+
+                return Unauthorized("Invalid admin credentials");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Admin login error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return StatusCode(500, $"An error occurred during admin login: {ex.Message}");
+            }
         }
 
         private string GenerateJwtToken(int userId, string username, string email, string userType)
@@ -192,6 +342,14 @@ namespace StudentTracker.Controllers
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        // Helper method to check if a file is an image
+        private bool IsImageFile(string fileName)
+        {
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var extension = Path.GetExtension(fileName).ToLowerInvariant();
+            return allowedExtensions.Contains(extension);
         }
     }
 } 

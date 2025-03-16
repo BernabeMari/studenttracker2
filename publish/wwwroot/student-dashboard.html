@@ -543,6 +543,51 @@
             background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
+        
+        /* Return to track button styling */
+        .return-to-track-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .return-to-track-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .return-to-track-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .return-to-track-btn.hidden {
+            display: none;
+        }
+        
+        /* Map edge marker styling */
+        .edge-marker {
+            border: 3px solid #ff5722 !important;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
+        }
     </style>
 </head>
 <body>
@@ -842,6 +887,12 @@
                 
                 // Add school marker
                 addSchoolToMap();
+                
+                // Add return to track button
+                addReturnToTrackButton();
+                
+                // Monitor map movements to check if marker is at edge
+                map.on('moveend', checkMarkerAtEdge);
                 
                 // Log map dimensions after initialization
                 console.log('Map container dimensions after init:', 
@@ -2354,9 +2405,12 @@
                         // Add waypoint markers at intervals along the route
                         addWaypoints(coordinates);
                         
-                        // Fit map to show the entire route
-                        const bounds = routeLayer.getBounds();
-                        map.fitBounds(bounds, { padding: [50, 50] });
+                        // Center on user position instead of fitting to route bounds
+                        // This prevents automatic zoom-out
+                        map.setView([startLat, startLng], 15);
+                        
+                        // Check if marker is at edge after drawing route
+                        setTimeout(checkMarkerAtEdge, 500);
                         
                         console.log('Route to school drawn successfully');
                     } else {
@@ -3131,6 +3185,70 @@
                 } catch (error) {
                     console.error('Error handling teacher connection:', error);
                     alert(`Error: ${error.message || 'An unknown error occurred'}`);
+                }
+            }
+        }
+
+        // Add return to track button
+        function addReturnToTrackButton() {
+            // Create return to track button
+            const returnBtn = document.createElement('button');
+            returnBtn.className = 'return-to-track-btn hidden';
+            returnBtn.id = 'return-to-track-btn';
+            returnBtn.innerHTML = '<i class="bi bi-geo-alt-fill"></i>';
+            returnBtn.title = 'Return to your location';
+            
+            // Add button to map container
+            document.querySelector('.leaflet-control-container').appendChild(returnBtn);
+            
+            // Add click event listener
+            returnBtn.addEventListener('click', () => {
+                if (currentMarker) {
+                    const latLng = currentMarker.getLatLng();
+                    map.setView(latLng, 15);
+                    checkMarkerAtEdge(); // Update edge status after centering
+                }
+            });
+        }
+        
+        // Check if marker is at edge of visible map
+        function checkMarkerAtEdge() {
+            if (!currentMarker || !map) return;
+            
+            const returnBtn = document.getElementById('return-to-track-btn');
+            if (!returnBtn) return;
+            
+            const markerLatLng = currentMarker.getLatLng();
+            const bounds = map.getBounds();
+            
+            // Calculate the visible bounds with some padding
+            const visibleBounds = bounds.pad(-0.3); // Negative padding creates smaller bounds
+            
+            // Check if marker is outside these inner bounds (near the edge)
+            const isAtEdge = !visibleBounds.contains(markerLatLng);
+            
+            // Show button and highlight marker when at edge
+            if (isAtEdge) {
+                returnBtn.classList.remove('hidden');
+                
+                // Add edge styling to marker
+                const markerElement = currentMarker.getElement();
+                if (markerElement) {
+                    const iconDiv = markerElement.querySelector('.marker-icon');
+                    if (iconDiv) {
+                        iconDiv.classList.add('edge-marker');
+                    }
+                }
+            } else {
+                returnBtn.classList.add('hidden');
+                
+                // Remove edge styling from marker
+                const markerElement = currentMarker.getElement();
+                if (markerElement) {
+                    const iconDiv = markerElement.querySelector('.marker-icon');
+                    if (iconDiv) {
+                        iconDiv.classList.remove('edge-marker');
+                    }
                 }
             }
         }
