@@ -697,7 +697,7 @@
             // Add new marker with custom icon - use fullname from studentMarkers object
             const customIcon = L.divIcon({
                 className: 'custom-map-marker',
-                html: `<div class="marker-icon"><img src="${studentMarkers[studentId].profilePic || '/images/default-profile.png'}" class="marker-profile-pic" alt="Profile"></div>`,
+                html: `<div class="marker-icon"><img src="${(studentMarkers[studentId].profilePic && studentMarkers[studentId].profilePic !== 'default-profile') ? studentMarkers[studentId].profilePic : '/images/default-profile.png'}" class="marker-profile-pic" alt="Profile"></div>`,
                 iconSize: [40, 40],
                 iconAnchor: [20, 40],
                 popupAnchor: [0, -40]
@@ -1224,11 +1224,14 @@
             // Create unique ID for this toast
             const toastId = 'toast-' + Date.now();
             
+            // Check if profilePic is valid
+            const hasValidProfilePic = profilePic && profilePic !== 'default-profile';
+            
             // Create the toast element
             const toastHtml = `
                 <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header ${type === 'success' ? 'bg-success text-white' : type === 'warning' ? 'bg-warning' : ''}">
-                        ${profilePic ? 
+                        ${hasValidProfilePic ? 
                             `<img src="${profilePic}" class="rounded me-2" alt="Profile" style="width: 20px; height: 20px; object-fit: cover;">` : 
                             `<i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>`
                         }
@@ -1413,7 +1416,7 @@
             const customIcon = L.divIcon({
                 className: 'custom-map-marker',
                 html: `<div class="marker-icon ${studentId === activeStudentId ? 'active-student' : ''}">
-                        <img src="${student.profilePic || '/images/default-profile.png'}" class="student-marker-img" alt="${student.name}" 
+                        <img src="${(student.profilePic && student.profilePic !== 'default-profile') ? student.profilePic : '/images/default-profile.png'}" class="student-marker-img" alt="${student.name}" 
                             onerror="this.src='/images/default-profile.png'; this.onerror=null;">
                       </div>`,
                 iconSize: [32, 32],
