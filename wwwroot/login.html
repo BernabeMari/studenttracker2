@@ -347,9 +347,8 @@
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
-                    // Redirect to admin dashboard (you might need to create this)
-                    // For now, we'll redirect to teacher dashboard
-                    window.location.href = '/teacher-dashboard.html';
+                    // Redirect to admin dashboard
+                    window.location.href = '/admin-dashboard.html';
                 } else {
                     errorMessage.textContent = 'Invalid admin credentials';
                     errorMessage.classList.remove('d-none');
