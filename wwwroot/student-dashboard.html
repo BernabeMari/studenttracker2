@@ -2390,13 +2390,32 @@
                         // Decode the polyline
                         const coordinates = L.Polyline.fromEncoded(geometry).getLatLngs();
                         
-                        // Create a polyline layer
-                        routeLayer = L.polyline(coordinates, {
-                            color: '#3388ff',
-                            weight: 6,
+                        // Create a road-like styling with dual layers
+                        // First create the "road outline" - a wider, darker line
+                        const roadOutline = L.polyline(coordinates, {
+                            color: '#2c3e50',  // dark gray/blue for road outline
+                            weight: 8,         // thicker line for outer edge
                             opacity: 0.7,
-                            className: 'route-path'
+                            lineCap: 'round',
+                            lineJoin: 'round',
+                            className: 'route-outline'
                         }).addTo(map);
+                        
+                        // Then create the "road surface" - a narrower, lighter line on top
+                        const roadSurface = L.polyline(coordinates, {
+                            color: '#3498db',  // blue for the road surface
+                            weight: 5,         // thinner line for the road itself
+                            opacity: 0.8,
+                            lineCap: 'round',
+                            lineJoin: 'round',
+                            className: 'route-surface'
+                        }).addTo(map);
+                        
+                        // Store both layers as a group
+                        routeLayer = L.layerGroup([roadOutline, roadSurface]);
+                        
+                        // Add some waypoint markers along the route to simulate road markers
+                        addWaypoints(coordinates);
                         
                         // Only center if user hasn't manually moved the map
                         if (!map.userHasManuallyMoved) {
@@ -2420,6 +2439,30 @@
                 });
         }
         
+        // Function to add waypoint markers along the route for visual effect
+        function addWaypoints(coordinates) {
+            // Clear any existing waypoints
+            if (window.waypoints) {
+                window.waypoints.forEach(wp => map.removeLayer(wp));
+            }
+            window.waypoints = [];
+            
+            // Add waypoints at intervals (every N points)
+            const interval = Math.max(Math.floor(coordinates.length / 8), 1);
+            
+            for (let i = interval; i < coordinates.length - interval; i += interval) {
+                const waypoint = L.circleMarker(coordinates[i], {
+                    radius: 3,
+                    color: '#2c3e50',
+                    fillColor: '#ffffff',
+                    fillOpacity: 1,
+                    weight: 1
+                }).addTo(map);
+                
+                window.waypoints.push(waypoint);
+            }
+        }
+        
         // Fallback function to draw a direct line to school
         function drawDirectLineToSchool(startLat, startLng) {
             // Clear existing route
@@ -2428,17 +2471,41 @@
                 routeLayer = null;
             }
             
-            // Draw a direct line between points
-            routeLayer = L.polyline([
+            // Clear any existing waypoints
+            if (window.waypoints) {
+                window.waypoints.forEach(wp => map.removeLayer(wp));
+                window.waypoints = [];
+            }
+            
+            // Draw a direct line between points with a better style
+            const roadOutline = L.polyline([
                 [startLat, startLng],
                 [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
             ], {
-                color: '#3388ff',
-                weight: 5,
+                color: '#2c3e50',
+                weight: 8,
                 opacity: 0.7,
                 dashArray: '10, 10',
-                className: 'route-path'
+                lineCap: 'round',
+                lineJoin: 'round',
+                className: 'route-outline'
             }).addTo(map);
+            
+            const roadSurface = L.polyline([
+                [startLat, startLng],
+                [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
+            ], {
+                color: '#3498db',
+                weight: 5,
+                opacity: 0.8,
+                dashArray: '10, 10',
+                lineCap: 'round',
+                lineJoin: 'round',
+                className: 'route-surface'
+            }).addTo(map);
+            
+            // Store both layers as a group
+            routeLayer = L.layerGroup([roadOutline, roadSurface]);
             
             // Only center if user hasn't manually moved the map
             if (!map.userHasManuallyMoved) {

@@ -110,9 +110,25 @@
             box-shadow: 0 0 4px rgba(0,0,0,0.3);
         }
         
+        .waypoint-direction-marker {
+            background: transparent;
+        }
+        
+        .direction-arrow {
+            font-size: 14px;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            transform-origin: center;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         @keyframes routePulse {
-            0%, 100% { stroke-opacity: 0.7; }
-            50% { stroke-opacity: 0.4; }
+            0%, 100% { stroke-opacity: 0.9; }
+            50% { stroke-opacity: 0.6; }
         }
         
         /* Student card styling */
@@ -449,6 +465,26 @@
         .navigation-mode {
             display: none; /* Hide the navigation mode indicator */
         }
+
+        /* Route styling */
+        .route-outline {
+            stroke-opacity: 0.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.2));
+        }
+        
+        .route-surface {
+            stroke-opacity: 0.9;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: routePulse 2s infinite;
+        }
+        
+        @keyframes routePulse {
+            0%, 100% { stroke-opacity: 0.9; }
+            50% { stroke-opacity: 0.6; }
+        }
     </style>
 </head>
 <body>
@@ -632,10 +668,13 @@
             // Update student status in the list
             updateStudentStatus(studentId, false);
             
-            // If this is the active student, update the UI
+            // If this is the active student, update the UI and clear the route
             if (activeStudentId === studentId) {
                 document.getElementById('currently-monitoring').innerHTML = 
                     `<span class="text-warning">Student ${studentMarkers[studentId]?.fullname || studentMarkers[studentId]?.username || activeStudentName} stopped sharing location</span>`;
+                
+                // Clear route when student stops tracking
+                clearRoute();
             }
         });
         
@@ -1081,13 +1120,29 @@
                         // Decode the polyline
                         const coordinates = decodePolyline(geometry);
                         
-                        // Create a polyline layer
-                        routeLayer = L.polyline(coordinates, {
-                            color: '#3388ff',
-                            weight: 6,
+                        // Create a road-like styling with dual layers
+                        // First create the "road outline" - a wider, darker line
+                        const roadOutline = L.polyline(coordinates, {
+                            color: '#2c3e50',  // dark gray/blue for road outline
+                            weight: 8,         // thicker line for outer edge
                             opacity: 0.7,
-                            className: 'route-path'
+                            lineCap: 'round',
+                            lineJoin: 'round',
+                            className: 'route-outline'
                         }).addTo(map);
+                        
+                        // Then create the "road surface" - a narrower, lighter line on top
+                        const roadSurface = L.polyline(coordinates, {
+                            color: '#3498db',  // blue for the road surface
+                            weight: 5,         // thinner line for the road itself
+                            opacity: 0.8,
+                            lineCap: 'round',
+                            lineJoin: 'round',
+                            className: 'route-surface'
+                        }).addTo(map);
+                        
+                        // Store both layers as a group
+                        routeLayer = L.layerGroup([roadOutline, roadSurface]);
                         
                         // Add waypoint markers at intervals along the route
                         addWaypoints(coordinates);
@@ -1117,20 +1172,50 @@
         
         // Function to add waypoint markers along the route for visual effect
         function addWaypoints(coordinates) {
+            // Clear any existing waypoints
+            clearWaypoints();
+            
             // Add waypoints at intervals (every N points)
-            const interval = Math.max(Math.floor(coordinates.length / 10), 1);
+            const interval = Math.max(Math.floor(coordinates.length / 12), 1);
             
             for (let i = interval; i < coordinates.length - interval; i += interval) {
-                const waypoint = L.circleMarker(coordinates[i], {
-                    radius: 4,
-                    color: 'white',
-                    fillColor: '#3388ff',
-                    fillOpacity: 1,
-                    weight: 2,
-                    className: 'waypoint-marker'
-                }).addTo(map);
-                
-                waypoints.push(waypoint);
+                // Add directional markers to show the direction of travel
+                if (i % (interval * 3) === 0) {
+                    // Calculate direction (if we have enough points)
+                    let direction = 0;
+                    if (i > 0 && i < coordinates.length - 1) {
+                        const prev = coordinates[i-interval];
+                        const current = coordinates[i];
+                        direction = Math.atan2(current[0] - prev[0], current[1] - prev[1]) * 180 / Math.PI;
+                    }
+                    
+                    // Create a directional marker
+                    const arrowIcon = L.divIcon({
+                        className: 'waypoint-direction-marker',
+                        html: `<div class="direction-arrow" style="transform: rotate(${direction}deg)">➤</div>`,
+                        iconSize: [16, 16],
+                        iconAnchor: [8, 8]
+                    });
+                    
+                    const directionMarker = L.marker(coordinates[i], {
+                        icon: arrowIcon,
+                        interactive: false
+                    }).addTo(map);
+                    
+                    waypoints.push(directionMarker);
+                } else {
+                    // Regular waypoint dot
+                    const waypoint = L.circleMarker(coordinates[i], {
+                        radius: 3,
+                        color: '#2c3e50',
+                        fillColor: '#ffffff',
+                        fillOpacity: 1,
+                        weight: 1,
+                        className: 'waypoint-marker'
+                    }).addTo(map);
+                    
+                    waypoints.push(waypoint);
+                }
             }
         }
         
@@ -1174,33 +1259,63 @@
             // Clear existing route
             clearRoute();
             
-            // Draw a direct line between points
-            routeLayer = L.polyline([
+            // Draw a direct line between points with a better style
+            const roadOutline = L.polyline([
                 [startLat, startLng],
                 [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
             ], {
-                color: '#3388ff',
-                weight: 5,
+                color: '#2c3e50',
+                weight: 8,
                 opacity: 0.7,
                 dashArray: '10, 10',
-                className: 'route-path'
+                lineCap: 'round',
+                lineJoin: 'round',
+                className: 'route-outline'
             }).addTo(map);
             
-            // Don't fit bounds - instead maintain the current view or center on student
-            // This prevents automatic zoom-out
+            const roadSurface = L.polyline([
+                [startLat, startLng],
+                [SCHOOL_COORDINATES.latitude, SCHOOL_COORDINATES.longitude]
+            ], {
+                color: '#3498db',
+                weight: 5,
+                opacity: 0.8,
+                dashArray: '10, 10',
+                lineCap: 'round',
+                lineJoin: 'round',
+                className: 'route-surface'
+            }).addTo(map);
+            
+            // Store both layers
+            routeLayer = L.layerGroup([roadOutline, roadSurface]);
+            
+            // Only center if user hasn't manually moved the map
             if (!map.userHasManuallyMoved) {
                 map.setView([startLat, startLng], 15);
             }
+            
             console.log('Direct line to school drawn as fallback');
         }
         
         // Function to clear route and waypoints
         function clearRoute() {
             if (routeLayer) {
-                map.removeLayer(routeLayer);
+                // If routeLayer is a LayerGroup, remove all layers
+                if (routeLayer instanceof L.LayerGroup) {
+                    routeLayer.eachLayer(layer => {
+                        map.removeLayer(layer);
+                    });
+                } else {
+                    map.removeLayer(routeLayer);
+                }
                 routeLayer = null;
             }
             
+            clearWaypoints();
+        }
+        
+        // Function to clear waypoints
+        function clearWaypoints() {
             // Clear existing waypoints
             waypoints.forEach(waypoint => {
                 if (map.hasLayer(waypoint)) {
