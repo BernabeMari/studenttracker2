@@ -1,6 +1,14 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\_redirects",
+      "PackagePath": "staticwebassets"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\admin-dashboard.html",
+      "PackagePath": "staticwebassets\\admin-dashboard.html"
+    },
+    {
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\images\\default-profile.png",
       "PackagePath": "staticwebassets\\images\\default-profile.png"
     },
@@ -13,8 +21,16 @@
       "PackagePath": "staticwebassets\\index.html"
     },
     {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\js\\pwa.js",
+      "PackagePath": "staticwebassets\\js\\pwa.js"
+    },
+    {
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\login.html",
       "PackagePath": "staticwebassets\\login.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\manifest.json",
+      "PackagePath": "staticwebassets\\manifest.json"
     },
     {
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\parent-dashboard.html",
@@ -23,6 +39,10 @@
     {
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\register.html",
       "PackagePath": "staticwebassets\\register.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\service-worker.js",
+      "PackagePath": "staticwebassets\\service-worker.js"
     },
     {
       "Id": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\student-dashboard.html",
