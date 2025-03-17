@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using StudentTracker.Data;
 using StudentTracker.Hubs;
 using System.Text;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -119,7 +120,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+// Configure static files with MIME type mappings for PWA
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = new FileExtensionContentTypeProvider
+    {
+        Mappings = 
+        {
+            [".webmanifest"] = "application/manifest+json",
+            [".json"] = "application/json"
+        }
+    }
+});
+
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
