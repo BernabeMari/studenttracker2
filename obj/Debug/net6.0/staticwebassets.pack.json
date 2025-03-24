@@ -1,0 +1,81 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\_redirects",
+      "PackagePath": "staticwebassets"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\admin-dashboard.html",
+      "PackagePath": "staticwebassets\\admin-dashboard.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\images\\default-profile.png",
+      "PackagePath": "staticwebassets\\images\\default-profile.png"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\images\\student.png",
+      "PackagePath": "staticwebassets\\images\\student.png"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\js\\pwa.js",
+      "PackagePath": "staticwebassets\\js\\pwa.js"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\login.html",
+      "PackagePath": "staticwebassets\\login.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\manifest.json",
+      "PackagePath": "staticwebassets\\manifest.json"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\parent-dashboard.html",
+      "PackagePath": "staticwebassets\\parent-dashboard.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\register.html",
+      "PackagePath": "staticwebassets\\register.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\service-worker.js",
+      "PackagePath": "staticwebassets\\service-worker.js"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\student-dashboard.html",
+      "PackagePath": "staticwebassets\\student-dashboard.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\teacher-dashboard.html",
+      "PackagePath": "staticwebassets\\teacher-dashboard.html"
+    },
+    {
+      "Id": "C:\\Users\\octop\\source\\repos\\WebApplication1\\studenttracker2-main - Copy\\wwwroot\\test-profilepic.html",
+      "PackagePath": "staticwebassets\\test-profilepic.html"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.StudentTracker.props",
+      "PackagePath": "build\\StudentTracker.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.StudentTracker.props",
+      "PackagePath": "buildMultiTargeting\\StudentTracker.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.StudentTracker.props",
+      "PackagePath": "buildTransitive\\StudentTracker.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

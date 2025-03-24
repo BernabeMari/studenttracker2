@@ -1,0 +1,224 @@
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\web.config
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\appsettings.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\appsettings.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\StudentTracker.deps.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\StudentTracker.runtimeconfig.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\StudentTracker.staticwebassets.endpoints.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.staticwebassets.runtime.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.staticwebassets.endpoints.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.exe
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.deps.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.runtimeconfig.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\StudentTracker.pdb
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\BCrypt.Net-Next.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Humanizer.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.AspNetCore.SpaServices.Extensions.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.Identity.Client.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.OpenApi.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\System.Runtime.Caching.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\System.Security.Permissions.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.csproj.AssemblyReference.cache
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.AssemblyInfoInputs.cache
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.AssemblyInfo.cs
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.csproj.CoreCompileInputs.cache
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.sourcelink.json
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\scopedcss\bundle\StudentTracker.styles.css
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets.build.endpoints.json
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.build.StudentTracker.props
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.StudentTracker.props
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.StudentTracker.props
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentT.49B335BB.Up2Date
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\refint\StudentTracker.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.pdb
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\StudentTracker.genruntimeconfig.cache
+C:\Users\octop\source\repos\test\studenttracker2-main\obj\Debug\net6.0\ref\StudentTracker.dll
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\publish\web.config
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\publish\appsettings.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\publish\StudentTracker.deps.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\publish\StudentTracker.runtimeconfig.json
+C:\Users\octop\source\repos\test\studenttracker2-main\bin\Debug\net6.0\publish\publish\StudentTracker.staticwebassets.endpoints.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\appsettings.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\StudentTracker.staticwebassets.runtime.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\StudentTracker.staticwebassets.endpoints.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\StudentTracker.exe
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\StudentTracker.deps.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\StudentTracker.runtimeconfig.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\StudentTracker.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\StudentTracker.pdb
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\BCrypt.Net-Next.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Humanizer.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.AspNetCore.SpaServices.Extensions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.Identity.Client.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.OpenApi.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\System.Runtime.Caching.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\System.Security.Permissions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.csproj.AssemblyReference.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.AssemblyInfoInputs.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.AssemblyInfo.cs
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.csproj.CoreCompileInputs.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\scopedcss\bundle\StudentTracker.styles.css
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets.build.endpoints.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.build.StudentTracker.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.StudentTracker.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.StudentTracker.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentT.49B335BB.Up2Date
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\refint\StudentTracker.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.pdb
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\StudentTracker.genruntimeconfig.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main\obj\Debug\net6.0\ref\StudentTracker.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\appsettings.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\StudentTracker.staticwebassets.endpoints.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\StudentTracker.staticwebassets.runtime.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\StudentTracker.exe
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\StudentTracker.deps.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\StudentTracker.runtimeconfig.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\StudentTracker.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\StudentTracker.pdb
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\BCrypt.Net-Next.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Humanizer.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.AspNetCore.SpaServices.Extensions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.Identity.Client.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.OpenApi.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\System.Runtime.Caching.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\System.Security.Permissions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.csproj.AssemblyReference.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.AssemblyInfoInputs.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.AssemblyInfo.cs
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.csproj.CoreCompileInputs.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\scopedcss\bundle\StudentTracker.styles.css
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets.build.endpoints.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets\msbuild.StudentTracker.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets\msbuild.build.StudentTracker.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.StudentTracker.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.StudentTracker.props
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentT.49B335BB.Up2Date
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\refint\StudentTracker.dll
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.pdb
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\StudentTracker.genruntimeconfig.cache
+C:\Users\octop\source\repos\WebApplication1\studenttracker2-main - Copy\obj\Debug\net6.0\ref\StudentTracker.dll

@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Student Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #5469d4;
+            --secondary-color: #4655a8;
+            --accent-color: #f7fafc;
+            --text-color: #2d3748;
+            --light-text: #718096;
+            --success-color: #38a169;
+            --danger-color: #e53e3e;
+            --warning-color: #f6ad55;
+            --info-color: #63b3ed;
+            --border-radius: 10px;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --border-color: #e2e8f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-color);
+            background-color: #f7fafc;
+            line-height: 1.6;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-dark.bg-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Card styling */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+        
+        /* Button styling */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .status-pending {
+            background-color: var(--warning-color);
+        }
+        
+        .status-approved {
+            background-color: var(--success-color);
+        }
+        
+        .status-rejected {
+            background-color: var(--danger-color);
+        }
+        
+        /* Student list styling */
+        .student-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .student-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        
+        .student-item:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .student-item:last-child {
+            border-bottom: none;
+        }
+        
+        .subject-card {
+            transition: all 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+        }
+        
+        .border-dashed {
+            border-style: dashed !important;
+            border-width: 2px !important;
+            border-color: #ccc !important;
+            border-radius: 5px;
+        }
+        
+        /* Add animation for the student list */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-book-fill me-2"></i>
+                Student Tracker
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span id="username-display">Teacher</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="logout-btn">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast container for notifications -->
+    <div class="toast-container"></div>
+
+    <!-- Main content -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Teacher Dashboard</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Welcome to the Teacher Dashboard! Here you can create sections and manage students.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Create Section</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="create-subject-form">
+                            <div class="mb-3">
+                                <label for="subject-name" class="form-label">Section Name</label>
+                                <input type="text" class="form-control" id="subject-name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject-description" class="form-label">Description</label>
+                                <textarea class="form-control" id="subject-description" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Create Section</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Add Student to Section</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="add-student-form">
+                            <div class="mb-3">
+                                <label for="subject-select" class="form-label">Select Section</label>
+                                <select class="form-select" id="subject-select" required>
+                                    <option value="">Select a section</option>
+                                    <!-- Sections will be loaded here -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="student-id" class="form-label">Student ID</label>
+                                <input type="number" class="form-control" id="student-id" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Send Request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">My Sections</h5>
+                        <button class="btn btn-sm btn-primary" id="refresh-subjects-btn">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="subjects-container" class="row row-cols-1 row-cols-md-2 g-4">
+                            <!-- Subject cards will be loaded here -->
+                            <div class="col">
+                                <div class="card h-100 subject-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">No Sections</h5>
+                                        <p class="card-text text-muted">Create your first section using the form on the left.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Student Connection Requests</h5>
+                        <button class="btn btn-sm btn-primary" id="refresh-requests-btn">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Section</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="connection-requests">
+                                    <tr>
+                                        <td colspan="4" class="text-center">No pending connection requests</td>
+                                    </tr>
+                                    <!-- Connection requests will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Details Modal -->
+    <div class="modal fade" id="subjectDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subject-modal-title">Section Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h5 class="mb-1"><span id="subject-name-display">Section</span></h5>
+                            <p class="mb-0 text-muted">Session ID: <span id="attendance-session-id">Loading...</span></p>
+                        </div>
+                        <div class="ms-3">
+                            <div class="qrcode-date-picker mb-2">
+                                <label for="qr-date-picker" class="form-label mb-1">QR Code Date:</label>
+                                <input type="date" id="qr-date-picker" class="form-control form-control-sm" />
+                            </div>
+                            <div class="text-end mt-2">
+                                <button class="btn btn-sm btn-primary" id="regenerate-qr-btn">Update QR</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center py-3">
+                        <div id="qr-code-container" class="text-center d-none">
+                            <div id="qrcode" class="mb-2 bg-white p-2 d-inline-block"></div>
+                            <div class="mt-2">
+                                <span id="attendance-session-id" class="badge bg-secondary mb-2 d-block">Date: </span>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" id="download-qr-btn">
+                                        <i class="bi bi-download me-1"></i> Download
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" id="new-session-btn">
+                                        <i class="bi bi-arrow-repeat me-1"></i> Refresh QR
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info" id="view-attendance-btn">
+                                        <i class="bi bi-list-check me-1"></i> View Attendance
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success" id="view-students-btn">
+                                        <i class="bi bi-people me-1"></i> Students
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="qr-placeholder" class="text-center text-muted">
+                            <div class="border border-dashed p-4 mb-2">
+                                <i class="bi bi-qr-code" style="font-size: 3rem;"></i>
+                                <p class="mb-0 mt-2">Click "Generate QR Code" to create an attendance QR code</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h6 class="fw-bold">Students</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student ID</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subject-students">
+                                    <tr>
+                                        <td colspan="4" class="text-center">No students in this section</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Add a new section for attendance records inside the modal body -->
+                    <div class="mt-4 attendance-records-section d-none">
+                        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+                            <span>Attendance Records</span>
+                            <div class="attendance-date-filter d-flex align-items-center">
+                                <div class="me-2">
+                                    <label for="attendance-date-filter" class="form-label mb-0 small text-muted">Filter by class date:</label>
+                                    <input type="date" id="attendance-date-filter" class="form-control form-control-sm" title="Filter attendance by the date of the class session" />
+                                </div>
+                                <button class="btn btn-sm btn-primary me-2" id="filter-attendance-btn" title="Filter attendance records by class date">Filter</button>
+                                <button class="btn btn-sm btn-outline-secondary" id="close-attendance-btn">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendance-records">
+                                    <tr>
+                                        <td colspan="3" class="text-center">Loading attendance records...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Add a new section for attendance statistics inside the modal body -->
+                    <div class="mt-4 attendance-stats-section d-none">
+                        <h6 class="fw-bold d-flex justify-content-between align-items-center">
+                            <span>Enrolled Students</span>
+                            <button class="btn btn-sm btn-outline-secondary" id="close-students-btn">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0">Enrolled Students</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush" id="present-students">
+                                            <li class="list-group-item text-center">Loading...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-secondary text-white">
+                                        <h6 class="mb-0">Section Details</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush" id="absent-students">
+                                            <li class="list-group-item text-center">Loading...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const userString = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            if (!userString || !token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            const user = JSON.parse(userString);
+            if (user.userType !== 'Teacher') {
+                alert('Access denied. This page is for teachers only.');
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Set username in navbar
+            document.getElementById('username-display').textContent = user.username;
+            
+            // Setup logout
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = '/login.html';
+            });
+            
+            // Initialize event listeners
+            initializeFormHandlers();
+            loadSubjects();
+            loadConnectionRequests();
+            
+            // Set up event handler for the filter attendance button
+            document.getElementById('filter-attendance-btn').addEventListener('click', function() {
+                const datePicker = document.getElementById('attendance-date-filter');
+                // Use either the dataset subjectId or get it from modal
+                let subjectId = datePicker?.dataset?.subjectId;
+                
+                if (!subjectId) {
+                    subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
+                }
+                
+                if (datePicker && datePicker.value && subjectId) {
+                    console.log(`Filtering attendance for subject ${subjectId} on date ${datePicker.value}`);
+                    // Pass the date to viewAttendanceRecords to filter by AttendanceSessions date
+                    viewAttendanceRecords(subjectId, datePicker.value);
+                } else {
+                    showNotification('warning', 'Select Date', 'Please select a date first.');
+                }
+            });
+        });
+
+        function initializeFormHandlers() {
+            // Create Section Form Handler
+            document.getElementById('create-subject-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const subjectName = document.getElementById('subject-name').value;
+                const description = document.getElementById('subject-description').value;
+
+                try {
+                    const response = await fetch('/api/subject/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({
+                            name: subjectName,
+                            description: description
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        document.getElementById('create-subject-form').reset();
+                        showNotification('success', 'Section Created', data.message);
+                        loadSubjects();
+                    } else {
+                        const errorData = await response.json();
+                        showNotification('error', 'Error', errorData.message || 'Failed to create section');
+                    }
+                } catch (error) {
+                    console.error('Error creating section:', error);
+                    showNotification('error', 'Error', 'Failed to create section. Please try again.');
+                }
+            });
+
+            // Add Student to Section Form Handler
+            document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const subjectId = document.getElementById('subject-select').value;
+                const studentId = document.getElementById('student-id').value;
+
+                if (!subjectId) {
+                    showNotification('error', 'Error', 'Please select a section');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/teacherconnection/request', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({
+                            studentId: parseInt(studentId),
+                            subjectId: parseInt(subjectId)
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        document.getElementById('add-student-form').reset();
+                        showNotification('success', 'Request Sent', data.message);
+                        loadConnectionRequests();
+                    } else {
+                        const errorData = await response.json();
+                        showNotification('error', 'Error', errorData.message || 'Failed to send connection request');
+                    }
+                } catch (error) {
+                    console.error('Error sending connection request:', error);
+                    showNotification('error', 'Error', 'Failed to send connection request. Please try again.');
+                }
+            });
+
+            // Refresh buttons
+            document.getElementById('refresh-subjects-btn').addEventListener('click', loadSubjects);
+            document.getElementById('refresh-requests-btn').addEventListener('click', loadConnectionRequests);
+        }
+
+        async function loadSubjects() {
+            try {
+                const response = await fetch('/api/subject/list', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const subjects = await response.json();
+                    const subjectsContainer = document.getElementById('subjects-container');
+                    
+                    if (subjects.length === 0) {
+                        subjectsContainer.innerHTML = `
+                            <div class="col">
+                                <div class="card h-100 subject-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">No Sections</h5>
+                                        <p class="card-text text-muted">Create your first section using the form on the left.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    subjectsContainer.innerHTML = subjects.map(subject => `
+                        <div class="col">
+                            <div class="card h-100 subject-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${subject.name}</h5>
+                                    <p class="card-text">${subject.description || 'No description'}</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="bi bi-people-fill me-1"></i>
+                                            ${subject.studentCount} students
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="showSubjectDetails(${subject.subjectId})">
+                                        View Details
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${subject.subjectId}, '${subject.name}')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    updateSubjectSelect(subjects);
+                } else {
+                    console.error('Failed to load subjects:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load subjects');
+                }
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+                showNotification('error', 'Error', 'Failed to load subjects');
+            }
+        }
+
+        function updateSubjectSelect(subjects) {
+            const subjectSelect = document.getElementById('subject-select');
+            
+            // Keep the first "Select a subject" option
+            subjectSelect.innerHTML = '<option value="">Select a section</option>';
+            
+            // Add options for each subject
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.subjectId;
+                option.textContent = subject.name;
+                subjectSelect.appendChild(option);
+            });
+        }
+
+        async function loadConnectionRequests() {
+            try {
+                const response = await fetch('/api/teacherconnection/pending', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const connections = await response.json();
+                    const connectionRequestsTable = document.getElementById('connection-requests');
+                    
+                    if (connections.length === 0) {
+                        connectionRequestsTable.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="text-center">No pending connection requests</td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    connectionRequestsTable.innerHTML = connections.map(request => `
+                        <tr>
+                            <td>${request.student.fullname} (ID: ${request.student.studentId})</td>
+                            <td>${request.subject.name}</td>
+                            <td>
+                                <span class="status-indicator status-${request.status.toLowerCase()}"></span>
+                                ${request.status}
+                            </td>
+                            <td>${new Date(request.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    console.error('Failed to load connection requests:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load connection requests');
+                }
+            } catch (error) {
+                console.error('Error loading connection requests:', error);
+                showNotification('error', 'Error', 'Failed to load connection requests');
+            }
+        }
+
+        async function showSubjectDetails(subjectId) {
+            try {
+                const response = await fetch(`/api/subject/${subjectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const subject = await response.json();
+                    
+                    // Set subject data to the modal elements
+                    const subjectModal = document.getElementById('subjectDetailsModal');
+                    subjectModal.dataset.subjectId = subject.subjectId;
+                    
+                    document.getElementById('subject-modal-title').textContent = subject.name;
+                    document.getElementById('subject-name-display').textContent = subject.name;
+                    
+                    // Initialize date pickers with today's date
+                    const today = new Date().toISOString().split('T')[0];
+                    const qrDatePicker = document.getElementById('qr-date-picker');
+                    const attendanceDateFilter = document.getElementById('attendance-date-filter');
+                    
+                    if (qrDatePicker) qrDatePicker.value = today;
+                    if (attendanceDateFilter) {
+                        attendanceDateFilter.value = today;
+                        // Store selected subject ID for use with the filter button
+                        attendanceDateFilter.dataset.subjectId = subject.subjectId;
+                    }
+                    
+                    // Check for existing attendance session in localStorage
+                    const sessionKey = `attendance_session_${subject.subjectId}`;
+                    const existingSession = localStorage.getItem(sessionKey);
+                    
+                    if (existingSession) {
+                        // If we have an existing session, restore it
+                        const sessionData = JSON.parse(existingSession);
+                        
+                        // Show the QR code container and hide the placeholder
+                        document.getElementById('qr-code-container').classList.remove('d-none');
+                        document.getElementById('qr-placeholder').classList.add('d-none');
+                        
+                        // Update the session ID display
+                        const sessionSpan = document.getElementById('attendance-session-id');
+                        
+                        // Use Philippines time zone (GMT+8) for displays
+                        const philippinesOptions = { 
+                            timeZone: 'Asia/Manila',
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        };
+                        
+                        // Get time in Philippines time zone
+                        let dateToUse = new Date();
+                        
+                        // Use stored timestamp if available
+                        if (sessionData.timestamp) {
+                            dateToUse = new Date(sessionData.timestamp);
+                        }
+                        
+                        // Format the date using Philippines timezone
+                        const formattedDate = dateToUse.toLocaleDateString('en-PH', philippinesOptions);
+                        
+                        console.log('Using Philippines time for stored session:', dateToUse.toString());
+                        console.log('Formatted date for display:', formattedDate);
+                        
+                        sessionSpan.textContent = `Date: ${formattedDate}`;
+                        sessionSpan.dataset.sessionId = sessionData.sessionId;
+                        
+                        // Generate QR code with the session data
+                        const qrContainer = document.getElementById('qrcode');
+                        qrContainer.innerHTML = '';
+                        
+                        // Create QR data with minimal necessary information
+                        // We're using abbreviated keys to reduce QR code size:
+                        // t = type (a for attendance)
+                        // s = sessionId 
+                        // i = subjectId
+                        // d = date in YYYY-MM-DD format
+                        const qrData = JSON.stringify({
+                            t: 'a', 
+                            s: sessionData.sessionId,
+                            i: subject.subjectId,
+                            d: new Date().toISOString().split('T')[0]
+                        });
+                        
+                        // Generate QR code using the qrcodejs library
+                        try {
+                            new QRCode(qrContainer, {
+                                text: qrData,
+                                width: 200,
+                                height: 200,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        } catch (qrError) {
+                            console.error('Error regenerating QR code:', qrError);
+                        }
+                    } else {
+                        // No existing session, show the placeholder
+                        document.getElementById('qr-code-container').classList.add('d-none');
+                        document.getElementById('qr-placeholder').classList.remove('d-none');
+                    }
+                    
+                    // Set up QR code generation button
+                    const generateQrBtn = document.getElementById('generate-qr-btn');
+                    
+                    // If the button doesn't exist, add it to the placeholder
+                    if (!generateQrBtn) {
+                        // Add the button to the QR placeholder
+                        const qrPlaceholder = document.getElementById('qr-placeholder');
+                        if (qrPlaceholder) {
+                            // Find the inner div
+                            const placeholderDiv = qrPlaceholder.querySelector('.border-dashed');
+                            if (placeholderDiv) {
+                                // Add the generate button after the paragraph
+                                placeholderDiv.innerHTML += `
+                                    <button id="generate-qr-btn" class="btn btn-primary mt-3">
+                                        <i class="bi bi-qr-code me-1"></i> Generate QR Code
+                                    </button>
+                                `;
+                                // Now get the newly created button
+                                const newGenerateBtn = document.getElementById('generate-qr-btn');
+                                if (newGenerateBtn) {
+                                    newGenerateBtn.onclick = () => generateAttendanceQR(subject.subjectId, subject.name);
+                                }
+                            }
+                        }
+                    } else {
+                        // Button exists, set its onclick handler
+                        generateQrBtn.onclick = () => generateAttendanceQR(subject.subjectId, subject.name);
+                    }
+                    
+                    // Set up download button handler with null check
+                    const downloadBtn = document.getElementById('download-qr-btn');
+                    if (downloadBtn) {
+                        downloadBtn.onclick = downloadQRCode;
+                    }
+                    
+                    // Set up new session button handler with null check
+                    const newSessionBtn = document.getElementById('new-session-btn');
+                    if (newSessionBtn) {
+                        newSessionBtn.onclick = () => clearQRCodeSession(subject.subjectId, subject.name);
+                    }
+                    
+                    // Set up update QR button handler with null check
+                    const regenerateBtn = document.getElementById('regenerate-qr-btn');
+                    if (regenerateBtn) {
+                        regenerateBtn.onclick = () => {
+                            const datePicker = document.getElementById('qr-date-picker');
+                            if (datePicker) {
+                                // If no date is set, use today's date
+                                if (!datePicker.value) {
+                                    const today = new Date().toISOString().split('T')[0];
+                                    datePicker.value = today;
+                                    console.log('No date selected, using today:', today);
+                                }
+                                generateAttendanceQR(subject.subjectId, subject.name);
+                            } else {
+                                showNotification('warning', 'Error', 'Date picker not found');
+                            }
+                        };
+                    }
+                    
+                    // Set up the view attendance button with enhanced error handling
+                    const viewAttendanceBtn = document.getElementById('view-attendance-btn');
+                    if (viewAttendanceBtn) {
+                        viewAttendanceBtn.onclick = function() {
+                            // Show loading state
+                            const attendanceRecordsTable = document.getElementById('attendance-records');
+                            if (attendanceRecordsTable) {
+                                attendanceRecordsTable.innerHTML = `
+                                    <tr>
+                                        <td colspan="3" class="text-center">
+                                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                            Loading attendance records...
+                                        </td>
+                                    </tr>
+                                `;
+                            }
+
+                            // Make sure the attendance records section is visible
+                            const recordsSection = document.querySelector('.attendance-records-section');
+                            if (recordsSection) {
+                                recordsSection.classList.remove('d-none');
+                                recordsSection.style.display = 'block'; // Explicitly set display style
+                            }
+
+                            // Hide the statistics section if it's open
+                            const statsSection = document.querySelector('.attendance-stats-section');
+                            if (statsSection) {
+                                statsSection.classList.add('d-none');
+                            }
+                            
+                            // Always use today's date if no specific date is provided
+                            // This date will be used to filter attendance by the session date in AttendanceSessions table
+                            const today = new Date().toISOString().split('T')[0];
+                            
+                            // Update the date filter input with today's date
+                            const dateFilter = document.getElementById('attendance-date-filter');
+                            if (dateFilter) {
+                                dateFilter.value = today;
+                                // Store the subjectId for easy access by the filter button
+                                dateFilter.dataset.subjectId = subjectId;
+                            }
+                            
+                            // Call viewAttendanceRecords with today's date to filter by AttendanceSessions date
+                            viewAttendanceRecords(subjectId, today);
+                        };
+                    }
+                    
+                    // Set up attendance statistics viewing button
+                    const viewStudentsBtn = document.getElementById('view-students-btn');
+                    if (viewStudentsBtn) {
+                        viewStudentsBtn.onclick = () => viewEnrolledStudents(subject.subjectId);
+                    }
+                    
+                    // Ensure close attendance button works properly
+                    const closeAttendanceBtn = document.getElementById('close-attendance-btn');
+                    if (closeAttendanceBtn) {
+                        closeAttendanceBtn.onclick = function() {
+                            const recordsSection = document.querySelector('.attendance-records-section');
+                            if (recordsSection) {
+                                recordsSection.classList.add('d-none');
+                            }
+                        };
+                    }
+                    
+                    // Set up close statistics button
+                    const closeStatsBtn = document.getElementById('close-students-btn');
+                    if (closeStatsBtn) {
+                        closeStatsBtn.onclick = () => {
+                            const statsSection = document.querySelector('.attendance-stats-section');
+                            if (statsSection) {
+                                statsSection.classList.add('d-none');
+                            }
+                        };
+                    }
+                    
+                    const studentsTable = document.getElementById('subject-students');
+                    if (!subject.students || subject.students.length === 0) {
+                        studentsTable.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="text-center">No students in this section</td>
+                            </tr>
+                        `;
+                    } else {
+                        studentsTable.innerHTML = subject.students.map(student => `
+                            <tr>
+                                <td>${student.studentId}</td>
+                                <td>${student.fullname}</td>
+                                <td>
+                                    <span class="status-indicator status-${student.status.toLowerCase()}"></span>
+                                    ${student.status}
+                                </td>
+                                <td>
+                                    ${student.status === 'Approved' ? 
+                                        `<button class="btn btn-sm btn-outline-danger" onclick="removeStudent(${student.connectionId})">Remove</button>` : 
+                                        ''}
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                    
+                    // Show the modal
+                    const modal = new bootstrap.Modal(document.getElementById('subjectDetailsModal'));
+                    modal.show();
+                } else {
+                    console.error('Failed to load subject details:', await response.text());
+                    showNotification('error', 'Error', 'Failed to load subject details');
+                }
+            } catch (error) {
+                console.error('Error loading subject details:', error);
+                showNotification('error', 'Error', 'Failed to load subject details');
+            }
+        }
+
+        // Function to remove a student from a section
+        async function removeStudent(connectionId) {
+            if (!confirm('Are you sure you want to remove this student from the section?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/teacherconnection/${connectionId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    showNotification('success', 'Student Removed', data.message);
+                    
+                    // Refresh the modal data
+                    const subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
+                    showSubjectDetails(subjectId);
+                } else {
+                    const errorData = await response.json();
+                    showNotification('error', 'Error', errorData.message || 'Failed to remove student');
+                }
+            } catch (error) {
+                console.error('Error removing student:', error);
+                showNotification('error', 'Error', 'Failed to remove student');
+            }
+        }
+
+        // Function to show toast notifications
+        function showNotification(type, title, message) {
+            // Create unique ID for this toast
+            const toastId = 'toast-' + Date.now();
+            
+            // Create the toast element
+            const toastHtml = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header ${type === 'success' ? 'bg-success text-white' : type === 'error' ? 'bg-danger text-white' : ''}">
+                        <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+                        <strong class="me-auto">${title}</strong>
+                        <small>just now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            // Add the toast to the container
+            document.querySelector('.toast-container').insertAdjacentHTML('beforeend', toastHtml);
+            
+            // Initialize and show the toast
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 5000
+            });
+            
+            toast.show();
+            
+            // Remove toast from DOM after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+        
+        // Generate attendance QR code
+        async function generateAttendanceQR(subjectId, subjectName) {
+            try {
+                // Get the date from the date picker if available
+                const datePicker = document.getElementById('qr-date-picker');
+                let selectedDate = new Date();
+                
+                if (datePicker && datePicker.value) {
+                    selectedDate = new Date(datePicker.value);
+                    // Add time to ensure proper date calculation
+                    selectedDate.setHours(12, 0, 0, 0);
+                } else {
+                    // If no date was selected, set today's date in the picker
+                    const today = new Date();
+                    const formattedToday = today.toISOString().split('T')[0];
+                    if (datePicker) {
+                        datePicker.value = formattedToday;
+                    }
+                }
+                
+                // Get or create a session for this subject with the selected date
+                const sessionData = await createAttendanceSession(subjectId, selectedDate);
+                
+                if (!sessionData) {
+                    showNotification('error', 'Error', 'Failed to get attendance session');
+                    return;
+                }
+                
+                // Show the QR code container and hide the placeholder
+                document.getElementById('qr-code-container').classList.remove('d-none');
+                document.getElementById('qr-placeholder').classList.add('d-none');
+                
+                // Update the session ID display
+                const sessionSpan = document.getElementById('attendance-session-id');
+                
+                // Use Philippines time zone (GMT+8) for displays
+                const philippinesOptions = { 
+                    timeZone: 'Asia/Manila',
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+                
+                // Format the selected date for display
+                const formattedDate = selectedDate.toLocaleDateString('en-PH', philippinesOptions);
+                
+                console.log('Using date for QR code:', selectedDate.toString());
+                console.log('Formatted date for display:', formattedDate);
+                
+                sessionSpan.textContent = `Date: ${formattedDate}`;
+                sessionSpan.dataset.sessionId = sessionData.sessionId;
+                
+                // Generate QR code with the session data
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+                
+                // Create QR data with minimal necessary information
+                // We're using abbreviated keys to reduce QR code size:
+                // t = type (a for attendance)
+                // s = sessionId 
+                // i = subjectId
+                // d = date in YYYY-MM-DD format
+                const qrData = JSON.stringify({
+                    t: 'a', 
+                    s: sessionData.sessionId,
+                    i: subjectId,
+                    d: selectedDate.toISOString().split('T')[0]
+                });
+                
+                // Save session data to localStorage for persistence
+                const sessionKey = `attendance_session_${subjectId}`;
+                const sessionToSave = {
+                    sessionId: sessionData.sessionId,
+                    timestamp: selectedDate.toISOString(),
+                    formattedDate: formattedDate,
+                    selectedDate: selectedDate.toISOString().split('T')[0]
+                };
+                localStorage.setItem(sessionKey, JSON.stringify(sessionToSave));
+                
+                // Generate QR code using the qrcodejs library
+                try {
+                    new QRCode(qrContainer, {
+                        text: qrData,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    
+                    const formattedDateForNotification = selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    showNotification(
+                        'success', 
+                        'QR Code Generated', 
+                        `Created QR code for ${formattedDateForNotification} (Session ID: ${sessionData.sessionId}). Students can now scan this code to record their attendance.`
+                    );
+                } catch (qrError) {
+                    console.error('Error generating QR code:', qrError);
+                    showNotification('error', 'Error', 'Could not generate QR code');
+                }
+            } catch (error) {
+                console.error('Error creating attendance QR code:', error);
+                showNotification('error', 'Error', 'Failed to generate QR code');
+            }
+        }
+        
+        // Download QR code as image
+        function downloadQRCode() {
+            try {
+                const canvas = document.querySelector('#qrcode img');
+                if (!canvas) {
+                    showNotification('error', 'Error', 'No QR code to download');
+                    return;
+                }
+                
+                // Create a temporary canvas to draw the QR code
+                const tempCanvas = document.createElement('canvas');
+                const context = tempCanvas.getContext('2d');
+                // Set canvas dimensions to match the QR code
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                // Draw the QR code image to the canvas
+                context.drawImage(canvas, 0, 0);
+                
+                // Create a download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = tempCanvas.toDataURL('image/png');
+                
+                // Get subject name and session ID for filename
+                const subjectId = document.getElementById('subjectDetailsModal').dataset.subjectId;
+                const sessionId = document.getElementById('attendance-session-id').dataset.sessionId;
+                
+                // Get the QR code date from localStorage
+                const sessionKey = `attendance_session_${subjectId}`;
+                let sessionDate = new Date().toISOString().split('T')[0]; // Default to today
+                
+                try {
+                    const savedSession = JSON.parse(localStorage.getItem(sessionKey) || '{}');
+                    if (savedSession.selectedDate) {
+                        sessionDate = savedSession.selectedDate;
+                    }
+                } catch (e) {
+                    console.error('Error parsing session data:', e);
+                }
+                
+                // Create filename with subject ID, session ID and date
+                downloadLink.download = `attendance-qr-subject-${subjectId}-session-${sessionId}-date-${sessionDate}.png`;
+                
+                // Trigger the download
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                showNotification('success', 'Download Started', 'QR code image is being downloaded');
+            } catch (error) {
+                console.error('Error downloading QR code:', error);
+                showNotification('error', 'Error', 'Could not download QR code');
+            }
+        }
+        
+        // Clear existing QR code session and create a new one
+        function clearQRCodeSession(subjectId, subjectName) {
+            try {
+                // Clear the previous session from localStorage
+                const sessionKey = `attendance_session_${subjectId}`;
+                localStorage.removeItem(sessionKey);
+                
+                // Reset UI to show placeholder
+                document.getElementById('qr-code-container').classList.add('d-none');
+                document.getElementById('qr-placeholder').classList.remove('d-none');
+                document.getElementById('qrcode').innerHTML = '';
+                
+                // Generate a new QR code (which will trigger a new session or get existing one)
+                generateAttendanceQR(subjectId, subjectName);
+                
+                showNotification('success', 'QR Code Refreshed', 'The QR code has been refreshed with the current session data.');
+            } catch (error) {
+                console.error('Error clearing QR session:', error);
+                showNotification('error', 'Error', 'Failed to refresh QR code');
+            }
+        }
+        
+        // Create a new attendance session on the server
+        async function createAttendanceSession(subjectId, date) {
+            try {
+                console.log(`Creating attendance session for subject ${subjectId} on date: ${date.toISOString().split('T')[0]}`);
+                
+                const response = await fetch('/api/attendance/create-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        subjectId: subjectId,
+                        date: date ? date.toISOString() : new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(`Session created/retrieved successfully. Session ID: ${data.sessionId}, Date: ${new Date(data.date).toISOString().split('T')[0]}`);
+                    return data;
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to create attendance session:', errorText);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error creating attendance session:', error);
+                return null;
+            }
+        }
+
+        // Add function to delete a section
+        async function deleteSubject(subjectId, subjectName) {
+            if (!confirm(`Are you sure you want to delete section "${subjectName}"?\nThis will also delete all related attendance data.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/subject/${subjectId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    showNotification('success', 'Section Deleted', `"${subjectName}" has been deleted successfully.`);
+                    
+                    // Clear any stored session data for this section
+                    const sessionKey = `attendance_session_${subjectId}`;
+                    localStorage.removeItem(sessionKey);
+                    
+                    // Refresh the sections list
+                    loadSubjects();
+                } else {
+                    const errorData = await response.json();
+                    showNotification('error', 'Error', errorData.message || 'Failed to delete section');
+                }
+            } catch (error) {
+                console.error('Error deleting section:', error);
+                showNotification('error', 'Error', 'Failed to delete section. Please try again.');
+            }
+        }
+
+        // Add function to view attendance records
+        async function viewAttendanceRecords(subjectId, filterDate = null) {
+            try {
+                console.log('Viewing attendance records for subject ID:', subjectId);
+                
+                if (!subjectId) {
+                    console.error('No subject ID provided to viewAttendanceRecords');
+                    showNotification('error', 'Error', 'No subject selected');
+                    return;
+                }
+                
+                // Always ensure we have a date (use today if none provided)
+                if (!filterDate) {
+                    filterDate = new Date().toISOString().split('T')[0];
+                    console.log('No date provided, using today:', filterDate);
+                }
+                
+                // Update UI to show we're loading
+                const attendanceRecordsTable = document.getElementById('attendance-records');
+                attendanceRecordsTable.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                            Loading attendance records...
+                        </td>
+                    </tr>
+                `;
+                
+                // Format and display the selected date
+                let formattedDateHeading = '';
+                try {
+                    const dateObj = new Date(filterDate);
+                    formattedDateHeading = dateObj.toLocaleDateString('en-US', { 
+                        weekday: 'long',
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
+                    // Update the heading of the attendance records section
+                    const recordsHeading = document.querySelector('.attendance-records-section h6 span');
+                    if (recordsHeading) {
+                        recordsHeading.innerHTML = `Attendance Records <small class="text-muted">(${formattedDateHeading})</small>`;
+                    }
+                } catch (e) {
+                    console.error('Error formatting date for heading:', e);
+                }
+                
+                // Update the date picker with the current filter date for UI consistency
+                const dateFilter = document.getElementById('attendance-date-filter');
+                if (dateFilter) {
+                    dateFilter.value = filterDate;
+                    // Store the subjectId in the date picker's dataset for reference when filtering
+                    dateFilter.dataset.subjectId = subjectId;
+                }
+                
+                // Construct the API URL with the date filter
+                let apiUrl = `/api/attendance/subject/${subjectId}`;
+                
+                // Always include date parameter - it will filter sessions by their date in AttendanceSessions table
+                const formattedDate = new Date(filterDate).toISOString().split('T')[0];
+                apiUrl += `?date=${formattedDate}`;
+                console.log(`Filtering attendance sessions by date: ${formattedDate}`);
+                
+                console.log('Fetching attendance from:', apiUrl);
+                console.log('Authorization token:', `Bearer ${localStorage.getItem('token').substring(0, 20)}...`);
+                
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Attendance data received:', data);
+                    
+                    // Debug what's in the records array
+                    if (data.records && data.records.length > 0) {
+                        console.log('First record:', data.records[0]);
+                    }
+                    
+                    if (!data.records || data.records.length === 0) {
+                        const attendanceRecordsTable = document.getElementById('attendance-records');
+                        
+                        // Format the filter date for display
+                        let formattedFilterDate = filterDate;
+                        try {
+                            const dateObj = new Date(filterDate);
+                            formattedFilterDate = dateObj.toLocaleDateString('en-US', { 
+                                weekday: 'long',
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            });
+                        } catch (e) {
+                            console.error('Error formatting date:', e);
+                        }
+                        
+                        attendanceRecordsTable.innerHTML = `
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    <div class="alert alert-info mb-0">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        No attendance records found for <strong>${formattedFilterDate}</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    // Clear previous content and append rows one by one instead of using innerHTML
+                    const attendanceRecordsTable = document.getElementById('attendance-records');
+                    attendanceRecordsTable.innerHTML = '';
+                    
+                    // Create table rows for each record
+                    data.records.forEach(record => {
+                        // Log the record for debugging
+                        console.log('Processing attendance record:', record);
+                        
+                        // Format the date and time for better readability
+                        let scanDate = record.date || 'N/A';
+                        let scanTime = record.time || 'N/A';
+                        
+                        // If timestamp is available, use it to create a nicer format
+                        if (record.timestamp) {
+                            try {
+                                // Create a proper Philippines time display by using the Asia/Manila timezone
+                                const recordTimestamp = new Date(record.timestamp);
+                                
+                                // Ensure we're showing Philippines time (GMT+8)
+                                const philippinesOptions = { 
+                                    timeZone: 'Asia/Manila',
+                                    weekday: 'short',
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                };
+                                
+                                // Format time with explicit time zone setting
+                                const timeOptions = {
+                                    timeZone: 'Asia/Manila',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: true
+                                };
+                                
+                                scanDate = recordTimestamp.toLocaleDateString('en-PH', philippinesOptions);
+                                scanTime = recordTimestamp.toLocaleTimeString('en-PH', timeOptions);
+                            } catch (e) {
+                                console.error('Error formatting timestamp:', e);
+                            }
+                        }
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${record.studentName || 'Unknown'}</td>
+                            <td>${scanDate}</td>
+                            <td>${scanTime}</td>
+                        `;
+                        attendanceRecordsTable.appendChild(row);
+                    });
+                    
+                    // Add summary row
+                    const summaryRow = document.createElement('tr');
+                    summaryRow.className = 'table-secondary';
+                    summaryRow.innerHTML = `
+                        <td colspan="3" class="text-end">
+                            <strong>Total Attendance: ${data.attendanceCount} student(s)</strong>
+                        </td>
+                    `;
+                    attendanceRecordsTable.appendChild(summaryRow);
+                    
+                } else {
+                    console.error('Failed to load attendance records. Status:', response.status);
+                    try {
+                        const errorText = await response.text();
+                        console.error('Error response:', errorText);
+                        
+                        // Try to parse as JSON if possible
+                        try {
+                            const errorJson = JSON.parse(errorText);
+                            console.error('Error JSON:', errorJson);
+                        } catch (parseError) {
+                            // Not JSON, that's fine
+                        }
+                    } catch (readError) {
+                        console.error('Could not read error response');
+                    }
+                    
+                    const attendanceRecordsTable = document.getElementById('attendance-records');
+                    attendanceRecordsTable.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="text-center text-danger">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Error loading attendance records. Please try again.
+                            </td>
+                        </tr>
+                    `;
+                    showNotification('error', 'Error', 'Failed to load attendance records');
+                }
+            } catch (error) {
+                console.error('Error loading attendance records:', error);
+                const attendanceRecordsTable = document.getElementById('attendance-records');
+                attendanceRecordsTable.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="text-center text-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Error loading attendance records: ${error.message || 'Unknown error'}
+                        </td>
+                    </tr>
+                `;
+                showNotification('error', 'Error', 'Failed to load attendance records');
+            }
+        }
+
+        // Add the viewEnrolledStudents function:
+        // Function to view enrolled students in a subject
+        async function viewEnrolledStudents(subjectId) {
+            try {
+                console.log('Viewing enrolled students for subject ID:', subjectId);
+                
+                if (!subjectId) {
+                    console.error('No subject ID provided to viewEnrolledStudents');
+                    showNotification('error', 'Error', 'No subject selected');
+                    return;
+                }
+
+                // Hide the attendance records section if it's open
+                const recordsSection = document.querySelector('.attendance-records-section');
+                if (recordsSection) {
+                    recordsSection.classList.add('d-none');
+                }
+                
+                // Show the statistics section and rename it to Students
+                const statsSection = document.querySelector('.attendance-stats-section');
+                if (statsSection) {
+                    // Change the heading
+                    const heading = statsSection.querySelector('h6 span');
+                    if (heading) {
+                        heading.textContent = 'Enrolled Students';
+                    }
+                    
+                    // Make the section visible
+                    statsSection.classList.remove('d-none');
+                    statsSection.style.display = 'block';
+                }
+                
+                // Update the UI to show loading state
+                const presentStudentsList = document.getElementById('present-students');
+                const absentStudentsList = document.getElementById('absent-students');
+                
+                if (presentStudentsList) {
+                    presentStudentsList.innerHTML = '<li class="list-group-item text-center">Loading enrolled students...</li>';
+                }
+                
+                if (absentStudentsList) {
+                    absentStudentsList.innerHTML = '<li class="list-group-item text-center">Loading...</li>';
+                }
+                
+                // Update card headers
+                const presentHeader = document.querySelector('.attendance-stats-section .col-md-6:first-child .card-header');
+                if (presentHeader) {
+                    presentHeader.className = 'card-header bg-primary text-white';
+                    presentHeader.querySelector('h6').textContent = 'Enrolled Students';
+                }
+                
+                const absentHeader = document.querySelector('.attendance-stats-section .col-md-6:last-child .card-header');
+                if (absentHeader) {
+                    absentHeader.className = 'card-header bg-secondary text-white';
+                    absentHeader.querySelector('h6').textContent = 'Section Details';
+                }
+                
+                // Fetch the subject details to get enrolled students
+                const response = await fetch(`/api/subject/${subjectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const subjectData = await response.json();
+                    console.log('Subject data received:', subjectData);
+                    
+                    // Process enrolled students (only approved ones)
+                    const enrolledStudents = subjectData.students ? 
+                        subjectData.students.filter(student => student.status === 'Approved') : 
+                        [];
+                    
+                    console.log('Enrolled students:', enrolledStudents);
+                    
+                    // Display the enrolled students
+                    if (presentStudentsList) {
+                        if (enrolledStudents.length === 0) {
+                            presentStudentsList.innerHTML = `
+                                <li class="list-group-item text-center">
+                                    <div class="alert alert-info mb-0">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        No students enrolled in this section
+                                    </div>
+                                </li>
+                            `;
+                        } else {
+                            presentStudentsList.innerHTML = enrolledStudents.map((student, index) => `
+                                <li class="list-group-item d-flex justify-content-between align-items-center" 
+                                    style="animation: fadeIn 0.3s ease-in-out ${index * 0.05}s both;">
+                                    <div>
+                                        <span class="fw-bold">${student.fullname}</span>
+                                        <small class="d-block text-muted">ID: ${student.studentId}</small>
+                                    </div>
+                                    <span class="badge bg-success rounded-pill">Enrolled</span>
+                                </li>
+                            `).join('');
+                        }
+                    }
+                    
+                    // Display summary in the details section
+                    if (absentStudentsList) {
+                        // Get the current user name to display as teacher
+                        const userString = localStorage.getItem('user');
+                        let teacherName = 'Not specified';
+                        
+                        if (userString) {
+                            try {
+                                const user = JSON.parse(userString);
+                                teacherName = user.fullname || user.username || teacherName;
+                            } catch(e) {
+                                console.error('Error parsing user data:', e);
+                            }
+                        }
+                        
+                        absentStudentsList.innerHTML = `
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span>Total Enrolled:</span>
+                                    <span class="fw-bold">${enrolledStudents.length} students</span>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span>Section Name:</span>
+                                    <span class="fw-bold">${subjectData.name}</span>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span>Teacher:</span>
+                                    <span class="fw-bold">${teacherName}</span>
+                                </div>
+                            </li>
+                        `;
+                    }
+                    
+                } else {
+                    console.error('Failed to load subject details. Status:', response.status);
+                    
+                    if (presentStudentsList) {
+                        presentStudentsList.innerHTML = `
+                            <li class="list-group-item text-center text-danger">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Error loading enrolled students. Please try again.
+                            </li>
+                        `;
+                    }
+                    
+                    showNotification('error', 'Error', 'Failed to load enrolled students');
+                }
+            } catch (error) {
+                console.error('Error loading enrolled students:', error);
+                showNotification('error', 'Error', 'Failed to load enrolled students');
+            }
+        }
+    </script>
+</body>
+</html>

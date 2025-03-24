@@ -1,0 +1,846 @@
+{
+  "Version": 1,
+  "Hash": "6Fk+Re4Fl4i0+llPkdJEAqXmZj971nIsIGbEQU1++zQ=",
+  "Source": "StudentTracker",
+  "BasePath": "_content/StudentTracker",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "StudentTracker\\wwwroot",
+      "Source": "StudentTracker",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\images\\default-profile.png",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "images/default-profile#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "yu78tspv7y",
+      "Integrity": "Nqnn8clbgv+5l0PgxcTOldg8mkMKrFn4TvPL+rYUUGg=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\default-profile.png"
+    },
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\index.html",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "index#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "1g3hblwx95",
+      "Integrity": "scpKem2yXTcXS2flFsimk8iDtTpSSKFeY8QNEFV/9vo=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\login.html",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "login#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "veyvnh80zy",
+      "Integrity": "95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\login.html"
+    },
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\parent-dashboard.html",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "parent-dashboard#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "p3smojoqa5",
+      "Integrity": "O4R0IEQDQmK5yBuuHbisZMRUjEkuEdPylcuCNtNn45E=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\parent-dashboard.html"
+    },
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\register.html",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "register#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "w46ho1ssy3",
+      "Integrity": "ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\register.html"
+    },
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\student-dashboard.html",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "student-dashboard#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "0pwoaoi75k",
+      "Integrity": "hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\student-dashboard.html"
+    },
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\teacher-dashboard.html",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "teacher-dashboard#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "qzxy2uv037",
+      "Integrity": "arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\teacher-dashboard.html"
+    },
+    {
+      "Identity": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\test-profilepic.html",
+      "SourceId": "StudentTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\",
+      "BasePath": "_content/StudentTracker",
+      "RelativePath": "test-profilepic#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "o0haow1jp7",
+      "Integrity": "qNxloS5fjpxCKuqWszez39ubZa9pkpN8p9Hi7PnYvqM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\test-profilepic.html"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "images/default-profile.png",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\images\\default-profile.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Nqnn8clbgv+5l0PgxcTOldg8mkMKrFn4TvPL+rYUUGg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Nqnn8clbgv+5l0PgxcTOldg8mkMKrFn4TvPL+rYUUGg="
+        }
+      ]
+    },
+    {
+      "Route": "images/default-profile.yu78tspv7y.png",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\images\\default-profile.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Nqnn8clbgv+5l0PgxcTOldg8mkMKrFn4TvPL+rYUUGg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "yu78tspv7y"
+        },
+        {
+          "Name": "label",
+          "Value": "images/default-profile.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Nqnn8clbgv+5l0PgxcTOldg8mkMKrFn4TvPL+rYUUGg="
+        }
+      ]
+    },
+    {
+      "Route": "index.1g3hblwx95.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\index.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "795"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"scpKem2yXTcXS2flFsimk8iDtTpSSKFeY8QNEFV/9vo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1g3hblwx95"
+        },
+        {
+          "Name": "label",
+          "Value": "index.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-scpKem2yXTcXS2flFsimk8iDtTpSSKFeY8QNEFV/9vo="
+        }
+      ]
+    },
+    {
+      "Route": "index.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\index.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "795"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"scpKem2yXTcXS2flFsimk8iDtTpSSKFeY8QNEFV/9vo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-scpKem2yXTcXS2flFsimk8iDtTpSSKFeY8QNEFV/9vo="
+        }
+      ]
+    },
+    {
+      "Route": "login.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\login.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "4989"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI="
+        }
+      ]
+    },
+    {
+      "Route": "login.veyvnh80zy.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\login.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "4989"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "veyvnh80zy"
+        },
+        {
+          "Name": "label",
+          "Value": "login.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-95rcChbNMxZOVpl8Tyka3Im/l8UoIpXuk1v97G7tGvI="
+        }
+      ]
+    },
+    {
+      "Route": "parent-dashboard.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\parent-dashboard.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "48309"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"O4R0IEQDQmK5yBuuHbisZMRUjEkuEdPylcuCNtNn45E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 14:30:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-O4R0IEQDQmK5yBuuHbisZMRUjEkuEdPylcuCNtNn45E="
+        }
+      ]
+    },
+    {
+      "Route": "parent-dashboard.p3smojoqa5.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\parent-dashboard.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "48309"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"O4R0IEQDQmK5yBuuHbisZMRUjEkuEdPylcuCNtNn45E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 14:30:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "p3smojoqa5"
+        },
+        {
+          "Name": "label",
+          "Value": "parent-dashboard.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-O4R0IEQDQmK5yBuuHbisZMRUjEkuEdPylcuCNtNn45E="
+        }
+      ]
+    },
+    {
+      "Route": "register.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\register.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6522"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY="
+        }
+      ]
+    },
+    {
+      "Route": "register.w46ho1ssy3.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\register.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6522"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "w46ho1ssy3"
+        },
+        {
+          "Name": "label",
+          "Value": "register.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ULUwOJLSt78R6Q9J0xmgsGjTcZIPBwhCYV881PsJBPY="
+        }
+      ]
+    },
+    {
+      "Route": "student-dashboard.0pwoaoi75k.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\student-dashboard.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "155367"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 13:46:56 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "0pwoaoi75k"
+        },
+        {
+          "Name": "label",
+          "Value": "student-dashboard.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po="
+        }
+      ]
+    },
+    {
+      "Route": "student-dashboard.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\student-dashboard.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "155367"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 13:46:56 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-hEWJGRc5qJVx+3hE7BOerW7+GpyS0kTh1PTHkODY4Po="
+        }
+      ]
+    },
+    {
+      "Route": "teacher-dashboard.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\teacher-dashboard.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "62153"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8="
+        }
+      ]
+    },
+    {
+      "Route": "teacher-dashboard.qzxy2uv037.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\teacher-dashboard.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "62153"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 11:21:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "qzxy2uv037"
+        },
+        {
+          "Name": "label",
+          "Value": "teacher-dashboard.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-arUSbhw4R5bpsfcrhPWD+m4IXPeKjqNBV3esg87rGk8="
+        }
+      ]
+    },
+    {
+      "Route": "test-profilepic.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\test-profilepic.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "31307"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qNxloS5fjpxCKuqWszez39ubZa9pkpN8p9Hi7PnYvqM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 14:29:45 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-qNxloS5fjpxCKuqWszez39ubZa9pkpN8p9Hi7PnYvqM="
+        }
+      ]
+    },
+    {
+      "Route": "test-profilepic.o0haow1jp7.html",
+      "AssetFile": "C:\\Users\\octop\\source\\repos\\test\\studenttracker2-main\\wwwroot\\test-profilepic.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "31307"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qNxloS5fjpxCKuqWszez39ubZa9pkpN8p9Hi7PnYvqM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 14:29:45 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "o0haow1jp7"
+        },
+        {
+          "Name": "label",
+          "Value": "test-profilepic.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-qNxloS5fjpxCKuqWszez39ubZa9pkpN8p9Hi7PnYvqM="
+        }
+      ]
+    }
+  ]
+}
