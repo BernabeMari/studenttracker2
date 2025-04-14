@@ -1,0 +1,293 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\wwwroot\\student-dashboard.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\wwwroot\\student-dashboard.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\hubs\\trackinghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\hubs\\trackinghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\parent-studenttracker.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\parent-studenttracker.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\migrations\\20250313085710_updatelocationtracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\migrations\\20250313085710_updatelocationtracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\migrations\\20250313083900_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\migrations\\20250313083900_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\controllers\\trackingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\controllers\\trackingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\controllers\\connectioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\controllers\\connectioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\migrations\\20250313085710_updatelocationtracking.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\migrations\\20250313085710_updatelocationtracking.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\migrations\\20250313083900_initialcreate.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\migrations\\20250313083900_initialcreate.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|c:\\users\\octop\\source\\repos\\webapplication1\\parent-studenttracker\\parent-studenttracker\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F91815EA-86EA-407F-B6D0-EDDAC2B84C0E}|parent-studenttracker\\parent-studenttracker.csproj|solutionrelative:parent-studenttracker\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "parent-studenttracker\\wwwroot\\index.html",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\wwwroot\\index.html",
+              "RelativeToolTip": "parent-studenttracker\\wwwroot\\index.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-03-14T06:48:47.257Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\WeatherForecast.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\WeatherForecast.cs",
+              "RelativeToolTip": "parent-studenttracker\\WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-14T06:48:08.376Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "student-dashboard.html",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\wwwroot\\student-dashboard.html",
+              "RelativeDocumentMoniker": "parent-studenttracker\\wwwroot\\student-dashboard.html",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\wwwroot\\student-dashboard.html",
+              "RelativeToolTip": "parent-studenttracker\\wwwroot\\student-dashboard.html",
+              "ViewState": "AgIAAF4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-03-14T06:37:26.788Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\appsettings.json",
+              "RelativeDocumentMoniker": "parent-studenttracker\\appsettings.json",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\appsettings.json",
+              "RelativeToolTip": "parent-studenttracker\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-14T06:11:34.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Program.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Program.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Program.cs",
+              "RelativeToolTip": "parent-studenttracker\\Program.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAAAIQAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:17:11.787Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "20250313085710_UpdateLocationTracking.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.cs",
+              "RelativeToolTip": "parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:17:09.998Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TrackingHub.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Hubs\\TrackingHub.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Hubs\\TrackingHub.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Hubs\\TrackingHub.cs",
+              "RelativeToolTip": "parent-studenttracker\\Hubs\\TrackingHub.cs",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:17:03.203Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "20250313083900_InitialCreate.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313083900_InitialCreate.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Migrations\\20250313083900_InitialCreate.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313083900_InitialCreate.cs",
+              "RelativeToolTip": "parent-studenttracker\\Migrations\\20250313083900_InitialCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:17:08.169Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "StudentController.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\StudentController.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Controllers\\StudentController.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\StudentController.cs",
+              "RelativeToolTip": "parent-studenttracker\\Controllers\\StudentController.cs",
+              "ViewState": "AgIAAOsAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:16:59.526Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "parent-studenttracker.csproj",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\parent-studenttracker.csproj",
+              "RelativeDocumentMoniker": "parent-studenttracker\\parent-studenttracker.csproj",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\parent-studenttracker.csproj",
+              "RelativeToolTip": "parent-studenttracker\\parent-studenttracker.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-03-13T14:17:44.672Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "TrackingController.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\TrackingController.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Controllers\\TrackingController.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\TrackingController.cs",
+              "RelativeToolTip": "parent-studenttracker\\Controllers\\TrackingController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:17:01.564Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ConnectionController.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\ConnectionController.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Controllers\\ConnectionController.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\ConnectionController.cs",
+              "RelativeToolTip": "parent-studenttracker\\Controllers\\ConnectionController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:16:57.348Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ApplicationDbContextModelSnapshot.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeToolTip": "parent-studenttracker\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAADwvwwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:16:55.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "20250313085710_UpdateLocationTracking.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.Designer.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.Designer.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.Designer.cs",
+              "RelativeToolTip": "parent-studenttracker\\Migrations\\20250313085710_UpdateLocationTracking.Designer.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAADwvw0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:16:53.628Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "20250313083900_InitialCreate.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313083900_InitialCreate.Designer.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Migrations\\20250313083900_InitialCreate.Designer.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Migrations\\20250313083900_InitialCreate.Designer.cs",
+              "RelativeToolTip": "parent-studenttracker\\Migrations\\20250313083900_InitialCreate.Designer.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABgAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:12:53.377Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "parent-studenttracker\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:12:51.455Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "parent-studenttracker\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\octop\\source\\repos\\WebApplication1\\parent-studenttracker\\parent-studenttracker\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "parent-studenttracker\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T14:12:49.922Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Tracker</title>
+    <meta name="description" content="Track student locations and manage connections between students, parents, and teachers">
+    <meta name="theme-color" content="#4285f4">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/student.png">
+    <script>
+        // Check if user is logged in
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (token && user) {
+            // Redirect to appropriate dashboard
+            window.location.href = user.userType === 'Student' 
+                ? '/student-dashboard.html' 
+                : user.userType === 'Parent'
+                    ? '/parent-dashboard.html'
+                    : user.userType === 'Teacher'
+                        ? '/teacher-dashboard.html'
+                        : '/admin-dashboard.html';
+        } else {
+            // Redirect to login page
+            window.location.href = '/login.html';
+        }
+    </script>
+    <script src="/js/pwa.js" defer></script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html> 
